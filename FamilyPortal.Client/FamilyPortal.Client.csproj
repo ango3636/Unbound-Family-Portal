@@ -15,6 +15,7 @@
 
     <ItemGroup>
         <PackageReference Include="ServiceStack.Blazor" Version="8.*" />
+        <PackageReference Include="Telerik.UI.for.Blazor" Version="6.2.0" />
     </ItemGroup>
 
     <ItemGroup>

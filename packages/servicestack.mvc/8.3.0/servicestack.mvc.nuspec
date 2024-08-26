@@ -1,0 +1,62 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2013/05/nuspec.xsd">
+  <metadata>
+    <id>ServiceStack.Mvc</id>
+    <version>8.3.0</version>
+    <title>MVC Adapters for integrating with ServiceStack webservices</title>
+    <authors>ServiceStack</authors>
+    <requireLicenseAcceptance>true</requireLicenseAcceptance>
+    <licenseUrl>https://servicestack.net/terms</licenseUrl>
+    <projectUrl>https://github.com/ServiceStack/ServiceStack</projectUrl>
+    <iconUrl>https://servicestack.net/img/logo-128.png</iconUrl>
+    <description>MVC Adapter classes to provide tight integration and re-usable functionality between ServiceStack and MVC.
+    Including adapters for: MiniProfiler, FluentValidation, Funq IOC Controller Factory, Funq Validator Factory ControllerBase (configured with access to ServiceStack's ICacheClient, ISession, typed UserSession dependencies).</description>
+    <releaseNotes>https://docs.servicestack.net/release-notes-history</releaseNotes>
+    <copyright>© 2008-2022 ServiceStack, Inc</copyright>
+    <tags>MVC ServiceStack MiniProfiler FluentValidation Controller</tags>
+    <repository type="git" url="https://github.com/ServiceStack/ServiceStack.git" commit="d78c427a42d8e2bb668a8eebe58b8fe287f73a93" />
+    <dependencies>
+      <group targetFramework=".NETFramework4.7.2">
+        <dependency id="ServiceStack.Text" version="8.3.0" exclude="Build,Analyzers" />
+        <dependency id="ServiceStack.Client" version="8.3.0" exclude="Build,Analyzers" />
+        <dependency id="ServiceStack.Common" version="8.3.0" exclude="Build,Analyzers" />
+        <dependency id="ServiceStack.Interfaces" version="8.3.0" exclude="Build,Analyzers" />
+        <dependency id="ServiceStack.NetFramework" version="8.3.0" exclude="Build,Analyzers" />
+        <dependency id="ServiceStack" version="8.3.0" exclude="Build,Analyzers" />
+        <dependency id="Microsoft.AspNet.Mvc" version="5.3.0" exclude="Build,Analyzers" />
+        <dependency id="Microsoft.Bcl.AsyncInterfaces" version="8.0.0" exclude="Build,Analyzers" />
+      </group>
+      <group targetFramework="net6.0">
+        <dependency id="ServiceStack.Text" version="8.3.0" exclude="Build,Analyzers" />
+        <dependency id="ServiceStack.Client" version="8.3.0" exclude="Build,Analyzers" />
+        <dependency id="ServiceStack.Common" version="8.3.0" exclude="Build,Analyzers" />
+        <dependency id="ServiceStack.Interfaces" version="8.3.0" exclude="Build,Analyzers" />
+        <dependency id="ServiceStack" version="8.3.0" exclude="Build,Analyzers" />
+      </group>
+      <group targetFramework="net8.0">
+        <dependency id="ServiceStack.Text" version="8.3.0" exclude="Build,Analyzers" />
+        <dependency id="ServiceStack.Client" version="8.3.0" exclude="Build,Analyzers" />
+        <dependency id="ServiceStack.Common" version="8.3.0" exclude="Build,Analyzers" />
+        <dependency id="ServiceStack.Interfaces" version="8.3.0" exclude="Build,Analyzers" />
+        <dependency id="ServiceStack" version="8.3.0" exclude="Build,Analyzers" />
+      </group>
+      <group targetFramework=".NETStandard2.0">
+        <dependency id="ServiceStack.Text" version="8.3.0" exclude="Build,Analyzers" />
+        <dependency id="ServiceStack.Client" version="8.3.0" exclude="Build,Analyzers" />
+        <dependency id="ServiceStack.Common" version="8.3.0" exclude="Build,Analyzers" />
+        <dependency id="ServiceStack.Interfaces" version="8.3.0" exclude="Build,Analyzers" />
+        <dependency id="ServiceStack" version="8.3.0" exclude="Build,Analyzers" />
+        <dependency id="Microsoft.AspNetCore.Mvc" version="2.2.0" exclude="Build,Analyzers" />
+        <dependency id="Microsoft.AspNetCore.Mvc.Razor" version="2.2.0" exclude="Build,Analyzers" />
+      </group>
+    </dependencies>
+    <frameworkAssemblies>
+      <frameworkAssembly assemblyName="System.ComponentModel.DataAnnotations" targetFramework=".NETFramework4.7.2" />
+      <frameworkAssembly assemblyName="System.Configuration" targetFramework=".NETFramework4.7.2" />
+      <frameworkAssembly assemblyName="System.Data" targetFramework=".NETFramework4.7.2" />
+      <frameworkAssembly assemblyName="System.ServiceModel" targetFramework=".NETFramework4.7.2" />
+      <frameworkAssembly assemblyName="System.Web" targetFramework=".NETFramework4.7.2" />
+      <frameworkAssembly assemblyName="System.Xml" targetFramework=".NETFramework4.7.2" />
+    </frameworkAssemblies>
+  </metadata>
+</package>

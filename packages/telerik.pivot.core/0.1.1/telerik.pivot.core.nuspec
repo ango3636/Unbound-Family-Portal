@@ -1,0 +1,15 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2012/06/nuspec.xsd">
+  <metadata>
+    <id>Telerik.Pivot.Core</id>
+    <version>0.1.1</version>
+    <authors>Progress</authors>
+    <requireLicenseAcceptance>true</requireLicenseAcceptance>
+    <licenseUrl>https://www.telerik.com/purchase/license-agreement/blazor-ui</licenseUrl>
+    <iconUrl>http://www.telerik.com/sfimages/default-source/logos/progress-64x64.png</iconUrl>
+    <description>Telerik.Pivot.Core provides pivot data processing.</description>
+    <dependencies>
+      <group targetFramework=".NETStandard2.1" />
+    </dependencies>
+  </metadata>
+</package>

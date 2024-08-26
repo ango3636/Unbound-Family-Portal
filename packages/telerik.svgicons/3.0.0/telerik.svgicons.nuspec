@@ -1,0 +1,17 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2012/06/nuspec.xsd">
+  <metadata>
+    <id>Telerik.SvgIcons</id>
+    <version>3.0.0</version>
+    <authors>Progress</authors>
+    <license type="expression">Apache-2.0</license>
+    <licenseUrl>https://licenses.nuget.org/Apache-2.0</licenseUrl>
+    <readme>README.md</readme>
+    <description>SVG icons for Telerik UI.</description>
+    <tags>aspnet icons svg Telerik</tags>
+    <repository type="git" url="https://github.com/telerik/kendo-icons" commit="f19fcaba45cd1ffc30dbc50757c64fde249d6c7c" />
+    <dependencies>
+      <group targetFramework=".NETStandard2.0" />
+    </dependencies>
+  </metadata>
+</package>

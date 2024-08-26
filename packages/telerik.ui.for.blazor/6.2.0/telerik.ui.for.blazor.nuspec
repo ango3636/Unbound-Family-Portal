@@ -1,0 +1,30 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2013/05/nuspec.xsd">
+  <metadata>
+    <id>Telerik.UI.for.Blazor</id>
+    <version>6.2.0</version>
+    <authors>Progress</authors>
+    <requireLicenseAcceptance>true</requireLicenseAcceptance>
+    <licenseUrl>https://www.telerik.com/purchase/license-agreement/blazor-ui</licenseUrl>
+    <icon>staticwebassets\images\blazor.png</icon>
+    <projectUrl>https://www.telerik.com/blazor-ui</projectUrl>
+    <iconUrl>http://www.telerik.com/sfimages/default-source/logos/blazor.png</iconUrl>
+    <description>Telerik UI for Blazor provides a suite of truly native Bazor components enabling you to build everything from highly-data driven dashboards for large industries to small e-shops for everyday internet users. We provide you with a control galore for data management, navigation and layout, visualization, editing, interactivity and more.</description>
+    <tags>aspnet blazor Telerik</tags>
+    <repository type="git" commit="84e39f4bcce13e22cdc0b04eae75b5646b3c54ce" />
+    <dependencies>
+      <group targetFramework="net6.0">
+        <dependency id="Microsoft.AspNetCore.Components.Web" version="3.1.32" exclude="Build,Analyzers" />
+        <dependency id="System.Data.Common" version="4.3.0" exclude="Build,Analyzers" />
+        <dependency id="System.Linq.Queryable" version="4.3.0" exclude="Build,Analyzers" />
+        <dependency id="Telerik.DataSource" version="3.0.1" exclude="Build,Analyzers" />
+        <dependency id="Telerik.Documents.SpreadsheetStreaming" version="2024.3.806" exclude="Build,Analyzers" />
+        <dependency id="Telerik.FontIcons" version="3.0.0" exclude="Build,Analyzers" />
+        <dependency id="Telerik.Pivot.Core" version="0.1.1" exclude="Build,Analyzers" />
+        <dependency id="Telerik.Pivot.DataProviders.Xmla" version="0.1.1" exclude="Build,Analyzers" />
+        <dependency id="Telerik.Recurrence" version="0.2.2" exclude="Build,Analyzers" />
+        <dependency id="Telerik.SvgIcons" version="3.0.0" exclude="Build,Analyzers" />
+      </group>
+    </dependencies>
+  </metadata>
+</package>

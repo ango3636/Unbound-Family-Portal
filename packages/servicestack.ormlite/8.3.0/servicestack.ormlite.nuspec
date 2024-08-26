@@ -1,0 +1,66 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2013/05/nuspec.xsd">
+  <metadata>
+    <id>ServiceStack.OrmLite</id>
+    <version>8.3.0</version>
+    <title>OrmLite - Fast, code-first, config-free POCO ORM</title>
+    <authors>ServiceStack</authors>
+    <requireLicenseAcceptance>true</requireLicenseAcceptance>
+    <licenseUrl>https://servicestack.net/terms</licenseUrl>
+    <projectUrl>https://github.com/ServiceStack/ServiceStack</projectUrl>
+    <iconUrl>https://servicestack.net/img/logo-128.png</iconUrl>
+    <description>Common library for the Light, simple and fast convention-based code-first POCO, OrmLite.
+      Support for Creating and Dropping Table Schemas from POCOs, Complex Property types transparently stored in schemaless text blobs.
+      OrmLite is a suite extension methods on ADO.NET's underlying IDbConnection providing DRY, typed access for common data usage patterns that map to clean, simple POCOs. Great support for testing where OrmLite methods can be mocked.</description>
+    <releaseNotes>https://docs.servicestack.net/release-notes-history</releaseNotes>
+    <copyright>© 2008-2022 ServiceStack, Inc</copyright>
+    <tags>OrmLite RDBMS SQL POCO Code-First ORM Schema-less Blobs</tags>
+    <repository type="git" url="https://github.com/ServiceStack/ServiceStack.git" commit="d78c427a42d8e2bb668a8eebe58b8fe287f73a93" />
+    <dependencies>
+      <group targetFramework=".NETFramework4.7.2">
+        <dependency id="ServiceStack.Common" version="8.3.0" exclude="Build,Analyzers" />
+        <dependency id="System.Memory" version="4.5.5" exclude="Build,Analyzers" />
+      </group>
+      <group targetFramework="net6.0">
+        <dependency id="ServiceStack.Common" version="8.3.0" exclude="Build,Analyzers" />
+        <dependency id="System.Collections.NonGeneric" version="4.3.0" exclude="Build,Analyzers" />
+        <dependency id="System.ComponentModel.Annotations" version="5.0.0" exclude="Build,Analyzers" />
+        <dependency id="System.ComponentModel.Primitives" version="4.3.0" exclude="Build,Analyzers" />
+        <dependency id="System.Dynamic.Runtime" version="4.3.0" exclude="Build,Analyzers" />
+        <dependency id="System.Memory" version="4.5.5" exclude="Build,Analyzers" />
+        <dependency id="System.Reflection.Emit" version="4.7.0" exclude="Build,Analyzers" />
+        <dependency id="System.Reflection.Emit.Lightweight" version="4.7.0" exclude="Build,Analyzers" />
+        <dependency id="System.Reflection.TypeExtensions" version="4.7.0" exclude="Build,Analyzers" />
+        <dependency id="System.Xml.XmlDocument" version="4.3.0" exclude="Build,Analyzers" />
+      </group>
+      <group targetFramework="net8.0">
+        <dependency id="ServiceStack.Common" version="8.3.0" exclude="Build,Analyzers" />
+        <dependency id="System.Collections.NonGeneric" version="4.3.0" exclude="Build,Analyzers" />
+        <dependency id="System.ComponentModel.Annotations" version="5.0.0" exclude="Build,Analyzers" />
+        <dependency id="System.ComponentModel.Primitives" version="4.3.0" exclude="Build,Analyzers" />
+        <dependency id="System.Dynamic.Runtime" version="4.3.0" exclude="Build,Analyzers" />
+        <dependency id="System.Memory" version="4.5.5" exclude="Build,Analyzers" />
+        <dependency id="System.Reflection.Emit" version="4.7.0" exclude="Build,Analyzers" />
+        <dependency id="System.Reflection.Emit.Lightweight" version="4.7.0" exclude="Build,Analyzers" />
+        <dependency id="System.Reflection.TypeExtensions" version="4.7.0" exclude="Build,Analyzers" />
+        <dependency id="System.Xml.XmlDocument" version="4.3.0" exclude="Build,Analyzers" />
+      </group>
+      <group targetFramework=".NETStandard2.0">
+        <dependency id="ServiceStack.Common" version="8.3.0" exclude="Build,Analyzers" />
+        <dependency id="System.Collections.NonGeneric" version="4.3.0" exclude="Build,Analyzers" />
+        <dependency id="System.ComponentModel.Annotations" version="4.7.0" exclude="Build,Analyzers" />
+        <dependency id="System.ComponentModel.Primitives" version="4.3.0" exclude="Build,Analyzers" />
+        <dependency id="System.Dynamic.Runtime" version="4.3.0" exclude="Build,Analyzers" />
+        <dependency id="System.Memory" version="4.5.5" exclude="Build,Analyzers" />
+        <dependency id="System.Reflection.Emit" version="4.7.0" exclude="Build,Analyzers" />
+        <dependency id="System.Reflection.Emit.Lightweight" version="4.7.0" exclude="Build,Analyzers" />
+        <dependency id="System.Reflection.TypeExtensions" version="4.7.0" exclude="Build,Analyzers" />
+        <dependency id="System.Xml.XmlDocument" version="4.3.0" exclude="Build,Analyzers" />
+      </group>
+    </dependencies>
+    <frameworkAssemblies>
+      <frameworkAssembly assemblyName="System.ComponentModel.DataAnnotations" targetFramework=".NETFramework4.7.2" />
+      <frameworkAssembly assemblyName="System.Net" targetFramework=".NETFramework4.7.2" />
+    </frameworkAssemblies>
+  </metadata>
+</package>

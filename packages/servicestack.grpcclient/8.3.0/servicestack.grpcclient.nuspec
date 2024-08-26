@@ -1,0 +1,47 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2013/05/nuspec.xsd">
+  <metadata>
+    <id>ServiceStack.GrpcClient</id>
+    <version>8.3.0</version>
+    <title>ServiceStack.GrpcClient</title>
+    <authors>ServiceStack</authors>
+    <requireLicenseAcceptance>true</requireLicenseAcceptance>
+    <licenseUrl>https://servicestack.net/terms</licenseUrl>
+    <projectUrl>https://github.com/ServiceStack/ServiceStack</projectUrl>
+    <iconUrl>https://servicestack.net/img/logo-128.png</iconUrl>
+    <description>ServiceStack's gRPC GrpcServiceClient</description>
+    <releaseNotes>https://docs.servicestack.net/release-notes-history</releaseNotes>
+    <copyright>© 2008-2022 ServiceStack, Inc</copyright>
+    <tags>ServiceStack ServiceClients gRPC</tags>
+    <repository type="git" url="https://github.com/ServiceStack/ServiceStack.git" commit="d78c427a42d8e2bb668a8eebe58b8fe287f73a93" />
+    <dependencies>
+      <group targetFramework="net6.0">
+        <dependency id="ServiceStack.Text" version="8.3.0" exclude="Build,Analyzers" />
+        <dependency id="ServiceStack.Client" version="8.3.0" exclude="Build,Analyzers" />
+        <dependency id="ServiceStack.Interfaces" version="8.3.0" exclude="Build,Analyzers" />
+        <dependency id="Grpc.Core" version="2.46.6" exclude="Build,Analyzers" />
+        <dependency id="Grpc.Net.Client" version="2.63.0" exclude="Build,Analyzers" />
+        <dependency id="protobuf-net" version="3.2.30" exclude="Build,Analyzers" />
+        <dependency id="protobuf-net.Grpc" version="1.1.1" exclude="Build,Analyzers" />
+      </group>
+      <group targetFramework="net8.0">
+        <dependency id="ServiceStack.Text" version="8.3.0" exclude="Build,Analyzers" />
+        <dependency id="ServiceStack.Client" version="8.3.0" exclude="Build,Analyzers" />
+        <dependency id="ServiceStack.Interfaces" version="8.3.0" exclude="Build,Analyzers" />
+        <dependency id="Grpc.Core" version="2.46.6" exclude="Build,Analyzers" />
+        <dependency id="Grpc.Net.Client" version="2.63.0" exclude="Build,Analyzers" />
+        <dependency id="protobuf-net" version="3.2.30" exclude="Build,Analyzers" />
+        <dependency id="protobuf-net.Grpc" version="1.1.1" exclude="Build,Analyzers" />
+      </group>
+      <group targetFramework=".NETStandard2.1">
+        <dependency id="ServiceStack.Text" version="8.3.0" exclude="Build,Analyzers" />
+        <dependency id="ServiceStack.Client" version="8.3.0" exclude="Build,Analyzers" />
+        <dependency id="ServiceStack.Interfaces" version="8.3.0" exclude="Build,Analyzers" />
+        <dependency id="Grpc.Core" version="2.46.6" exclude="Build,Analyzers" />
+        <dependency id="Grpc.Net.Client" version="2.63.0" exclude="Build,Analyzers" />
+        <dependency id="protobuf-net" version="3.2.30" exclude="Build,Analyzers" />
+        <dependency id="protobuf-net.Grpc" version="1.1.1" exclude="Build,Analyzers" />
+      </group>
+    </dependencies>
+  </metadata>
+</package>

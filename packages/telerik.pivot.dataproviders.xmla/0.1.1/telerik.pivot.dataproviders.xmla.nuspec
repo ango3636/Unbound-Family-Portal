@@ -1,0 +1,18 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2013/05/nuspec.xsd">
+  <metadata>
+    <id>Telerik.Pivot.DataProviders.Xmla</id>
+    <version>0.1.1</version>
+    <authors>Progress</authors>
+    <requireLicenseAcceptance>true</requireLicenseAcceptance>
+    <licenseUrl>https://www.telerik.com/purchase/license-agreement/blazor-ui</licenseUrl>
+    <iconUrl>http://www.telerik.com/sfimages/default-source/logos/progress-64x64.png</iconUrl>
+    <description>Telerik.Pivot.DataProviders.Xmla provides pivot data processing.</description>
+    <repository type="git" commit="d95a92026ddbdc5891022e912805c8346b5c36b4" />
+    <dependencies>
+      <group targetFramework=".NETStandard2.1">
+        <dependency id="Telerik.Pivot.Core" version="0.1.0" exclude="Build,Analyzers" />
+      </group>
+    </dependencies>
+  </metadata>
+</package>

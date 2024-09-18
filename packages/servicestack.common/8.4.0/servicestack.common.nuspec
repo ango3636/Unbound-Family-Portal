@@ -1,0 +1,48 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2013/05/nuspec.xsd">
+  <metadata>
+    <id>ServiceStack.Common</id>
+    <version>8.4.0</version>
+    <title>Common libraries for ServiceStack projects</title>
+    <authors>ServiceStack</authors>
+    <requireLicenseAcceptance>true</requireLicenseAcceptance>
+    <licenseUrl>https://servicestack.net/terms</licenseUrl>
+    <projectUrl>https://github.com/ServiceStack/ServiceStack</projectUrl>
+    <iconUrl>https://servicestack.net/img/logo-128.png</iconUrl>
+    <description>#Script, Virtual File System, SimpleContainer and Common library for ServiceStack projects.</description>
+    <releaseNotes>https://docs.servicestack.net/release-notes-history</releaseNotes>
+    <copyright>© 2008-2022 ServiceStack, Inc</copyright>
+    <tags>ServiceStack Common Framework Clients ServiceClients Gateway</tags>
+    <repository type="git" url="https://github.com/ServiceStack/ServiceStack.git" commit="51dadf804867042c91e4eafbc32c3eb70388eeca" />
+    <dependencies>
+      <group targetFramework=".NETFramework4.7.2">
+        <dependency id="ServiceStack.Text" version="8.4.0" exclude="Build,Analyzers" />
+        <dependency id="ServiceStack.Interfaces" version="8.4.0" exclude="Build,Analyzers" />
+        <dependency id="System.Memory" version="4.5.5" exclude="Build,Analyzers" />
+        <dependency id="System.Threading.Tasks.Extensions" version="4.5.4" exclude="Build,Analyzers" />
+      </group>
+      <group targetFramework="net6.0">
+        <dependency id="ServiceStack.Text" version="8.4.0" exclude="Build,Analyzers" />
+        <dependency id="ServiceStack.Interfaces" version="8.4.0" exclude="Build,Analyzers" />
+        <dependency id="System.Memory" version="4.5.5" exclude="Build,Analyzers" />
+      </group>
+      <group targetFramework="net8.0">
+        <dependency id="ServiceStack.Text" version="8.4.0" exclude="Build,Analyzers" />
+        <dependency id="ServiceStack.Interfaces" version="8.4.0" exclude="Build,Analyzers" />
+        <dependency id="System.Memory" version="4.5.5" exclude="Build,Analyzers" />
+      </group>
+      <group targetFramework=".NETStandard2.0">
+        <dependency id="ServiceStack.Text" version="8.4.0" exclude="Build,Analyzers" />
+        <dependency id="ServiceStack.Interfaces" version="8.4.0" exclude="Build,Analyzers" />
+        <dependency id="System.ComponentModel.Primitives" version="4.3.0" exclude="Build,Analyzers" />
+        <dependency id="System.Data.Common" version="4.3.0" exclude="Build,Analyzers" />
+        <dependency id="System.Dynamic.Runtime" version="4.3.0" exclude="Build,Analyzers" />
+        <dependency id="System.Memory" version="4.5.5" exclude="Build,Analyzers" />
+        <dependency id="System.Net.NetworkInformation" version="4.3.0" exclude="Build,Analyzers" />
+        <dependency id="System.Net.Requests" version="4.3.0" exclude="Build,Analyzers" />
+        <dependency id="System.Reflection.TypeExtensions" version="4.7.0" exclude="Build,Analyzers" />
+        <dependency id="System.Runtime.Serialization.Primitives" version="4.3.0" exclude="Build,Analyzers" />
+      </group>
+    </dependencies>
+  </metadata>
+</package>

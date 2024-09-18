@@ -1,0 +1,763 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>ServiceStack.Blazor</name>
+    </assembly>
+    <members>
+        <member name="T:ServiceStack.Blazor.AuthBlazorComponentBase">
+            <summary>
+            For Pages and Components requiring Authentication
+            </summary>
+        </member>
+        <member name="T:ServiceStack.Blazor.BlazorComponentBase">
+            <summary>
+            Blazor component base
+            </summary>
+        </member>
+        <member name="T:ServiceStack.Blazor.BlazorConfig">
+            <summary>
+            Default conventions and behavior used by ServiceStack.Blazor Components
+            </summary>
+        </member>
+        <member name="P:ServiceStack.Blazor.BlazorConfig.Services">
+            <summary>
+            IOC used to resolve App dependencies (e.g. ILoggerFactory)
+            </summary>
+        </member>
+        <member name="P:ServiceStack.Blazor.BlazorConfig.Log">
+            <summary>
+            Custom ILogger for Blazor Components to use (default uses ILoggerFactory)
+            </summary>
+        </member>
+        <member name="P:ServiceStack.Blazor.BlazorConfig.IsDevelopment">
+            <summary>
+            Flag App can use to detect if running in Blazor WASM or Blazor Server
+            </summary>
+        </member>
+        <member name="P:ServiceStack.Blazor.BlazorConfig.IsWasm">
+            <summary>
+            Flag App can use to detect if running in Blazor WASM or Blazor Server
+            </summary>
+        </member>
+        <member name="P:ServiceStack.Blazor.BlazorConfig.DarkMode">
+            <summary>
+            Whether Components should be rendered in Dark Mode
+            </summary>
+        </member>
+        <member name="P:ServiceStack.Blazor.BlazorConfig.EnableErrorLogging">
+            <summary>
+            Enable Error Logging (default true)
+            </summary>
+        </member>
+        <member name="P:ServiceStack.Blazor.BlazorConfig.EnableVerboseLogging">
+            <summary>
+            Enable Verbose Logging (default false)
+            </summary>
+        </member>
+        <member name="P:ServiceStack.Blazor.BlazorConfig.EnableLogging">
+            <summary>
+            Enable Verbose Logging (default false)
+            </summary>
+        </member>
+        <member name="P:ServiceStack.Blazor.BlazorConfig.MaxFieldLength">
+            <summary>
+            Max Field Length in Format components (default 150)
+            </summary>
+        </member>
+        <member name="P:ServiceStack.Blazor.BlazorConfig.MaxNestedFields">
+            <summary>
+            Max Number of Fields in Format components (default 2)
+            </summary>
+        </member>
+        <member name="P:ServiceStack.Blazor.BlazorConfig.MaxNestedFieldLength">
+            <summary>
+            Max Field Length in Nested Types in Format components (default 30)
+            </summary>
+        </member>
+        <member name="P:ServiceStack.Blazor.BlazorConfig.RedirectSignIn">
+            <summary>
+            Sign In Page to redirect for Unauthorized access to protected compontents (default /signin)
+            </summary>
+        </member>
+        <member name="P:ServiceStack.Blazor.BlazorConfig.UseLocalStorage">
+            <summary>
+            Whether to Register ILocalStorage with AddBlazorApiClient()
+            </summary>
+        </member>
+        <member name="P:ServiceStack.Blazor.BlazorConfig.DefaultProfileUrl">
+            <summary>
+            Image URI to use when No ProfileUrl exists
+            </summary>
+        </member>
+        <member name="P:ServiceStack.Blazor.BlazorConfig.ApiBaseUrl">
+            <summary>
+            Capture the Server Api BaseUrl
+            </summary>
+        </member>
+        <member name="P:ServiceStack.Blazor.BlazorConfig.AssetsBasePath">
+            <summary>
+            Prefix added to relative Asset URLs
+            </summary>
+        </member>
+        <member name="P:ServiceStack.Blazor.BlazorConfig.FallbackAssetsBasePath">
+            <summary>
+            Prefix used to add to fallback URLs when default Asset Path fails
+            </summary>
+        </member>
+        <member name="P:ServiceStack.Blazor.BlazorConfig.AssetsPathResolver">
+            <summary>
+            Use custom strategy for resolving Asset Paths
+            </summary>
+        </member>
+        <member name="P:ServiceStack.Blazor.BlazorConfig.FallbackPathResolver">
+            <summary>
+            Use custom strategy for resolving Fallback Asset Paths
+            </summary>
+        </member>
+        <member name="P:ServiceStack.Blazor.BlazorConfig.UseInProcessClient">
+            <summary>
+            Whether ApiAsync BlazorComponentBase APIs should use IServiceGateway instead of JsonApiClient in Blazor Server by default
+            </summary>
+        </member>
+        <member name="P:ServiceStack.Blazor.BlazorConfig.AutoQueryGridDefaults">
+            <summary>
+            Change defaults for AutoQueryGrid Components
+            </summary>
+        </member>
+        <member name="P:ServiceStack.Blazor.BlazorConfig.JSParseObject">
+            <summary>
+            Function used to parse JS Object literals
+            </summary>
+        </member>
+        <member name="P:ServiceStack.Blazor.BlazorConfig.EvalExpression">
+            <summary>
+            Function used to evaluate script expressions in Inputs
+            </summary>
+        </member>
+        <member name="P:ServiceStack.Blazor.BlazorConfig.DefaultFilters">
+            <summary>
+            Default Filter Conventions to use in DataGrid (for non AutoQuery APIs)
+            </summary>
+        </member>
+        <member name="T:ServiceStack.Blazor.BlazorUtils">
+            <summary>
+            Also extend functionality to any class implementing IHasJsonApiClient
+            </summary>
+        </member>
+        <member name="T:ServiceStack.Blazor.Components.ApiComponentBase">
+            <summary>
+            The Base class for all ResponseStatus aware ServiceStack.Blazor Components
+            </summary>
+        </member>
+        <member name="P:ServiceStack.Blazor.Components.ApiComponentBase.Status">
+            <summary>
+            Directly assing a Response Status to this component
+            </summary>
+        </member>
+        <member name="P:ServiceStack.Blazor.Components.ApiComponentBase.CascadingStatus">
+            <summary>
+            The ResponseStatus injected by CascadingValue
+            </summary>
+        </member>
+        <member name="P:ServiceStack.Blazor.Components.ApiComponentBase.UseStatus">
+            <summary>
+            The ResponseStatus assinged to this compontent
+            </summary>
+        </member>
+        <member name="P:ServiceStack.Blazor.Components.ApiComponentBase.ExplicitStatus">
+            <summary>
+            Assign ResponseStatus to component and ignore CascadingStatus injected by CascadingValue
+            </summary>
+        </member>
+        <member name="P:ServiceStack.Blazor.Components.ApiComponentBase.IgnoreCascadingStatus">
+            <summary>
+            Whether to ignore CascadingStatus
+            </summary>
+        </member>
+        <member name="P:ServiceStack.Blazor.Components.ApiComponentBase.IsError">
+            <summary>
+            If the ResponseStatus assigned to this component is in an Error State
+            </summary>
+        </member>
+        <member name="M:ServiceStack.Blazor.Components.ApiComponentBase.StateClasses(System.String,System.String)">
+            <summary>
+            Helper to return classes for when component is in a `valid` or `invalid` state
+            </summary>
+            <param name="valid">css classes to include when valid</param>
+            <param name="invalid">css classes to include when invalid</param>
+            <returns></returns>
+        </member>
+        <member name="M:ServiceStack.Blazor.Components.ApiComponentBase.CssClass(System.String,System.String)">
+            <inheritdoc/>
+        </member>
+        <member name="T:ServiceStack.Blazor.Components.ErrorSummaryBase">
+            <summary>
+            Base class for rendering a Summary Error
+            </summary>
+        </member>
+        <member name="P:ServiceStack.Blazor.Components.ErrorSummaryBase.Except">
+            <summary>
+            Do not show Field Error Messages for specified visible fields which will display them
+            </summary>
+        </member>
+        <member name="T:ServiceStack.Blazor.Components.DataTransition">
+            <summary>
+            To capture Tailwind's animation rules, e.g:
+            {
+                entering: { cls:'ease-out duration-300', from:'opacity-0',    to:'opacity-100' },
+                 leaving: { cls:'ease-in duration-200',  from:'opacity-100',  to: 'opacity-0'  }
+            }
+            {
+               entering: { cls:'ease-out duration-300', from:'opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95', to:'opacity-100 translate-y-0 sm:scale-100' }, 
+                leaving: { cls:'ease-in duration-200',  from:'opacity-100 translate-y-0 sm:scale-100',               to:'opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95' }
+            }
+            </summary>
+        </member>
+        <member name="T:ServiceStack.Blazor.Components.Tailwind.Alert">
+            <summary>
+            Show Alert Message
+            </summary>
+            <remarks>
+            ![](https://raw.githubusercontent.com/ServiceStack/docs/master/docs/images/blazor/components/Alert.png)
+            </remarks>
+        </member>
+        <member name="P:ServiceStack.Blazor.Components.Tailwind.Alert.AdditionalAttributes">
+            <summary>
+            Gets or sets a collection of additional attributes that will be added to the generated
+            <c>a</c> element.
+            </summary>
+        </member>
+        <member name="T:ServiceStack.Blazor.Components.Tailwind.AlertSuccess">
+            <summary>
+            Show Alert Success Message
+            </summary>
+            <remarks>
+            ![](https://raw.githubusercontent.com/ServiceStack/docs/master/docs/images/blazor/components/AlertSuccess.png)
+            </remarks>
+        </member>
+        <member name="T:ServiceStack.Blazor.Components.Tailwind.AutoCreateForm`1">
+            <summary>
+            Auto UI for generating a Create Form from a Request DTO in a Slide Over component
+            </summary>
+            <remarks>
+            ![](https://raw.githubusercontent.com/ServiceStack/docs/master/docs/images/blazor/components/AutoCreateForm.png)
+            </remarks>
+            <typeparam name="Model"></typeparam>
+        </member>
+        <member name="T:ServiceStack.Blazor.Components.Tailwind.AutoEditForm`1">
+            <summary>
+            Auto UI for generating a Edit Form from a Request DTO in a Slide Over component
+            </summary>
+            <remarks>
+            ![](https://raw.githubusercontent.com/ServiceStack/docs/master/docs/images/blazor/components/AutoEditForm.png)
+            </remarks>
+            <typeparam name="Model"></typeparam>
+        </member>
+        <member name="T:ServiceStack.Blazor.Components.Tailwind.AutoFormFields">
+            <summary>
+            Auto UI for generating a chromelss Form from a Request DTO that can be embedded in custom Form UIs
+            </summary>
+            <remarks>
+            ![](https://raw.githubusercontent.com/ServiceStack/docs/master/docs/images/blazor/components/AutoCreateForm.png)
+            </remarks>
+        </member>
+        <member name="T:ServiceStack.Blazor.Components.Tailwind.AutoQueryGrid`1">
+            <summary>
+            Auto UI for managing AutoQuery CRUD APIs
+            </summary>
+            <remarks>
+            ![](https://raw.githubusercontent.com/ServiceStack/docs/master/docs/images/blazor/components/AutoQueryGrid.png)
+            </remarks>
+            <typeparam name="Model"></typeparam>
+        </member>
+        <member name="P:ServiceStack.Blazor.Components.Tailwind.AutoQueryGrid`1.Toolbar">
+            <summary>
+            Replace entire Toolbar
+            </summary>
+        </member>
+        <member name="P:ServiceStack.Blazor.Components.Tailwind.AutoQueryGrid`1.ToolbarButtons">
+            <summary>
+            Add more Toolbar buttons
+            </summary>
+        </member>
+        <member name="T:ServiceStack.Blazor.Components.Tailwind.Breadcrumbs">
+            <summary>
+            Create a Tailwind Breadcrumb component
+            </summary>
+            <remarks>
+            ![](https://raw.githubusercontent.com/ServiceStack/docs/master/docs/images/blazor/components/Breadcrumbs.png)
+            </remarks>
+        </member>
+        <member name="T:ServiceStack.Blazor.Components.Tailwind.CheckboxInput`1">
+            <summary>
+            Checkbox Input Control
+            </summary>
+            <remarks>
+            ![](https://raw.githubusercontent.com/ServiceStack/docs/master/docs/images/blazor/components/CheckboxInput.png)
+            </remarks>
+        </member>
+        <member name="T:ServiceStack.Blazor.Components.Tailwind.ConfirmDelete">
+            <summary>
+            Require explicit confirmation before deleting
+            </summary>
+            <remarks>
+            ![](https://raw.githubusercontent.com/ServiceStack/docs/master/docs/images/blazor/components/ConfirmDelete.png)
+            </remarks>
+        </member>
+        <member name="T:ServiceStack.Blazor.Components.Tailwind.DarkModeToggle">
+            <summary>
+            Button to Toggle BlazorConfig.HtmlClass to dark mode
+            </summary>
+        </member>
+        <member name="T:ServiceStack.Blazor.Components.Tailwind.DataGrid`1">
+            <summary>
+            Display a typed .NET Collection
+            </summary>
+            <remarks>
+            ![](https://raw.githubusercontent.com/ServiceStack/docs/master/docs/images/blazor/components/DataGrid.png)
+            </remarks>
+            <typeparam name="Model"></typeparam>
+        </member>
+        <member name="T:ServiceStack.Blazor.Components.Tailwind.DateTimeInput`1">
+            <summary>
+            Date Input Control
+            </summary>
+            <remarks>
+            ![](https://raw.githubusercontent.com/ServiceStack/docs/master/docs/images/blazor/components/DateTimeInput.png)
+            </remarks>
+        </member>
+        <member name="T:ServiceStack.Blazor.Components.Tailwind.DynamicInput">
+            <summary>
+            Dynamically render Input controls from FormLayout definition
+            </summary>
+            <remarks>
+            ![](https://raw.githubusercontent.com/ServiceStack/docs/master/docs/images/blazor/components/DynamicInput.png)
+            </remarks>
+        </member>
+        <member name="T:ServiceStack.Blazor.Components.Tailwind.EnsureAccess">
+            <summary>
+            Redirect to Sign In page if not authenticated or show access denied message if unauthorized
+            </summary>
+            <remarks>
+            ![](https://raw.githubusercontent.com/ServiceStack/docs/master/docs/images/blazor/components/EnsureAccess.png)
+            </remarks>
+        </member>
+        <member name="T:ServiceStack.Blazor.Components.Tailwind.ErrorSummary">
+            <summary>
+            Display Summary Error Message from failed API Response
+            </summary>
+            <remarks>
+            ![](https://raw.githubusercontent.com/ServiceStack/docs/master/docs/images/blazor/components/ErrorSummary.png)
+            </remarks>
+        </member>
+        <member name="T:ServiceStack.Blazor.Components.Tailwind.FileInput">
+            <summary>
+            File Input Control
+            </summary>
+            <remarks>
+            ![](https://raw.githubusercontent.com/ServiceStack/docs/master/docs/images/blazor/components/FileInput.png)
+            </remarks>
+        </member>
+        <member name="P:ServiceStack.Blazor.Components.Tailwind.FileInput.ValueExpression">
+            <summary>
+            Gets or sets an expression that identifies the bound value.
+            </summary>
+        </member>
+        <member name="M:ServiceStack.Blazor.Components.Tailwind.FileInput.SetParametersAsync(Microsoft.AspNetCore.Components.ParameterView)">
+            <inheritdoc />
+        </member>
+        <member name="T:ServiceStack.Blazor.Components.Tailwind.FileUpload`1">
+            <summary>
+            A FileUpload UI component that integrates with the FileUploadFeature.
+            </summary>
+            <remarks>
+            The File Upload UI component used in the [File Blazor Demo](https://file.locode.dev) has been extracted into a reusable Blazor component 
+            you can utilize in your own app, e.g:
+            ![](https://raw.githubusercontent.com/ServiceStack/docs/master/docs/images/templates/fileupload-blazor-usage-example.png)
+            </remarks>
+            <typeparam name="TReq"></typeparam>
+        </member>
+        <member name="T:ServiceStack.Blazor.Components.Tailwind.HtmlFormat">
+            <summary>
+            Formats any Serializable object in a human-friendly HTML Format
+            </summary>
+            <remarks>
+            ![](https://raw.githubusercontent.com/ServiceStack/docs/master/docs/images/blazor/components/HtmlFormat.png)
+            </remarks>
+        </member>
+        <member name="T:ServiceStack.Blazor.Components.Tailwind.Icon">
+            <summary>
+            Display Customizable Icon
+            </summary>
+            <remarks>
+            ![](https://raw.githubusercontent.com/ServiceStack/docs/master/docs/images/blazor/components/Icon.png)
+            </remarks>
+        </member>
+        <member name="T:ServiceStack.Blazor.Components.Tailwind.LinkButton">
+            <summary>
+            Render a Tailwind NavLink
+            </summary>
+            <remarks>
+            [NavLink.cs](https://github.com/dotnet/aspnetcore/blob/main/src/Components/Web/src/Routing/NavLink.cs)
+            </remarks>
+        </member>
+        <member name="P:ServiceStack.Blazor.Components.Tailwind.LinkButton.ActiveClass">
+            <summary>
+            Gets or sets the CSS class name applied to the NavLink when the
+            current route matches the NavLink href.
+            </summary>
+        </member>
+        <member name="P:ServiceStack.Blazor.Components.Tailwind.LinkButton.AdditionalAttributes">
+            <summary>
+            Gets or sets a collection of additional attributes that will be added to the generated
+            <c>a</c> element.
+            </summary>
+        </member>
+        <member name="P:ServiceStack.Blazor.Components.Tailwind.LinkButton.CssClass">
+            <summary>
+            Gets or sets the computed CSS class based on whether or not the link is active.
+            </summary>
+        </member>
+        <member name="P:ServiceStack.Blazor.Components.Tailwind.LinkButton.ChildContent">
+            <summary>
+            Gets or sets the child content of the component.
+            </summary>
+        </member>
+        <member name="P:ServiceStack.Blazor.Components.Tailwind.LinkButton.Match">
+            <summary>
+            Gets or sets a value representing the URL matching behavior.
+            </summary>
+        </member>
+        <member name="M:ServiceStack.Blazor.Components.Tailwind.LinkButton.OnInitialized">
+            <inheritdoc />
+        </member>
+        <member name="M:ServiceStack.Blazor.Components.Tailwind.LinkButton.OnParametersSet">
+            <inheritdoc />
+        </member>
+        <member name="M:ServiceStack.Blazor.Components.Tailwind.LinkButton.Dispose">
+            <inheritdoc />
+        </member>
+        <member name="M:ServiceStack.Blazor.Components.Tailwind.LinkButton.BuildRenderTree(Microsoft.AspNetCore.Components.Rendering.RenderTreeBuilder)">
+            <inheritdoc/>
+        </member>
+        <member name="T:ServiceStack.Blazor.Components.Tailwind.Loading">
+            <summary>
+            Show Loading animation whilst waiting for a long operation to complete
+            </summary>
+            <remarks>
+            ![](https://raw.githubusercontent.com/ServiceStack/docs/master/docs/images/blazor/components/Loading.png)
+            </remarks>
+        </member>
+        <member name="T:ServiceStack.Blazor.Components.Tailwind.LookupInput">
+            <summary>
+            UX Friendly Input for selecting referential Data using Modal Lookup
+            </summary>
+            <remarks>
+            ![](https://raw.githubusercontent.com/ServiceStack/docs/master/docs/images/blazor/components/LookupInput.png)
+            </remarks>
+        </member>
+        <member name="T:ServiceStack.Blazor.Components.Tailwind.ModalDialog">
+            <summary>
+            Display ChildContent in a Modal Dialog
+            </summary>
+            <remarks>
+            ![](https://raw.githubusercontent.com/ServiceStack/docs/master/docs/images/blazor/components/ModalDialog.png)
+            </remarks>
+        </member>
+        <member name="T:ServiceStack.Blazor.Components.Tailwind.DynamicModalLookup">
+            <summary>
+            Dynamic Modal Lookup for selecting Referential Data
+            </summary>
+            <remarks>
+            ![](https://raw.githubusercontent.com/ServiceStack/docs/master/docs/images/blazor/components/DynamicModalLookup.png)
+            </remarks>
+        </member>
+        <member name="T:ServiceStack.Blazor.Components.Tailwind.ModalLookup`1">
+            <summary>
+            Modal Lookup for selecting Referential Data
+            </summary>
+            <remarks>
+            ![](https://raw.githubusercontent.com/ServiceStack/docs/master/docs/images/blazor/components/ModalLookup.png)
+            </remarks>
+        </member>
+        <member name="T:ServiceStack.Blazor.Components.Tailwind.PreviewFormat">
+            <summary>
+            Customize how Table Cell data are rendered into different UX-Friendly formats
+            </summary>
+            <remarks>
+            ![](https://raw.githubusercontent.com/ServiceStack/docs/master/docs/images/blazor/components/PreviewFormat.png)
+            </remarks>
+        </member>
+        <member name="T:ServiceStack.Blazor.Components.Tailwind.PrimaryButton">
+            <summary>
+            Render a Primary Tailwind Link or Button
+            </summary>
+            <remarks>
+            ![](https://raw.githubusercontent.com/ServiceStack/docs/master/docs/images/blazor/components/PrimaryButton.png)
+            </remarks>
+        </member>
+        <member name="P:ServiceStack.Blazor.Components.Tailwind.PrimaryButton.AdditionalAttributes">
+            <summary>
+            Gets or sets a collection of additional attributes that will be applied to the created element.
+            </summary>
+        </member>
+        <member name="T:ServiceStack.Blazor.Components.Tailwind.SecondaryButton">
+            <summary>
+            Render a normal Tailwind Link or Button
+            </summary>
+            <remarks>
+            ![](https://raw.githubusercontent.com/ServiceStack/docs/master/docs/images/blazor/components/SecondaryButton.png)
+            </remarks>
+        </member>
+        <member name="P:ServiceStack.Blazor.Components.Tailwind.SecondaryButton.AdditionalAttributes">
+            <summary>
+            Gets or sets a collection of additional attributes that will be applied to the created element.
+            </summary>
+        </member>
+        <member name="T:ServiceStack.Blazor.Components.Tailwind.SelectInput`1">
+            <summary>
+            Select Input Control
+            </summary>
+            <remarks>
+            ![](https://raw.githubusercontent.com/ServiceStack/docs/master/docs/images/blazor/components/SelectInput.png)
+            </remarks>
+        </member>
+        <member name="T:ServiceStack.Blazor.Components.Tailwind.SlideOver">
+            <summary>
+            Display ChildContent in a Slide Over Dialog
+            </summary>
+            <remarks>
+            ![](https://raw.githubusercontent.com/ServiceStack/docs/master/docs/images/blazor/components/SlideOver.png)
+            </remarks>
+        </member>
+        <member name="T:ServiceStack.Blazor.Components.Tailwind.TextAreaInput`1">
+            <summary>
+            TextArea Input Control
+            </summary>
+            <remarks>
+            ![](https://raw.githubusercontent.com/ServiceStack/docs/master/docs/images/blazor/components/TextAreaInput.png)
+            </remarks>
+        </member>
+        <member name="T:ServiceStack.Blazor.Components.Tailwind.TextInput`1">
+            <summary>
+            Text Input Control
+            </summary>
+            <remarks>
+            ![](https://raw.githubusercontent.com/ServiceStack/docs/master/docs/images/blazor/components/TextInput.png)
+            </remarks>
+        </member>
+        <member name="T:ServiceStack.Blazor.Components.Tailwind.TextLink">
+            <summary>
+            Render a tailwind hyper link
+            </summary>
+            <remarks>
+            ![](https://raw.githubusercontent.com/ServiceStack/docs/master/docs/images/blazor/components/TextLink.png)
+            </remarks>
+        </member>
+        <member name="P:ServiceStack.Blazor.Components.TextInputBase.Help">
+            <summary>
+            Additional help text for Input Control, defaults to split Pascal Case Id.
+            Set to empty string "" to hide
+            </summary>
+        </member>
+        <member name="P:ServiceStack.Blazor.Components.TextInputBase.Label">
+            <summary>
+            Label assigned to the Input Control, defaults to split Pascal Case Id.
+            Set to empty string "" to hide
+            </summary>
+        </member>
+        <member name="P:ServiceStack.Blazor.Components.TextInputBase.LabelClass">
+            <summary>
+            Class for Input Label
+            </summary>
+        </member>
+        <member name="P:ServiceStack.Blazor.Components.TextInputBase.FieldClass">
+            <summary>
+            Class for outer container element
+            </summary>
+        </member>
+        <member name="P:ServiceStack.Blazor.Components.TextInputBase.AdditionalAttributes">
+            <summary>
+            Gets or sets a collection of additional attributes that will be applied to the created element.
+            </summary>
+        </member>
+        <member name="P:ServiceStack.Blazor.Components.TextInputBase.FieldIdentifier">
+            <summary>
+            Gets the <see cref="P:ServiceStack.Blazor.Components.TextInputBase.FieldIdentifier"/> for the bound value.
+            </summary>
+        </member>
+        <member name="P:ServiceStack.Blazor.Components.TextInputBase`1.Value">
+            <summary>
+            Gets or sets the value of the input. This should be used with two-way binding.
+            </summary>
+            <example>
+            @bind-Value="model.PropertyName"
+            </example>
+        </member>
+        <member name="P:ServiceStack.Blazor.Components.TextInputBase`1.ValueChanged">
+            <summary>
+            Gets or sets a callback that updates the bound value.
+            </summary>
+        </member>
+        <member name="P:ServiceStack.Blazor.Components.TextInputBase`1.ValueExpression">
+            <summary>
+            Gets or sets an expression that identifies the bound value.
+            </summary>
+        </member>
+        <member name="P:ServiceStack.Blazor.Components.TextInputBase`1.CurrentValue">
+            <summary>
+            Gets or sets the current value of the input.
+            </summary>
+        </member>
+        <member name="P:ServiceStack.Blazor.Components.TextInputBase`1.CurrentValueAsString">
+            <summary>
+            Gets or sets the current value of the input, represented as a string.
+            </summary>
+        </member>
+        <member name="M:ServiceStack.Blazor.Components.TextInputBase`1.FormatValueAsString(`0)">
+            <summary>
+            Formats the value as a string. Derived classes can override this to determine the formating used for <see cref="P:ServiceStack.Blazor.Components.TextInputBase`1.CurrentValueAsString"/>.
+            </summary>
+            <param name="value">The value to format.</param>
+            <returns>A string representation of the value.</returns>
+        </member>
+        <member name="M:ServiceStack.Blazor.Components.TextInputBase`1.TryParseValueFromString(System.String,`0@,System.String@)">
+            <summary>
+            Parses a string to create an instance of <typeparamref name="TValue"/>. Derived classes can override this to change how
+            <see cref="P:ServiceStack.Blazor.Components.TextInputBase`1.CurrentValueAsString"/> interprets incoming values.
+            </summary>
+            <param name="value">The string value to be parsed.</param>
+            <param name="result">An instance of <typeparamref name="TValue"/>.</param>
+            <param name="validationErrorMessage">If the value could not be parsed, provides a validation error message.</param>
+            <returns>True if the value could be parsed; otherwise false.</returns>
+        </member>
+        <member name="M:ServiceStack.Blazor.Components.TextInputBase`1.SetParametersAsync(Microsoft.AspNetCore.Components.ParameterView)">
+            <inheritdoc />
+        </member>
+        <member name="T:ServiceStack.Blazor.Components.UiComponentBase">
+            <summary>
+            The Base class for all ServiceStack.Blazor Components
+            </summary>
+        </member>
+        <member name="P:ServiceStack.Blazor.Components.UiComponentBase.class">
+            <summary>
+            Optional user defined classes for this component
+            </summary>
+        </member>
+        <member name="M:ServiceStack.Blazor.Components.UiComponentBase.CssClass(System.String,System.String)">
+            <summary>
+            Return any user-defined classes along with optional classes for when component is in a `valid` or `invalid` state
+            </summary>
+            <param name="valid">css classes to include when valid</param>
+            <param name="invalid">css classes to include when invalid</param>
+            <returns></returns>
+        </member>
+        <member name="M:ServiceStack.Blazor.Components.UiComponentBase.ClassNames(System.String[])">
+            <summary>
+            Helper to combine multiple css classes. Strings can contain multiple classes, empty strings are ignored.
+            </summary>
+            <param name="classes"></param>
+            <returns></returns>
+        </member>
+        <member name="M:ServiceStack.Blazor.Components.UiComponentBase.SetTitle(System.String)">
+            <summary>
+            Set the document.title
+            </summary>
+        </member>
+        <member name="P:ServiceStack.Blazor.Components.UiComponentLiteBase.class">
+            <summary>
+            Optional user defined classes for this component
+            </summary>
+        </member>
+        <member name="M:ServiceStack.Blazor.Components.UiComponentLiteBase.ClassNames(System.String[])">
+            <summary>
+            Helper to combine multiple css classes. Strings can contain multiple classes, empty strings are ignored.
+            </summary>
+            <param name="classes"></param>
+            <returns></returns>
+        </member>
+        <member name="T:ServiceStack.Blazor.CssDefaults">
+            <summary>
+            For CSS classes used in *.cs so they're exported to tailwind.html
+            </summary>
+        </member>
+        <member name="T:ServiceStack.Blazor.EnableCorsMessageHandler">
+            <summary>
+            Required to enable CORS requests
+            </summary>
+        </member>
+        <member name="M:ServiceStack.Blazor.FileIcons.EncodeSvg(System.String)">
+            <summary>
+            Encode SVG for embedding in Data URI
+            </summary>
+            <param name="svg"></param>
+        </member>
+        <member name="M:ServiceStack.Blazor.FileIcons.SvgToDataUri(System.String)">
+            <summary>
+            Convert SVG to Data URI
+            </summary>
+            <param name="svg"></param>
+        </member>
+        <member name="M:ServiceStack.Blazor.FileIcons.GetFileName(System.String)">
+            <summary>
+            Return file name part of URI or file path
+            </summary>
+            <param name="path"></param>
+        </member>
+        <member name="M:ServiceStack.Blazor.FileIcons.GetExt(System.String)">
+            <summary>
+            Return file extension (without '.; prefix) of path or URI
+            </summary>
+            <param name="path"></param>
+        </member>
+        <member name="M:ServiceStack.Blazor.FileIcons.CanPreview(System.String)">
+            <summary>
+            Return whether path is a URI to a previewable image
+            </summary>
+            <param name="path"></param>
+        </member>
+        <member name="M:ServiceStack.Blazor.FileIcons.FilePathUri(System.String)">
+            <summary>
+            Get the Icon src for a file path or URI, previewable resources will return self, otherwise returns SVG URI of .ext
+            </summary>
+            <param name="path"></param>
+        </member>
+        <member name="M:ServiceStack.Blazor.FileIcons.ExtSrc(System.String)">
+            <summary>
+            Get Icon src for .ext
+            </summary>
+            <param name="ext"></param>
+        </member>
+        <member name="M:ServiceStack.Blazor.FileIcons.ExtSvg(System.String)">
+            <summary>
+            Get Icon SVG for .ext
+            </summary>
+            <param name="ext"></param>
+        </member>
+        <member name="T:ServiceStack.Blazor.LookupValues">
+            <summary>
+            Manage Lookup Data
+            </summary>
+        </member>
+        <member name="M:ServiceStack.Blazor.TextUtils.ToModelDictionary``1(``0)">
+            <summary>
+            Used to convert Typed model into an object dictionary for usage in DynamicInput
+            </summary>
+        </member>
+        <member name="M:ServiceStack.Blazor.TextUtils.FromModelDictionary``1(System.Collections.Generic.Dictionary{System.String,System.Object})">
+            <summary>
+            Used to convert DynamicInput dictionary to a Typed model
+            </summary>
+        </member>
+        <member name="M:ServiceStack.Blazor.TextUtils.FromModelDictionary(System.Collections.Generic.Dictionary{System.String,System.Object},System.Type)">
+            <summary>
+            Used to convert DynamicInput dictionary to a Typed model
+            </summary>
+        </member>
+        <member name="M:ServiceStack.Blazor.TextUtils.CreateFormLayout``1(ServiceStack.MetadataType)">
+            <summary>
+            Create a Form Layout from a declarative annotated DTO definition
+            </summary>
+        </member>
+    </members>
+</doc>

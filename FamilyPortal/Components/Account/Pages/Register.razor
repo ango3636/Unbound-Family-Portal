@@ -1,4 +1,5 @@
 @page "/Account/Register"
+@layout Layout.LoginLayout
 
 @using System.ComponentModel.DataAnnotations
 @using System.Text
@@ -28,6 +29,41 @@
                 <DataAnnotationsValidator />
                 <ValidationSummary class="mb-3 text-danger text-center font-semibold" />
                 <div class="flex flex-col gap-y-4">
+                    <div>
+                        <label for="fullName" class="@TextInput.LabelClasses">Full Name</label>
+                        <div class="mt-1 relative rounded-md shadow-sm">
+                            <InputText id="fullName" @bind-Value="Input.FullName" class="@TextInput.InputClasses" placeholder="Full Name" />
+                        </div>
+                        <ValidationMessage For="() => Input.FullName" class="mt-2 text-danger text-sm" />
+                    </div>
+                    <div>
+                        <label for="chId" class="@TextInput.LabelClasses">CH ID</label>
+                        <div class="mt-1 relative rounded-md shadow-sm">
+                            <InputText id="chId" @bind-Value="Input.CHID" class="@TextInput.InputClasses" placeholder="CH ID" />
+                        </div>
+                        <ValidationMessage For="() => Input.CHID" class="mt-2 text-danger text-sm" />
+                    </div>
+                    <div>
+                        <label for="repId" class="@TextInput.LabelClasses">Representative ID</label>
+                        <div class="mt-1 relative rounded-md shadow-sm">
+                            <InputText id="repId" @bind-Value="Input.RepresentativeID" class="@TextInput.InputClasses" placeholder="Representative ID" />
+                        </div>
+                        <ValidationMessage For="() => Input.RepresentativeID" class="mt-2 text-danger text-sm" />
+                    </div>
+                    <div>
+                        <label for="uniqueCode" class="@TextInput.LabelClasses">Unique Code</label>
+                        <div class="mt-1 relative rounded-md shadow-sm">
+                            <InputText id="uniqueCode" @bind-Value="Input.UniqueCode" class="@TextInput.InputClasses" placeholder="Unique Code" />
+                        </div>
+                        <ValidationMessage For="() => Input.UniqueCode" class="mt-2 text-danger text-sm" />
+                    </div>
+                    <div>
+                        <label for="age" class="@TextInput.LabelClasses">Age</label>
+                        <div class="mt-1 relative rounded-md shadow-sm">
+                            <InputNumber id="age" @bind-Value="Input.Age" class="@TextInput.InputClasses" placeholder="Age" />
+                        </div>
+                        <ValidationMessage For="() => Input.Age" class="mt-2 text-danger text-sm" />
+                    </div>
                     <div>
                         <label for="email" class="@TextInput.LabelClasses">Email</label>
                         <div class="mt-1 relative rounded-md shadow-sm">
@@ -78,6 +114,15 @@
     public async Task RegisterUser(EditContext editContext)
     {
         var user = CreateUser();
+
+        
+
+        // Age check (example: must be 18 or older)
+        if (Input.Age < 18)
+        {
+            identityErrors = new List<IdentityError> { new IdentityError { Description = "You must be 18 years or older to register." } };
+            return;
+        }
 
         await UserStore.SetUserNameAsync(user, Input.Email, CancellationToken.None);
         var emailStore = GetEmailStore();
@@ -137,19 +182,38 @@
     private sealed class InputModel
     {
         [Required]
-        [EmailAddress]
-        [Display(Name = "Email")]
-        public string Email { get; set; } = "";
+        [Display(Name = "Full Name")]
+        public string FullName { get; set; } = "";
 
         [Required]
-        [StringLength(100, ErrorMessage = "The {0} must be at least {2} and at max {1} characters long.", MinimumLength = 6)]
+        [Display(Name = "CH ID")]
+        public string CHID { get; set; } = "";
+
+        [Required]
+        [Display(Name = "Representative ID")]
+        public string RepresentativeID { get; set; } = "";
+
+        [Required]
+        [Display(Name = "Unique Code")]
+        public string UniqueCode { get; set; } = "";
+
+        [Required]
+        [Range(18, 120, ErrorMessage = "You must be at least 18 years old.")]
+        public int Age { get; set; }
+
+        [Required]
+        [EmailAddress]
+        public string Email { get; set; } = "";
+
+        
+
+        [Required]
         [DataType(DataType.Password)]
-        [Display(Name = "Password")]
         public string Password { get; set; } = "";
 
+        [Required]
+        [Compare(nameof(Password), ErrorMessage = "Passwords do not match.")]
         [DataType(DataType.Password)]
-        [Display(Name = "Confirm password")]
-        [Compare("Password", ErrorMessage = "The password and confirmation password do not match.")]
         public string ConfirmPassword { get; set; } = "";
     }
 }

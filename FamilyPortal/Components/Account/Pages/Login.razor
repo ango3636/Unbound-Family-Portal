@@ -1,4 +1,5 @@
-@page "/Account/Login"
+@page "/"
+@layout Layout.LoginLayout
 
 @using System.ComponentModel.DataAnnotations
 @using Microsoft.AspNetCore.Authentication
@@ -14,7 +15,7 @@
 
 <div class="mt-8 mx-auto max-w-lg">
     <div class="max-w-xl">
-        <Heading1>Use a local account to log in.</Heading1>
+        <Heading1>Use your account to log in</Heading1>
         <StatusMessage class="mb-3" Message="@errorMessage" />
         <section class="mt-4 sm:shadow overflow-hidden sm:rounded-md">
             <EditForm id="account" Model="Input" method="post" OnValidSubmit="LoginUser" FormName="login">
@@ -23,17 +24,17 @@
                     <div class="flex flex-col gap-y-4">
                         <div>
                             <div>
-                                <label for="Email" class="@TextInput.LabelClasses">Email</label>
+                                <label for="UserName" class="@TextInput.LabelClasses">Username</label>
                                 <div class="mt-1 relative rounded-md shadow-sm">
-                                    <InputText id="email" type="text" @bind-Value="Input.Email" class="@TextInput.InputClasses" autocomplete="username" aria-required="true" placeholder="name@example.com" />
+                                    <InputText id="username" type="text" @bind-Value="Input.UserName" class="@TextInput.InputClasses" autocomplete="username" aria-required="true" placeholder="Enter username" />
                                 </div>
                             </div>
                         </div>
                         <div>
                             <div>
-                                <label for="UserName" class="@TextInput.LabelClasses">Password</label>
+                                <label for="Password" class="@TextInput.LabelClasses">Password</label>
                                 <div class="mt-1 relative rounded-md shadow-sm">
-                                    <InputText id="password" type="password" @bind-Value="Input.Password" class="@TextInput.InputClasses" autocomplete="current-password" aria-required="true" placeholder="password" />
+                                    <InputText id="password" type="password" @bind-Value="Input.Password" class="@TextInput.InputClasses" autocomplete="current-password" aria-required="true" placeholder="Enter password" />
                                 </div>
                             </div>
                         </div>
@@ -51,25 +52,16 @@
 
                         <div class="mt-8 text-sm">
                             <p class="mb-3">
-                                <HyperLink class="font-semibold" id="forgot-password" href="Account/ForgotPassword">Forgot your password?</HyperLink>
+                                <HyperLink class="font-semibold" id="forgot-password" href="Account/ForgotPassword">Forgot your username or password?</HyperLink>
                             </p>
                             <p class="mb-3">
                                 <HyperLink class="font-semibold" href="@(NavigationManager.GetUriWithQueryParameters("Account/Register", new Dictionary<string, object?> { ["ReturnUrl"] = ReturnUrl }))">Register as a new user</HyperLink>
-                            </p>
-                            <p class="mb-3">
-                                <HyperLink class="font-semibold" id="resend-confirmation" href="Account/ResendEmailConfirmation">Resend email confirmation</HyperLink>
                             </p>
                         </div>
                     </div>
                 </div>
             </EditForm>
         </section>
-        <div class="mt-8">
-            <section>
-                <Heading3>Use another service to log in.</Heading3>
-                <ExternalLoginPicker />
-            </section>
-        </div>
     </div>
 </div>
 
@@ -96,19 +88,15 @@
 
     public async Task LoginUser()
     {
-        // This doesn't count login failures towards account lockout
-        // To enable password failures to trigger account lockout, set lockoutOnFailure: true
-        var result = await SignInManager.PasswordSignInAsync(Input.Email, Input.Password, Input.RememberMe, lockoutOnFailure: false);
+        var result = await SignInManager.PasswordSignInAsync(Input.UserName, Input.Password, Input.RememberMe, lockoutOnFailure: false);
         if (result.Succeeded)
         {
             Logger.LogInformation("User logged in.");
-            RedirectManager.RedirectTo(ReturnUrl);
+            RedirectManager.RedirectTo("/home");
         }
         else if (result.RequiresTwoFactor)
         {
-            RedirectManager.RedirectTo(
-                "Account/LoginWith2fa",
-                new() { ["returnUrl"] = ReturnUrl, ["rememberMe"] = Input.RememberMe });
+            RedirectManager.RedirectTo("Account/LoginWith2fa", new() { ["returnUrl"] = ReturnUrl, ["rememberMe"] = Input.RememberMe });
         }
         else if (result.IsLockedOut)
         {
@@ -124,8 +112,7 @@
     private sealed class InputModel
     {
         [Required]
-        [EmailAddress]
-        public string Email { get; set; } = "";
+        public string UserName { get; set; } = "";
 
         [Required]
         [DataType(DataType.Password)]

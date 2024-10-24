@@ -1,0 +1,106 @@
+@page "/dashboard"
+@rendermode InteractiveAuto
+
+<PageTitle>Dashboard</PageTitle>
+
+<Heading1>Dashboard</Heading1>
+<div class="mx-auto mt-16 max-w-7xl px-4 sm:mt-24">
+    <div class="k-card-list card-container">
+        <div>
+            @* <div class="mx-auto mt-5 max-w-md sm:flex sm:justify-center md:mt-8"> *@
+            <TelerikCard>
+                <CardHeader>
+                    <CardTitle>Mailbox ()</CardTitle>
+                </CardHeader>
+                <TelerikListView Data="@ListViewData" Pageable="true">
+                    @* <HeaderTemplate>
+                    <h1>Mailbox ()</h1>
+                    </HeaderTemplate> *@
+                    <Template>
+                        <div class="listview-item">
+                            <h3>@context.Name</h3>
+                            <h5>@context.Message</h5>
+                        </div>
+                    </Template>
+                </TelerikListView>
+            </TelerikCard>
+
+            <TelerikCard>
+                <CardHeader>
+                    <CardTitle>To-Do Lists ()</CardTitle>
+                </CardHeader>
+
+                <TelerikListView Data="@ListViewData" Pageable="true">
+                    <HeaderTemplate>
+                        <h1 style="padding: 10px;">Send a Message</h1>
+                    </HeaderTemplate>
+                    <Template>
+                        <div class="listview-item">
+                            <h3>@context.Name</h3>
+                            <h5>@context.Message</h5>
+                        </div>
+                    </Template>
+                </TelerikListView>
+
+                <TelerikListView Data="@ListViewData" Pageable="true">
+                    <HeaderTemplate>
+                        <h1 style="padding: 10px;">Send an Annual Photo</h1>
+                    </HeaderTemplate>
+                    <Template>
+                        <div class="listview-item">
+                            <h3>@context.Name</h3>
+                            <h5>@context.Message</h5>
+                        </div>
+                    </Template>
+                </TelerikListView>
+
+                <TelerikListView Data="@ListViewData" Pageable="true">
+                    <HeaderTemplate>
+                        <h1 style="padding: 10px;">Staff Edit Requests</h1>
+                    </HeaderTemplate>
+                    <Template>
+                        <div class="listview-item">
+                            <h3>@context.Name</h3>
+                            <h5>@context.Message</h5>
+                        </div>
+                    </Template>
+                </TelerikListView>
+
+            </TelerikCard>
+
+        </div>
+    </div>
+</div>
+
+@code {
+    List<SampleData> ListViewData { get; set; } = Enumerable.Range(1, 2).Select(x => new SampleData
+        {
+            Id = x,
+            Name = $"Sponsor Name {x}",
+            Message = $"Message {x % 3}"
+        }).ToList();
+
+    public class SampleData
+    {
+        public int Id { get; set; }
+        public string Name { get; set; }
+        public string Message { get; set; }
+    }
+}
+
+<style>
+    .listview-item {
+        height: 75px;
+        width: 900px;
+        display: inline-block;
+        margin: 10px;
+        border: 1px solid black;
+        border-radius: 10px;
+        padding: 10px;
+    }
+
+    .card-container {
+        padding: 10px;
+        margin: 15px;
+    }
+</style>

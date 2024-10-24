@@ -77,12 +77,13 @@ app.UseAntiforgery();
 app.MapRazorComponents<App>()
     .AddInteractiveServerRenderMode()
     .AddInteractiveWebAssemblyRenderMode()
-    .AddAdditionalAssemblies(typeof(Counter).Assembly);
+    .AddAdditionalAssemblies(typeof(Dashboard).Assembly);
 
 // Add additional endpoints required by the Identity /Account Razor components.
 app.MapAdditionalIdentityEndpoints();
 
-app.UseServiceStack(new AppHost(), options => {
+app.UseServiceStack(new AppHost(), options =>
+{
     options.MapEndpoints();
 });
 

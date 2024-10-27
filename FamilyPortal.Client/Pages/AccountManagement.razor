@@ -2,7 +2,11 @@
 @attribute [Authorize]
 @inherits AppAuthComponentBase
 
-@inject NavigationManager NavigationManager
+@using FamilyPortal.ServiceInterface
+@inject AssociateService associateService
+
+@inject NavigationManager navigationManager
+
 
 <PageTitle>Account Management</PageTitle>
 
@@ -54,22 +58,68 @@
                     </SecondaryButton>
                 </form>
             </div>
-            <div>
-                @* <label for="repId" class="@TextInput.LabelClasses">Representative ID</label>
-                <div class="mt-1 relative rounded-md shadow-sm">
-                <InputText id="repId" @bind-Value="Input.RepresentativeID" class="@TextInput.InputClasses"
-                placeholder="Representative ID" />
-                </div> *@
-            </div>
+        </div>
+        <div>
+            @if (associate != null)
+            {
+                <EditForm Model="@associate" OnValidSubmit="SaveChanges" FormName="UpdateAssociateForm">
+                    <DataAnnotationsValidator />
+                    <ValidationSummary />
+
+                    <div class="form-group associateInfo">
+                        <label class="font-bold" for="firstName">First Name</label>
+                        <div class="mt-1 relative rounded-md shadow dark:border dark:border-gray-800 mb-3 associateInfo">
+                            <InputText id="firstName" @bind-Value="associate.FirstName" class="form-control" />
+                        </div>
+
+                    </div>
+                    <div class="form-group associateInfo">
+                        <label class="font-bold" for="lastName">Last Name</label>
+                        <div class="mt-1 relative rounded-md shadow dark:border dark:border-gray-800 mb-3 associateInfo">
+                            <InputText id="lastName" @bind-Value="associate.LastName" class="form-control" />
+                        </div>
+                    </div>
+                    <div class="form-group associateInfo">
+                        <label class="font-bold" for="phoneNumber">Phone Number</label>
+                        <div class="mt-1 relative rounded-md shadow dark:border dark:border-gray-800 mb-3 associateInfo">
+                            <InputText id="phoneNumber" @bind-Value="associate.PhoneNumber" class="form-control" />
+                        </div>
+                    </div>
+
+                    <PrimaryButton type="submit" class="btn btn-primary">Save</PrimaryButton>
+                </EditForm>
+            }
         </div>
     </div>
 </div>
 
 @code {
     private string? currentUrl;
+    private Associate associate;
 
     protected override void OnInitialized()
     {
-        currentUrl = NavigationManager.ToBaseRelativePath(NavigationManager.Uri);
+        currentUrl = navigationManager.ToBaseRelativePath(navigationManager.Uri);
+    }
+
+    private string userId = "46276207-b638-46e9-b7e9-06b9179120ce"; // Example userId; replace with actual user context
+
+    protected override async Task OnInitializedAsync()
+    {
+        associate = await associateService.GetAssociateByUserIdAsync(userId); // Fetch associate by userId
+    }
+
+    private async Task SaveChanges()
+    {
+        await associateService.UpdateAssociateAsync(associate);
+        navigationManager.NavigateTo("/accountmanagement"); // Redirect after saving
     }
 }
+
+<style>
+    .associateInfo {
+        padding: 10px;
+        margin: 15px;
+        font-weight: 200;
+    }
+</style>

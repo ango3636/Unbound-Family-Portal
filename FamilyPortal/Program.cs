@@ -2,13 +2,14 @@ using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.AspNetCore.DataProtection;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
-using FamilyPortal.Client.Pages;
+using FamilyPortal.Client;
 using FamilyPortal.Components;
 using FamilyPortal.Components.Account;
 using FamilyPortal.Data;
 using ServiceStack.Blazor;
 using System.Net;
 using FamilyPortal.ServiceInterface;
+using FamilyPortal.Client.Pages;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -53,6 +54,7 @@ services.AddLocalStorage();
 
 // Register all services
 services.AddServiceStack(typeof(MyServices).Assembly);
+services.AddScoped<AssociateService>();
 
 var app = builder.Build();
 
@@ -95,5 +97,8 @@ BlazorConfig.Set(new()
     EnableLogging = app.Environment.IsDevelopment(),
     EnableVerboseLogging = app.Environment.IsDevelopment(),
 });
+
+// builder.Services.AddDbContext<ApplicationDbContext>(options =>
+//     options.UseSqlite("Data Source=app.db"));
 
 app.Run();

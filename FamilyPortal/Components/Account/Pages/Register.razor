@@ -94,7 +94,7 @@
                             <HyperLink class="font-semibold" id="forgot-password" href="/my-radio-buttons">Forgot your username or password?</HyperLink>
                         </p>
                         <p class="mb-3">
-                            <HyperLink class="font-semibold" href="@(NavigationManager.GetUriWithQueryParameters("Account/Register", new Dictionary<string, object?> { ["ReturnUrl"] = ReturnUrl }))">Already have an account? Login here</HyperLink>
+                            <HyperLink class="font-semibold" href="@(NavigationManager.GetUriWithQueryParameters("/", new Dictionary<string, object?> { ["ReturnUrl"] = ReturnUrl }))">Already have an account? Login here</HyperLink>
                         </p>
                     </div>
                 </div>

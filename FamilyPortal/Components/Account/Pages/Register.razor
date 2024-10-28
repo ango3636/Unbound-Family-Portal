@@ -74,19 +74,28 @@
                     <div>
                         <label for="password" class="@TextInput.LabelClasses">Password</label>
                         <div class="mt-1 relative rounded-md shadow-sm">
-                            <InputText id="password" type="password" @bind-Value="Input.Password" class="@TextInput.InputClasses" autocomplete="new-password" aria-required="true" placeholder="password" />
+                            <InputText id="password" type="password" @bind-Value="Input.Password" class="@TextInput.InputClasses" autocomplete="new-password" aria-required="true" placeholder="Password" />
                         </div>
                         <ValidationMessage For="() => Input.Password" class="mt-2 text-danger text-sm" />
                     </div>
                     <div>
                         <label for="confirm-password" class="@TextInput.LabelClasses">Confirm Password</label>
                         <div class="mt-1 relative rounded-md shadow-sm">
-                            <InputText id="confirm-password" type="password" @bind-Value="Input.ConfirmPassword" class="@TextInput.InputClasses" autocomplete="new-password" aria-required="true" placeholder="password" />
+                            <InputText id="confirm-password" type="password" @bind-Value="Input.ConfirmPassword" class="@TextInput.InputClasses" autocomplete="new-password" aria-required="true" placeholder="Re-enter Password" />
                         </div>
                         <ValidationMessage For="() => Input.ConfirmPassword" class="mt-2 text-danger text-sm" />
                     </div>
                     <div>
                         <PrimaryButton id="registerSubmit" type="submit">Register</PrimaryButton>
+                    </div>
+
+                    <div class="mt-8 text-sm">
+                        <p class="mb-3">
+                            <HyperLink class="font-semibold" id="forgot-password" href="/my-radio-buttons">Forgot your username or password?</HyperLink>
+                        </p>
+                        <p class="mb-3">
+                            <HyperLink class="font-semibold" href="@(NavigationManager.GetUriWithQueryParameters("Account/Register", new Dictionary<string, object?> { ["ReturnUrl"] = ReturnUrl }))">Already have an account? Login here</HyperLink>
+                        </p>
                     </div>
                 </div>
             </EditForm>

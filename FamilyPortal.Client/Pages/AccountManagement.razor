@@ -1,4 +1,11 @@
 @page "/accountmanagement"
+
+@*
+    Pre-rendering is disabled for this page because it was causing the OnInitializedAsync method to be called before
+    the SaveChanges method was being called.  This was updating the values in the Associate object
+    with the values from the database.  This meant the values the user entered were being overwritten when the save button was pressed.
+*@
+@rendermode @(new InteractiveServerRenderMode(prerender: false))
 @attribute [Authorize]
 @inherits AppAuthComponentBase
 
@@ -29,7 +36,7 @@
                             @foreach (var role in User.GetRoles())
                             {
                                 <span @key="role" title="Role"
-                                    class="inline-flex items-center px-2.5 py-0.5 mr-1 mb-1 rounded-full text-xs font-medium bg-green-100 dark:bg-green-800 text-green-800 dark:text-green-100">
+                                class="inline-flex items-center px-2.5 py-0.5 mr-1 mb-1 rounded-full text-xs font-medium bg-green-100 dark:bg-green-800 text-green-800 dark:text-green-100">
                                     @role
                                 </span>
                             }
@@ -41,7 +48,7 @@
                             @foreach (var perm in User.GetPermissions())
                             {
                                 <span @key="perm" title="Role"
-                                    class="inline-flex items-center px-2.5 py-0.5 mr-1 mb-1 rounded-full text-xs font-medium bg-green-100 dark:bg-green-800 text-green-800 dark:text-green-100">
+                                class="inline-flex items-center px-2.5 py-0.5 mr-1 mb-1 rounded-full text-xs font-medium bg-green-100 dark:bg-green-800 text-green-800 dark:text-green-100">
                                     @perm
                                 </span>
                             }
@@ -95,7 +102,7 @@
 
 @code {
     private string? currentUrl;
-    private Associate associate;
+    private Associate associate  = new Associate();
 
     protected override void OnInitialized()
     {

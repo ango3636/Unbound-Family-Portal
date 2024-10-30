@@ -16,10 +16,16 @@ var builder = WebApplication.CreateBuilder(args);
 var services = builder.Services;
 var config = builder.Configuration;
 
+
 // Add services to the container.
 services.AddRazorComponents()
     .AddInteractiveServerComponents()
     .AddInteractiveWebAssemblyComponents();
+
+services.AddServerSideBlazor().AddCircuitOptions(options =>
+{
+    options.DetailedErrors = true;
+});
 
 services.AddCascadingAuthenticationState();
 services.AddScoped<IdentityUserAccessor>();

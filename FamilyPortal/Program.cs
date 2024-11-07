@@ -10,6 +10,7 @@ using ServiceStack.Blazor;
 using System.Net;
 using FamilyPortal.ServiceInterface;
 using FamilyPortal.Client.Pages;
+using Telerik.Blazor.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -61,6 +62,7 @@ services.AddLocalStorage();
 // Register all services
 services.AddServiceStack(typeof(MyServices).Assembly);
 services.AddScoped<AssociateService>();
+services.AddTelerikBlazor();
 
 var app = builder.Build();
 
@@ -104,7 +106,7 @@ BlazorConfig.Set(new()
     EnableVerboseLogging = app.Environment.IsDevelopment(),
 });
 
-// builder.Services.AddDbContext<ApplicationDbContext>(options =>
-//     options.UseSqlite("Data Source=app.db"));
+
+
 
 app.Run();

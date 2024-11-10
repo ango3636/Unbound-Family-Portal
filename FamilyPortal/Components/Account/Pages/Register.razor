@@ -2,19 +2,15 @@
 @layout Layout.LoginLayout
 
 @using System.ComponentModel.DataAnnotations
-@using System.Text
-@using System.Text.Encodings.Web
+@using FamilyPortal.ServiceInterface
 @using Microsoft.AspNetCore.Identity
-@using Microsoft.AspNetCore.WebUtilities
 @using FamilyPortal.Data
 
 @inject UserManager<ApplicationUser> UserManager
-@inject IUserStore<ApplicationUser> UserStore
-@inject SignInManager<ApplicationUser> SignInManager
+@inject NavigationManager NavigationManager
 @inject IEmailSender<ApplicationUser> EmailSender
 @inject ILogger<Register> Logger
-@inject NavigationManager NavigationManager
-@inject IdentityRedirectManager RedirectManager
+@inject ChildService ChildService
 
 <PageTitle>Register</PageTitle>
 
@@ -24,205 +20,127 @@
     <StatusMessage Message="@Message" />
     <div class="mt-3 shadow overflow-hidden sm:rounded-md">
         <div class="px-4 bg-white dark:bg-black sm:p-6">
-            <EditForm id="registerForm" Model="Input" asp-route-returnUrl="@ReturnUrl" method="post" OnValidSubmit="RegisterUser" FormName="register">
-                <Heading3>Create a new account.</Heading3>
+            <!-- Step 1: Verify Child Information -->
+            <EditForm id="initialRegisterForm" Model="@child" OnValidSubmit="ValidateUser" FormName="initialRegisterForm">
+                <Heading3>Enter your details to verify your identity.</Heading3>
                 <DataAnnotationsValidator />
                 <ValidationSummary class="mb-3 text-danger text-center font-semibold" />
                 <div class="flex flex-col gap-y-4">
                     <div>
-                        <label for="fullName" class="@TextInput.LabelClasses">Full Name</label>
-                        <div class="mt-1 relative rounded-md shadow-sm">
-                            <InputText id="fullName" @bind-Value="Input.FullName" class="@TextInput.InputClasses" placeholder="Full Name" />
-                        </div>
-                        <ValidationMessage For="() => Input.FullName" class="mt-2 text-danger text-sm" />
+                        <label for="firstName">First Name</label>
+                        <InputText id="firstName" @bind-Value="child.FirstName" class="input-class" />
+                        <ValidationMessage For="() => child.FirstName" />
                     </div>
                     <div>
-                        <label for="chId" class="@TextInput.LabelClasses">CH ID</label>
-                        <div class="mt-1 relative rounded-md shadow-sm">
-                            <InputText id="chId" @bind-Value="Input.CHID" class="@TextInput.InputClasses" placeholder="CH ID" />
-                        </div>
-                        <ValidationMessage For="() => Input.CHID" class="mt-2 text-danger text-sm" />
+                        <label for="lastName">Last Name</label>
+                        <InputText id="lastName" @bind-Value="child.LastName" class="input-class" />
+                        <ValidationMessage For="() => child.LastName" />
                     </div>
                     <div>
-                        <label for="repId" class="@TextInput.LabelClasses">Representative ID</label>
-                        <div class="mt-1 relative rounded-md shadow-sm">
-                            <InputText id="repId" @bind-Value="Input.RepresentativeID" class="@TextInput.InputClasses" placeholder="Representative ID" />
-                        </div>
-                        <ValidationMessage For="() => Input.RepresentativeID" class="mt-2 text-danger text-sm" />
+                        <label for="childId">Child ID</label>
+                        <InputNumber id="childId" @bind-Value="child.ChildId" class="input-class" />
+                        <ValidationMessage For="() => child.ChildId" />
                     </div>
                     <div>
-                        <label for="uniqueCode" class="@TextInput.LabelClasses">Unique Code</label>
-                        <div class="mt-1 relative rounded-md shadow-sm">
-                            <InputText id="uniqueCode" @bind-Value="Input.UniqueCode" class="@TextInput.InputClasses" placeholder="Unique Code" />
-                        </div>
-                        <ValidationMessage For="() => Input.UniqueCode" class="mt-2 text-danger text-sm" />
-                    </div>
-                    <div>
-                        <label for="age" class="@TextInput.LabelClasses">Age</label>
-                        <div class="mt-1 relative rounded-md shadow-sm">
-                            <InputNumber id="age" @bind-Value="Input.Age" class="@TextInput.InputClasses" placeholder="Age" />
-                        </div>
-                        <ValidationMessage For="() => Input.Age" class="mt-2 text-danger text-sm" />
-                    </div>
-                    <div>
-                        <label for="email" class="@TextInput.LabelClasses">Email</label>
-                        <div class="mt-1 relative rounded-md shadow-sm">
-                            <InputText id="email" type="text" @bind-Value="Input.Email" class="@TextInput.InputClasses" autocomplete="username" aria-required="true" placeholder="name@example.com" />
-                        </div>
-                        <ValidationMessage For="() => Input.Email" class="mt-2 text-danger text-sm" />
-                    </div>
-                    <div>
-                        <label for="password" class="@TextInput.LabelClasses">Password</label>
-                        <div class="mt-1 relative rounded-md shadow-sm">
-                            <InputText id="password" type="password" @bind-Value="Input.Password" class="@TextInput.InputClasses" autocomplete="new-password" aria-required="true" placeholder="Password" />
-                        </div>
-                        <ValidationMessage For="() => Input.Password" class="mt-2 text-danger text-sm" />
-                    </div>
-                    <div>
-                        <label for="confirm-password" class="@TextInput.LabelClasses">Confirm Password</label>
-                        <div class="mt-1 relative rounded-md shadow-sm">
-                            <InputText id="confirm-password" type="password" @bind-Value="Input.ConfirmPassword" class="@TextInput.InputClasses" autocomplete="new-password" aria-required="true" placeholder="Re-enter Password" />
-                        </div>
-                        <ValidationMessage For="() => Input.ConfirmPassword" class="mt-2 text-danger text-sm" />
-                    </div>
-                    <div>
-                        <PrimaryButton id="registerSubmit" type="submit">Register</PrimaryButton>
-                    </div>
-
-                    <div class="mt-8 text-sm">
-                        <p class="mb-3">
-                            <HyperLink class="font-semibold" id="forgot-password" href="/my-radio-buttons">Forgot your username or password?</HyperLink>
-                        </p>
-                        <p class="mb-3">
-                            <HyperLink class="font-semibold" href="@(NavigationManager.GetUriWithQueryParameters("/", new Dictionary<string, object?> { ["ReturnUrl"] = ReturnUrl }))">Already have an account? Login here</HyperLink>
-                        </p>
+                        <PrimaryButton type="submit">Verify</PrimaryButton>
                     </div>
                 </div>
             </EditForm>
         </div>
     </div>
-    <div class="mt-8">
-        <section>
-            <Heading3>Use another service to register.</Heading3>
-            <ExternalLoginPicker />
-        </section>
-    </div>
+
+    <!-- Only show the next step if validation is successful -->
+    @if (isAccountSetup)
+    {
+        <div class="mt-8">
+            <Heading3>Account Setup</Heading3>
+            <p>Your account has been successfully verified. You can proceed to account setup.</p>
+        </div>
+    }
+    <!-- Show error messages if validation fails -->
+    @if (identityErrors != null && identityErrors.Any())
+    {
+        <div class="text-danger">
+            @foreach (var error in identityErrors)
+            {
+                <p>@error.Description</p>
+            }
+        </div>
+    }
 </div>
 
 @code {
-    private IEnumerable<IdentityError>? identityErrors;
-
-    [SupplyParameterFromForm]
-    private InputModel Input { get; set; } = new();
-
-    [SupplyParameterFromQuery]
-    private string? ReturnUrl { get; set; }
-
-    private string? Message => identityErrors is null ? null : $"Error: {string.Join(", ", identityErrors.Select(error => error.Description))}";
-
-    public async Task RegisterUser(EditContext editContext)
+    private Child child = new Child();
+    /*private Child child = new Child
     {
-        var user = CreateUser();
+    FirstName = "Kathy",
+    LastName = "Simpson",
+    ChildId = 1
+    };*/
 
-        
+    private bool isAccountSetup = false;
+    private List<IdentityError>? identityErrors;
 
-        // Age check (example: must be 18 or older)
-        if (Input.Age < 18)
-        {
-            identityErrors = new List<IdentityError> { new IdentityError { Description = "You must be 18 years or older to register." } };
-            return;
-        }
-
-        await UserStore.SetUserNameAsync(user, Input.Email, CancellationToken.None);
-        var emailStore = GetEmailStore();
-        await emailStore.SetEmailAsync(user, Input.Email, CancellationToken.None);
-        var result = await UserManager.CreateAsync(user, Input.Password);
-
-        if (!result.Succeeded)
-        {
-            identityErrors = result.Errors;
-            return;
-        }
-
-        Logger.LogInformation("User created a new account with password.");
-
-        var userId = await UserManager.GetUserIdAsync(user);
-        var code = await UserManager.GenerateEmailConfirmationTokenAsync(user);
-        code = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(code));
-        var callbackUrl = NavigationManager.GetUriWithQueryParameters(
-            NavigationManager.ToAbsoluteUri("Account/ConfirmEmail").AbsoluteUri,
-            new Dictionary<string, object?> { ["userId"] = userId, ["code"] = code, ["returnUrl"] = ReturnUrl });
-
-        await EmailSender.SendConfirmationLinkAsync(user, Input.Email, HtmlEncoder.Default.Encode(callbackUrl));
-
-        if (UserManager.Options.SignIn.RequireConfirmedAccount)
-        {
-            RedirectManager.RedirectTo(
-                "Account/RegisterConfirmation",
-                new() { ["email"] = Input.Email, ["returnUrl"] = ReturnUrl });
-        }
-
-        await SignInManager.SignInAsync(user, isPersistent: false);
-        RedirectManager.RedirectTo(ReturnUrl);
+    private string? Message => identityErrors is null ? null : string.Join(", ", identityErrors.Select(e => e.Description));
+    protected override Task OnInitializedAsync()
+    {
+    child = new Child(); // Reset child object to default state
+    return base.OnInitializedAsync();
     }
 
-    private ApplicationUser CreateUser()
+    public async Task ValidateUser()
+{
+    Console.WriteLine($"Input FirstName: {child.FirstName ?? "null"}");
+    Console.WriteLine($"Input LastName: {child.LastName ?? "null"}");
+    Console.WriteLine($"Input ChildId: {child.ChildId}");
+
+    // Ensure ChildId is valid (not zero)
+    if (child.ChildId == 0)
     {
-        try
+        identityErrors = new List<IdentityError>
         {
-            return Activator.CreateInstance<ApplicationUser>();
-        }
-        catch
-        {
-            throw new InvalidOperationException($"Can't create an instance of '{nameof(ApplicationUser)}'. " +
-                $"Ensure that '{nameof(ApplicationUser)}' is not an abstract class and has a parameterless constructor.");
-        }
+            new IdentityError
+            {
+                Description = "Please enter a valid Child ID."
+            }
+        };
+        return;
     }
 
-    private IUserEmailStore<ApplicationUser> GetEmailStore()
+    // Check if the child exists by FirstName, LastName, and ChildId
+    var existingChild = await ChildService.GetChildByNameAsync(child.FirstName, child.LastName, child.ChildId);
+
+    // If no child is found, or the ChildId does not match, return an error message
+    if (existingChild == null)
     {
-        if (!UserManager.SupportsUserEmail)
+        identityErrors = new List<IdentityError>
         {
-            throw new NotSupportedException("The default UI requires a user store with email support.");
-        }
-        return (IUserEmailStore<ApplicationUser>)UserStore;
+            new IdentityError
+            {
+                Description = "We cannot find you according to the information entered. Please try again or contact someone from your local office for more help."
+            }
+        };
+        return;
     }
 
-    private sealed class InputModel
+    // If the ChildId does not match, return a different error
+    if (existingChild.ChildId != child.ChildId)
     {
-        [Required]
-        [Display(Name = "Full Name")]
-        public string FullName { get; set; } = "";
-
-        [Required]
-        [Display(Name = "CH ID")]
-        public string CHID { get; set; } = "";
-
-        [Required]
-        [Display(Name = "Representative ID")]
-        public string RepresentativeID { get; set; } = "";
-
-        [Required]
-        [Display(Name = "Unique Code")]
-        public string UniqueCode { get; set; } = "";
-
-        [Required]
-        [Range(18, 120, ErrorMessage = "You must be at least 18 years old.")]
-        public int Age { get; set; }
-
-        [Required]
-        [EmailAddress]
-        public string Email { get; set; } = "";
-
-        
-
-        [Required]
-        [DataType(DataType.Password)]
-        public string Password { get; set; } = "";
-
-        [Required]
-        [Compare(nameof(Password), ErrorMessage = "Passwords do not match.")]
-        [DataType(DataType.Password)]
-        public string ConfirmPassword { get; set; } = "";
+        identityErrors = new List<IdentityError>
+        {
+            new IdentityError
+            {
+                Description = "The provided Child ID does not match our records."
+            }
+        };
+        return;
     }
+
+    // If validation is successful, show the account setup section
+    isAccountSetup = true;
 }
+
+}
+
+
+

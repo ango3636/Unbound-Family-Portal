@@ -61,6 +61,8 @@ services.AddLocalStorage();
 // Register all services
 services.AddServiceStack(typeof(MyServices).Assembly);
 services.AddScoped<AssociateService>();
+services.AddScoped<ChildService>();
+
 
 var app = builder.Build();
 

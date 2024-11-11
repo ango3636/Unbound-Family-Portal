@@ -1,7 +1,9 @@
 @page "/writealetter"
-@rendermode InteractiveAuto
+@rendermode InteractiveServer
 
 @using Telerik.Blazor
+
+<TelerikContainer>
 
 <PageTitle>Write A Letter</PageTitle>
 
@@ -17,7 +19,7 @@
 
 <!-- Rich text editor for writing the letter -->
 <div class="k-form-field" style="padding-top: 10px;">
-    <TelerikEditor @bind-Value="@TheEditorValue" Width="70%" Height="400px"></TelerikEditor>
+    <TelerikEditor @bind-Value="@TheEditorValue" Width="70%" Height="400px" ReadOnly="false"></TelerikEditor>
 </div>
 
 <!-- Photo upload section (1-4 photos) -->
@@ -33,14 +35,14 @@
 @if (UploadedPhotos.Any())
 {
     <div class="k-form-field">
-    <label class="k-form-label">Uploaded Photos:</label>
-    <div class="k-file-list">
-        @foreach (var photo in UploadedPhotos)
+        <label class="k-form-label">Uploaded Photos:</label>
+        <div class="k-file-list">
+            @foreach (var photo in UploadedPhotos)
             {
                 <div class="k-file-item" style="display: inline-block; margin: 5px;">
                     <img src="@photo" alt="Uploaded photo" style="width: 100px; height: 100px;" class="k-image" />
                     <button @onclick="@(() => RotatePhoto(photo))" class="k-button k-button-icon k-primary"
-                        style="margin-top: 5px;">
+                    style="margin-top: 5px;">
                         <span class="k-icon k-i-rotate"></span> Rotate
                     </button>
                 </div>
@@ -49,8 +51,12 @@
     </div>
 }
 
+</TelerikContainer>
+
 
 @code {
+    string inputValue { get; set; } = "Initial value";
+
     // Editor content
     string TheEditorValue { get; set; } = "Write A Message";
     // List of sponsor letters (for selection)

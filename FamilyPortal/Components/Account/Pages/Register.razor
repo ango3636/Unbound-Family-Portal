@@ -1,5 +1,6 @@
 @page "/Account/Register"
 @layout Layout.LoginLayout
+@rendermode @(new InteractiveServerRenderMode(prerender: false))
 
 @using System.ComponentModel.DataAnnotations
 @using FamilyPortal.ServiceInterface
@@ -18,8 +19,10 @@
     <Heading1>Register</Heading1>
 
     <StatusMessage Message="@Message" />
-    <div class="mt-3 shadow overflow-hidden sm:rounded-md">
-        <div class="px-4 bg-white dark:bg-black sm:p-6">
+    @if (!isAccountSetup)
+    {
+        <div class="mt-3 shadow overflow-hidden sm:rounded-md">
+            <div class="px-4 bg-white dark:bg-black sm:p-6">
             <!-- Step 1: Verify Child Information -->
             <EditForm id="initialRegisterForm" Model="@child" OnValidSubmit="ValidateUser" FormName="initialRegisterForm">
                 <Heading3>Enter your details to verify your identity.</Heading3>
@@ -48,6 +51,7 @@
             </EditForm>
         </div>
     </div>
+    }
 
     <!-- Only show the next step if validation is successful -->
     @if (isAccountSetup)
@@ -71,74 +75,69 @@
 
 @code {
     private Child child = new Child();
-    /*private Child child = new Child
-    {
-    FirstName = "Kathy",
-    LastName = "Simpson",
-    ChildId = 1
-    };*/
 
     private bool isAccountSetup = false;
     private List<IdentityError>? identityErrors;
 
     private string? Message => identityErrors is null ? null : string.Join(", ", identityErrors.Select(e => e.Description));
+
     protected override Task OnInitializedAsync()
     {
-    child = new Child(); // Reset child object to default state
-    return base.OnInitializedAsync();
+        child = new Child(); // Reset child object to default state
+        return base.OnInitializedAsync();
     }
 
     public async Task ValidateUser()
-{
-    Console.WriteLine($"Input FirstName: {child.FirstName ?? "null"}");
-    Console.WriteLine($"Input LastName: {child.LastName ?? "null"}");
-    Console.WriteLine($"Input ChildId: {child.ChildId}");
-
-    // Ensure ChildId is valid (not zero)
-    if (child.ChildId == 0)
     {
-        identityErrors = new List<IdentityError>
+        Console.WriteLine($"Input FirstName: {child.FirstName ?? "null"}");
+        Console.WriteLine($"Input LastName: {child.LastName ?? "null"}");
+        Console.WriteLine($"Input ChildId: {child.ChildId}");
+
+        // Ensure ChildId is valid (not zero)
+        if (child.ChildId == 0)
         {
-            new IdentityError
+            identityErrors = new List<IdentityError>
             {
-                Description = "Please enter a valid Child ID."
-            }
-        };
-        return;
-    }
+                new IdentityError
+                {
+                    Description = "Please enter a valid Child ID."
+                }
+            };
+            return;
+        }
 
-    // Check if the child exists by FirstName, LastName, and ChildId
-    var existingChild = await ChildService.GetChildByNameAsync(child.FirstName, child.LastName, child.ChildId);
+        // Check if the child exists by FirstName, LastName, and ChildId
+        var existingChild = await ChildService.GetChildByNameAsync(child.FirstName, child.LastName, child.ChildId);
 
-    // If no child is found, or the ChildId does not match, return an error message
-    if (existingChild == null)
-    {
-        identityErrors = new List<IdentityError>
+        // If no child is found, or the ChildId does not match, return an error message
+        if (existingChild == null)
+        {
+            identityErrors = new List<IdentityError>
         {
             new IdentityError
             {
                 Description = "We cannot find you according to the information entered. Please try again or contact someone from your local office for more help."
             }
         };
-        return;
-    }
+            return;
+        }
 
-    // If the ChildId does not match, return a different error
-    if (existingChild.ChildId != child.ChildId)
-    {
-        identityErrors = new List<IdentityError>
+        // If the ChildId does not match, return a different error
+        if (existingChild.ChildId != child.ChildId)
+        {
+            identityErrors = new List<IdentityError>
         {
             new IdentityError
             {
                 Description = "The provided Child ID does not match our records."
             }
         };
-        return;
-    }
+            return;
+        }
 
-    // If validation is successful, show the account setup section
-    isAccountSetup = true;
-}
+        // If validation is successful, show the account setup section
+        isAccountSetup = true;
+    }
 
 }
 

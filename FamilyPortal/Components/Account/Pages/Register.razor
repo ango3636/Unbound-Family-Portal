@@ -56,10 +56,37 @@
     <!-- Only show the next step if validation is successful -->
     @if (isAccountSetup)
     {
-        <div class="mt-8">
-            <Heading3>Account Setup</Heading3>
-            <p>Your account has been successfully verified. You can proceed to account setup.</p>
+        <div class="mt-3 shadow overflow-hidden sm:rounded-md">
+            <div class="px-4 bg-white dark:bg-black sm:p-6">
+            <EditForm id="initialRegisterForm" Model="@child" OnValidSubmit="SaveChanges" FormName="SetupAccount">
+                <Heading3>Set up Account</Heading3>
+                <DataAnnotationsValidator />
+                <ValidationSummary class="mb-3 text-danger text-center font-semibold" />
+                <div class="flex flex-col gap-y-4">
+                    <div>
+                        <label for="userName">Username</label>
+                        <InputText id="firstName" @bind-Value="child.UserName" class="input-class" />
+                        <ValidationMessage For="() => child.FirstName" />
+                    </div>
+                    <div>
+                        <label for="password">Password</label>
+                        <InputText id="password" @bind-Value="child.PasswordHash" class="input-class"/>
+                    </div>
+                    <div>
+                        <label for="securityQuestion">Security Question</label>
+                        <InputText id="securityQuestion" @bind-Value="child.SecurityQuestion" class="input-class"/>
+                    </div>
+                    <div>
+                        <label for="securityAnswer">Security Answer</label>
+                        <InputText id="securityAnswer" @bind-Value="child.SecurityAnswer" class="input-class"/>
+                    </div>
+                    <div>
+                        <PrimaryButton type="submit">Submit</PrimaryButton>
+                    </div>
+                </div>
+            </EditForm>
         </div>
+    </div>
     }
     <!-- Show error messages if validation fails -->
     @if (identityErrors != null && identityErrors.Any())
@@ -137,6 +164,15 @@
 
         // If validation is successful, show the account setup section
         isAccountSetup = true;
+
+        //Redirect to another page 
+        //NavigationManager.NavigateTo("/AccountSetup");
+    }
+
+    private async Task SaveChanges()
+    {
+        await ChildService.UpdateChildAsync(child);
+        NavigationManager.NavigateTo("/"); // Redirect after saving
     }
 
 }

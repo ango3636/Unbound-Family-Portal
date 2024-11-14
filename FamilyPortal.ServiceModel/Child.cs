@@ -6,31 +6,20 @@ using ServiceStack.Model;
 
 public class Child
 {
-[Required(ErrorMessage ="ChildId is required.")]
+//[Required(ErrorMessage ="ChildId is required.")]
 public int ChildId {get; set;}
-[Required(ErrorMessage ="First Name is required.")]
+//[Required(ErrorMessage ="First Name is required.")]
 public string FirstName {get; set;}
-[Required(ErrorMessage ="Last Name is required")]
+//[Required(ErrorMessage ="Last Name is required")]
 public string LastName {get; set;}
 
 
+public string? UserName { get; set; }
+public string? PasswordHash { get; set; }
+public string? SecurityQuestion { get; set; }
+public string? SecurityAnswer { get; set; }
 
-/* Add a string version for binding purposes
-    public string ChildIdString
-    {
-        get => ChildId.ToString(); // Convert int to string when binding
-        set
-        {
-            if (int.TryParse(value, out var parsedId))
-            {
-                ChildId = parsedId; // Convert back to int on submission
-            }
-            else
-            {
-                ChildId = 0; // Default to 0 if conversion fails
-            }
-        }
-    }*/
+
 }
 [Tag("Child")]
 [Route("/Child", "GET")]

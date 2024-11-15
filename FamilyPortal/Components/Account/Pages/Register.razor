@@ -31,12 +31,12 @@
                 <div class="flex flex-col gap-y-4">
                     <div>
                         <label for="firstName">First Name</label>
-                        <InputText id="firstName" @bind-Value="child.FirstName" class="input-class" />
+                        <InputText id="firstName" @bind-Value="child.FirstName" class="input-class" placeholder ="Enter First Name"/>
                         <ValidationMessage For="() => child.FirstName" />
                     </div>
                     <div>
                         <label for="lastName">Last Name</label>
-                        <InputText id="lastName" @bind-Value="child.LastName" class="input-class" />
+                        <InputText id="lastName" @bind-Value="child.LastName" class="input-class" placeholder ="Enter Last Name"/>
                         <ValidationMessage For="() => child.LastName" />
                     </div>
                     <div>

@@ -1,0 +1,44 @@
+@page "/RegisterRoute"
+@layout Layout.LoginLayout
+@rendermode @(new InteractiveServerRenderMode(prerender: false))
+
+@inject NavigationManager NavigationManager
+
+<PageTitle>Which kind of user are you?</PageTitle>
+
+<div class="mt-12 mx-auto max-w-lg">
+    <!-- Back Button positioned higher up on the left -->
+    <div class="flex justify-start mt-4"> <!-- Adjusted margin-top for Back button -->
+        <PrimaryButton @onclick="NavigateBack" class="mr-auto">Back</PrimaryButton>
+    </div>
+
+    <!-- Title centered below the Back Button -->
+    <Heading1 class="text-center mt-8">Which kind of user are you?</Heading1> <!-- Increased margin-top for title -->
+
+    <!-- Buttons Section stacked vertically with space in between -->
+    <div class="mt-12 flex flex-col gap-6 items-center">
+        <!-- Representative Button with consistent width and height -->
+        <PrimaryButton @onclick="NavigateToRepresentative" class="w-40 py-3 text-lg">Representative</PrimaryButton>
+
+        <!-- Sponsored Member Button with consistent width and height -->
+        <PrimaryButton @onclick="NavigateToSponsoredMember" class="w-40 py-3 text-lg">Sponsored Member</PrimaryButton>
+    </div>
+</div>
+
+@code {
+    private void NavigateBack()
+    {
+        NavigationManager.NavigateTo("/"); // Replace with the previous page URL
+    }
+
+    private void NavigateToRepresentative()
+    {
+        NavigationManager.NavigateTo("/Account/Register/Associate"); // Replace with the representative page URL
+    }
+
+    private void NavigateToSponsoredMember()
+    {
+        NavigationManager.NavigateTo("/Account/Register/Child"); // Replace with the sponsored member page URL
+    }
+}
+

@@ -30,6 +30,14 @@ namespace FamilyPortal.ServiceInterface
                                  .FirstOrDefaultAsync();
         }
 
+        // Method to check if a child exists based on Login Info [Register page]
+        public async Task<Child> GetChildByLoginInfoAsync(string userName, string passwordHash)
+        {
+            return await _context.Child
+                                 .Where(c => c.UserName == userName && c.PasswordHash == passwordHash)
+                                 .FirstOrDefaultAsync();
+        }
+
         //Method to save account details for child
         public async Task UpdateChildAsync(Child child)
         {
@@ -42,12 +50,11 @@ namespace FamilyPortal.ServiceInterface
             existingChild.SecurityQuestion=child.SecurityQuestion;
             existingChild.SecurityAnswer=child.SecurityAnswer;
 
-            //_context.Entry(child).State = EntityState.Modified;
+            
             _context.Child.Update(existingChild);
             await _context.SaveChangesAsync();
 
-            //await _context.SaveChangesAsync();
-            //return true;
+
             }
 
             

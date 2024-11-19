@@ -2,6 +2,7 @@
 @layout Layout.LoginLayout
 
 @using System.ComponentModel.DataAnnotations
+@using FamilyPortal.ServiceInterface
 @using Microsoft.AspNetCore.Authentication
 @using Microsoft.AspNetCore.Identity
 @using FamilyPortal.Data
@@ -10,13 +11,15 @@
 @inject ILogger<Login> Logger
 @inject NavigationManager NavigationManager
 @inject IdentityRedirectManager RedirectManager
+@inject ChildService ChildService
+@inject AssociateService AssociateService
 
 <PageTitle>Log in</PageTitle>
 
 <div class="mt-8 mx-auto max-w-lg">
     <div class="max-w-xl">
-        <Heading1>Use your account to log in</Heading1>
-        <StatusMessage class="mb-3" Message="@errorMessage" />
+        <Heading1>Welcome!</Heading1>
+        <StatusMessage Message="@Message" />
         <section class="mt-4 sm:shadow overflow-hidden sm:rounded-md">
             <EditForm id="account" Model="Input" method="post" OnValidSubmit="LoginUser" FormName="login">
                 <div class="px-4 bg-white dark:bg-black sm:p-6">
@@ -27,6 +30,7 @@
                                 <label for="UserName" class="@TextInput.LabelClasses">Username</label>
                                 <div class="mt-1 relative rounded-md shadow-sm">
                                     <InputText id="username" type="text" @bind-Value="Input.UserName" class="@TextInput.InputClasses" autocomplete="username" aria-required="true" placeholder="Enter username" />
+                                    <ValidationMessage For="() => Input.UserName" />
                                 </div>
                             </div>
                         </div>
@@ -35,6 +39,7 @@
                                 <label for="Password" class="@TextInput.LabelClasses">Password</label>
                                 <div class="mt-1 relative rounded-md shadow-sm">
                                     <InputText id="password" type="password" @bind-Value="Input.Password" class="@TextInput.InputClasses" autocomplete="current-password" aria-required="true" placeholder="Enter password" />
+                                    <ValidationMessage For="() => Input.Password" />
                                 </div>
                             </div>
                         </div>
@@ -55,7 +60,7 @@
                                 <HyperLink class="font-semibold" id="forgot-password" href="Account/ForgotPassword">Forgot your username or password?</HyperLink>
                             </p>
                             <p class="mb-3">
-                                <HyperLink class="font-semibold" href="@(NavigationManager.GetUriWithQueryParameters("Account/Register", new Dictionary<string, object?> { ["ReturnUrl"] = ReturnUrl }))">Register as a new user</HyperLink>
+                                <HyperLink class="font-semibold" href="@(NavigationManager.GetUriWithQueryParameters("/RegisterRoute", new Dictionary<string, object?> { ["ReturnUrl"] = ReturnUrl }))">Register as a new user</HyperLink>
                             </p>
                         </div>
                     </div>
@@ -66,7 +71,12 @@
 </div>
 
 @code {
+    private Child child = new Child();
+    private Associate associate = new Associate();
     private string? errorMessage;
+     private List<IdentityError>? identityErrors;
+
+    private string? Message => identityErrors is null ? null : string.Join(", ", identityErrors.Select(e => e.Description));
 
     [CascadingParameter]
     private HttpContext HttpContext { get; set; } = default!;
@@ -77,37 +87,67 @@
     [SupplyParameterFromQuery]
     private string? ReturnUrl { get; set; }
 
-    protected override async Task OnInitializedAsync()
+    protected override Task OnInitializedAsync()
     {
-        if (HttpMethods.IsGet(HttpContext.Request.Method))
-        {
-            // Clear the existing external cookie to ensure a clean login process
-            await HttpContext.SignOutAsync(IdentityConstants.ExternalScheme);
-        }
+        child = new Child(); // Reset child object to default state
+        associate = new Associate(); // Reset associate object to default state
+        return base.OnInitializedAsync();
+        
     }
 
-    public async Task LoginUser()
+
+    private void ClearErrors()
     {
-        var result = await SignInManager.PasswordSignInAsync(Input.UserName, Input.Password, Input.RememberMe, lockoutOnFailure: false);
-        if (result.Succeeded)
-        {
-            Logger.LogInformation("User logged in.");
-            RedirectManager.RedirectTo("/home");
-        }
-        else if (result.RequiresTwoFactor)
-        {
-            RedirectManager.RedirectTo("Account/LoginWith2fa", new() { ["returnUrl"] = ReturnUrl, ["rememberMe"] = Input.RememberMe });
-        }
-        else if (result.IsLockedOut)
-        {
-            Logger.LogWarning("User account locked out.");
-            RedirectManager.RedirectTo("Account/Lockout");
-        }
-        else
-        {
-            errorMessage = "Error: Invalid login attempt.";
-        }
+        identityErrors = null;
     }
+
+
+public async Task LoginUser()
+{
+    ClearErrors(); // Clear previous errors
+
+    // Validate input fields
+    if (string.IsNullOrWhiteSpace(Input.UserName) || string.IsNullOrWhiteSpace(Input.Password))
+    {
+        identityErrors = new List<IdentityError>
+        {
+            new IdentityError
+            {
+                Description = "Please enter both Username and Password."
+            }
+        };
+        return;
+    }
+
+    // Attempt to authenticate as a child user
+    var existingChild = await ChildService.GetChildByLoginInfoAsync(Input.UserName, Input.Password);
+    if (existingChild != null)
+    {
+        Logger.LogInformation("Child user logged in.");
+        NavigationManager.NavigateTo("/Dashboard");
+        return;
+    }
+
+    // Attempt to authenticate as an associate user
+    var existingAssociate = await AssociateService.GetAssociateByLoginInfoAsync(Input.UserName, Input.Password);
+    if (existingAssociate != null)
+    {
+        Logger.LogInformation("Associate user logged in.");
+        NavigationManager.NavigateTo("/Dashboard");
+        return;
+    }
+
+    // If no user is found
+    identityErrors = new List<IdentityError>
+    {
+        new IdentityError
+        {
+            Description = "Invalid login attempt. Please check your credentials."
+        }
+    };
+    Logger.LogWarning("Invalid login attempt for username: {UserName}", Input.UserName);
+}
+
 
     private sealed class InputModel
     {
@@ -122,3 +162,4 @@
         public bool RememberMe { get; set; }
     }
 }
+    

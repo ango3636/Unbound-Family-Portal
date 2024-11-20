@@ -10,7 +10,7 @@ public class Associate
     public string PhoneNumber { get; set; }
     public long CreatedOn { get; set; }
 
-    public string? UserId { get; set; }
+    public string? UserName { get; set; }
 }
 
 [Tag("associate")]

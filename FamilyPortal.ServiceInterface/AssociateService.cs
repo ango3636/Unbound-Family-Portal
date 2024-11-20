@@ -13,10 +13,10 @@ namespace FamilyPortal.ServiceInterface
             _context = dbContext;
         }
 
-        public async Task<Associate> GetAssociateByUserIdAsync(string userId)
+        public async Task<Associate> GetAssociateByAssociateIdAsync(int associateId)
         {
             return await _context.Associate
-                                .Where(a => a.UserId == userId)
+                                .Where(a => a.AssociateID == associateId)
                                 .FirstOrDefaultAsync();
         }
 

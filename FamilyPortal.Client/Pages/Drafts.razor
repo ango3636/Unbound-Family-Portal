@@ -1,0 +1,98 @@
+@page "/drafts"
+
+@using FamilyPortal.ServiceInterface
+
+@inject LetterService LetterService
+@inject NavigationManager Navigation
+
+<PageTitle>Draft Letters</PageTitle>
+
+<!-- Drafts List -->
+<TelerikContainer>
+    <Heading1>Your Draft Letters</Heading1>
+
+    @if (drafts != null && drafts.Any())
+    {
+
+        <TelerikListView Data="@drafts">
+            <Template>
+                <div class="draft-item listview-item">
+
+                    <!-- "To: [Child Name]" on top with bold text -->
+                    <div class="text-lg mb-2 font-bold text-gray-800">To: @context.ChildName</div>
+
+                    <!-- Draft Message Preview -->
+                    <span class="text-gray-700">@context.ELetterText.Substring(0, Math.Min(context.ELetterText.Length,
+                    50))...</span>
+
+                    <!-- Button Container -->
+                    <div class="flex space-x-2 button-container mt-2">
+                        <!-- Edit Draft Button -->
+                        <PrimaryButton @onclick="() => EditDraft(context)" class="btn btn-primary">Edit Draft
+                        </PrimaryButton>
+
+                        <!-- Delete Draft Button -->
+                        <PrimaryButton @onclick="() => DeleteDraft(context)" class="btn btn-danger">Delete Draft
+                        </PrimaryButton>
+                    </div>
+                </div>
+            </Template>
+        </TelerikListView>
+    }
+    else
+    {
+        <p>No drafts available.</p>
+    }
+    </TelerikContainer>
+
+    @code {
+    private List<ELetter> drafts = new();
+    private ELetter selectedDraft;
+
+    protected override async Task OnInitializedAsync()
+    {
+        // Fetch drafts for the associate (user) from the database
+        drafts = await LetterService.GetDraftsByAssociateIdAsync(associateId);
+        foreach (var draft in drafts)
+        {
+            draft.ChildName = await LetterService.GetChildNameByIdAsync(draft.ChildID);
+        }
+    }
+
+    private async Task EditDraft(ELetter draft)
+    {
+        // Navigate to the WriteLetter page to edit the selected draft
+        Navigation.NavigateTo($"/writealetter/{draft.ELetterID}");
+    }
+
+    private async Task DeleteDraft(ELetter draft)
+    {
+
+        await LetterService.DeleteDraftAsync(draft.ELetterID); // Make sure to implement DeleteDraftAsync in your service
+        drafts.Remove(draft); // Remove from the list in the UI
+        StateHasChanged(); // Refresh the UI
+
+    }
+
+
+
+    // Example Associate ID, replace with actual logged-in user ID
+    private int associateId = 1;
+}
+
+<style>
+    .listview-item {
+        height: 150px;
+        width: 400px;
+        display: inline-block;
+        margin: 10px;
+        border: 1px solid black;
+        border-radius: 10px;
+        padding: 20px;
+    }
+
+
+    .button-container {
+        margin-top: 15px;
+    }
+</style>

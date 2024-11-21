@@ -113,7 +113,7 @@ public async Task LoginUser()
         {
             new IdentityError
             {
-                Description = "Please enter both Username and Password."
+                Description = "Please enter both Username and Password. [ESPANOL]Por favor, ingrese nombre de usuario y contrasena."
             }
         };
         return;
@@ -133,8 +133,14 @@ public async Task LoginUser()
     if (existingAssociate != null)
     {
         Logger.LogInformation("Associate user logged in.");
+        var user = new ApplicationUser {UserName = Input.UserName};
+        var signInResult = await SignInManager.PasswordSignInAsync(user, Input.Password, Input.RememberMe, false);
+        if (signInResult.Succeeded){
+
+        
         NavigationManager.NavigateTo("/Dashboard");
-        return;
+        }
+        //eturn;
     }
 
     // If no user is found
@@ -142,7 +148,7 @@ public async Task LoginUser()
     {
         new IdentityError
         {
-            Description = "Invalid login attempt. Please check your credentials."
+            Description = "Invalid login attempt. Please check your credentials. [ESPANOL]Intento de inicio de sesión no válido. Por favor verifique sus credenciales."
         }
     };
     Logger.LogWarning("Invalid login attempt for username: {UserName}", Input.UserName);

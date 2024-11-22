@@ -4,41 +4,45 @@
 
 @inject NavigationManager NavigationManager
 
-<PageTitle>Which kind of user are you?</PageTitle>
+<PageTitle>Register</PageTitle>
 
-<div class="mt-12 mx-auto max-w-lg">
-    <!-- Back Button positioned higher up on the left -->
-    <div class="flex justify-start mt-4"> <!-- Adjusted margin-top for Back button -->
+<div class="mt-8 mx-auto max-w-lg">
+    <!-- Back Button -->
+    <div class="flex justify-start mt-4"> 
         <PrimaryButton @onclick="NavigateBack" class="mr-auto">Back</PrimaryButton>
     </div>
 
-    <!-- Title centered below the Back Button -->
-    <Heading1 class="text-center mt-8">Which kind of user are you?</Heading1> <!-- Increased margin-top for title -->
+    <Heading1 class="text-center mt-8">Register</Heading1>
 
-    <!-- Buttons Section stacked vertically with space in between -->
-    <div class="mt-12 flex flex-col gap-6 items-center">
-        <!-- Representative Button with consistent width and height -->
-        <PrimaryButton @onclick="NavigateToRepresentative" class="w-40 py-3 text-lg">Representative</PrimaryButton>
+    <div class="mt-3 shadow overflow-hidden sm:rounded-md">
+        <div class="px-4 bg-white dark:bg-black sm:p-6">
+            <Heading3 class="text-center mb-6">Which kind of user are you?</Heading3>
+            <div class="flex flex-col gap-y-4">
+                <!-- Representative Button -->
+                <PrimaryButton @onclick="NavigateToRepresentative" class="w-full py-3">Representative</PrimaryButton>
 
-        <!-- Sponsored Member Button with consistent width and height -->
-        <PrimaryButton @onclick="NavigateToSponsoredMember" class="w-40 py-3 text-lg">Sponsored Member</PrimaryButton>
+                <!-- Sponsored Member Button -->
+                <PrimaryButton @onclick="NavigateToSponsoredMember" class="w-full py-3">Sponsored Member</PrimaryButton>
+            </div>
+        </div>
     </div>
 </div>
 
 @code {
     private void NavigateBack()
     {
-        NavigationManager.NavigateTo("/"); // Replace with the previous page URL
+        NavigationManager.NavigateTo("/"); 
     }
 
     private void NavigateToRepresentative()
     {
-        NavigationManager.NavigateTo("/Account/Register/Associate"); // Replace with the representative page URL
+        NavigationManager.NavigateTo("/Account/Register/Associate"); 
     }
 
     private void NavigateToSponsoredMember()
     {
-        NavigationManager.NavigateTo("/Account/Register/Child"); // Replace with the sponsored member page URL
+        NavigationManager.NavigateTo("/Account/Register/Child"); 
     }
 }
+
 

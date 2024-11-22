@@ -143,7 +143,7 @@
             {
                 new IdentityError
                 {
-                    Description = "Please enter a valid Child ID. [ESPANOL]Por Favor, introduzca un Child ID valido."
+                    Description = "Please enter a valid Child ID. [ESPAÑOL]Por Favor, introduzca un Child ID valido."
                 }
             };
             return;
@@ -159,7 +159,7 @@
         {
             new IdentityError
             {
-                Description = "We cannot find you according to the information entered. Please try again or contact someone from your local office for more help. [ESPANOL]No podemos encontrarlo según la información ingresada. Inténtelo de nuevo o comuníquese con alguien de su oficina local para obtener más ayuda."
+                Description = "We cannot find you according to the information entered. Please try again or contact someone from your local office for more help. [ESPAÑOL]No podemos encontrarlo según la información ingresada. Inténtelo de nuevo o comuníquese con alguien de su oficina local para obtener más ayuda."
             }
         };
             return;
@@ -172,7 +172,7 @@
         {
             new IdentityError
             {
-                Description = "The provided Child ID does not match our records. [ESPANOL]La identificación infantil proporcionada no coincide con nuestros registros."
+                Description = "The provided Child ID does not match our records. [ESPAÑOL]La identificación infantil proporcionada no coincide con nuestros registros."
             }
         };
             return;
@@ -194,21 +194,21 @@
     // Validate Username
     if (string.IsNullOrWhiteSpace(child.UserName))
     {
-        AddError("Username is required.[ESPANOL]El nombre de usuario es requerido.");
+        AddError("Username is required.[ESPAÑOL]El nombre de usuario es requerido.");
     }
     else if (child.UserName.Length > 28)
     {
-        AddError("Username cannot be more than 28 characters. [ESPANOL]El nombre usuario no puede tener más de 28 caracteres.");
+        AddError("Username cannot be more than 28 characters. [ESPAÑOL]El nombre usuario no puede tener más de 28 caracteres.");
     }
     else if (!Regex.IsMatch(child.UserName, @"^[a-zA-Z0-9]*$"))
     {
-        AddError("Username cannot have special characters. [ESPANOL]El nombre usuario no puede tener caracteres especiales.");
+        AddError("Username cannot have special characters. [ESPAÑOL]El nombre usuario no puede tener caracteres especiales.");
     }
 
     // Validate Password
     if (string.IsNullOrWhiteSpace(child.PasswordHash) || child.PasswordHash.Length < 8 || !Regex.IsMatch(child.PasswordHash, @"^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[^\s]{8,}$"))
     {
-        AddError("The password must have at least one uppercase letter, one lowercase letter, one number, one special character and no spaces. [ESPANOL]Las contraseñas deben tener al menos una letra maýuscula, una letra minúscula, un dígito, un carácter especial y ningún espacio.");
+        AddError("The password must have at least one uppercase letter, one lowercase letter, one number, one special character and no spaces. [ESPAÑOL]Las contraseñas deben tener al menos una letra maýuscula, una letra minúscula, un dígito, un carácter especial y ningún espacio.");
     }
     
 
@@ -216,13 +216,13 @@
     // Validate Security Question
     if (string.IsNullOrWhiteSpace(child.SecurityQuestion))
     {
-        AddError("Security question is required. [ESPANOL]Pregunta de seguridad es requerida.");
+        AddError("Security question is required. [ESPAÑOL]Pregunta de seguridad es requerida.");
     }
 
     // Validate Security Answer
     if (string.IsNullOrWhiteSpace(child.SecurityAnswer))
     {
-        AddError("Security answer is required. [ESPANOL]Respuesta a la pregunta de seguridad es requerida.");
+        AddError("Security answer is required. [ESPAÑOL]Respuesta a la pregunta de seguridad es requerida.");
     }
 
     // If there are any errors, return early
@@ -254,25 +254,5 @@ private void NavigateBack()
 
 
 }
-
-<style>
-    .error-summary {
-        color: red;
-        font-weight: bold;
-        text-align: center;
-    }
-
-    .validation-messages {
-        color: red;
-        font-size: 14px;
-        margin-top: 10px;
-    }
-
-    .validation-messages .validation-message {
-        margin-top: 5px;
-    }
-</style>
-
-
 
 

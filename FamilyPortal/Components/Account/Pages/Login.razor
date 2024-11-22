@@ -74,7 +74,7 @@
     private Child child = new Child();
     private Associate associate = new Associate();
     private string? errorMessage;
-     private List<IdentityError>? identityErrors;
+    private List<IdentityError>? identityErrors;
 
     private string? Message => identityErrors is null ? null : string.Join(", ", identityErrors.Select(e => e.Description));
 
@@ -92,68 +92,74 @@
         child = new Child(); // Reset child object to default state
         associate = new Associate(); // Reset associate object to default state
         return base.OnInitializedAsync();
-        
     }
-
 
     private void ClearErrors()
     {
         identityErrors = null;
     }
 
-
-public async Task LoginUser()
-{
-    ClearErrors(); // Clear previous errors
-
-    // Validate input fields
-    if (string.IsNullOrWhiteSpace(Input.UserName) || string.IsNullOrWhiteSpace(Input.Password))
+    public async Task LoginUser()
     {
+        ClearErrors(); // Clear previous errors
+
+        // Validate input fields
+        if (string.IsNullOrWhiteSpace(Input.UserName) || string.IsNullOrWhiteSpace(Input.Password))
+        {
+            identityErrors = new List<IdentityError>
+            {
+                new IdentityError
+                {
+                    Description = "Please enter both Username and Password.[ESPAÑOL] Por favor, ingrese nombre the usuario y contraseña."
+                }
+            };
+            return;
+        }
+
+        // Attempt to authenticate as a child user
+        var existingChild = await ChildService.GetChildByLoginInfoAsync(Input.UserName, Input.Password);
+        if (existingChild != null)
+        {
+            Logger.LogInformation("Child user logged in.");
+            await SignInChildUser(existingChild);  // Sign in the child user
+            NavigationManager.NavigateTo("/Dashboard");  // Redirect to Dashboard
+            return;
+        }
+
+        // Attempt to authenticate as an associate user
+        var existingAssociate = await AssociateService.GetAssociateByLoginInfoAsync(Input.UserName, Input.Password);
+        if (existingAssociate != null)
+        {
+            Logger.LogInformation("Associate user logged in.");
+            await SignInAssociateUser(existingAssociate);  // Sign in the associate user
+            NavigationManager.NavigateTo("/Dashboard");  // Redirect to Dashboard
+            return;
+        }
+
+        // If no user is found
         identityErrors = new List<IdentityError>
         {
             new IdentityError
             {
-                Description = "Please enter both Username and Password. [ESPANOL]Por favor, ingrese nombre de usuario y contrasena."
+                Description = "Invalid login attempt. Please check your credentials.[ESPAÑOL]Intento de inicio de sesión no válido. Por favor verifique sus credenciales."
             }
         };
-        return;
+        Logger.LogWarning("Invalid login attempt for username: {UserName}", Input.UserName);
     }
 
-    // Attempt to authenticate as a child user
-    var existingChild = await ChildService.GetChildByLoginInfoAsync(Input.UserName, Input.Password);
-    if (existingChild != null)
+    private async Task SignInChildUser(Child child)
     {
-        Logger.LogInformation("Child user logged in.");
-        NavigationManager.NavigateTo("/Dashboard");
-        return;
+        // Add logic to sign in the child user here (e.g., create a temporary application user)
+        var user = new ApplicationUser { UserName = child.UserName };
+        await SignInManager.SignInAsync(user, Input.RememberMe);
     }
 
-    // Attempt to authenticate as an associate user
-    var existingAssociate = await AssociateService.GetAssociateByLoginInfoAsync(Input.UserName, Input.Password);
-    if (existingAssociate != null)
+    private async Task SignInAssociateUser(Associate associate)
     {
-        Logger.LogInformation("Associate user logged in.");
-        var user = new ApplicationUser {UserName = Input.UserName};
-        var signInResult = await SignInManager.PasswordSignInAsync(user, Input.Password, Input.RememberMe, false);
-        if (signInResult.Succeeded){
-
-        
-        NavigationManager.NavigateTo("/Dashboard");
-        }
-        //eturn;
+        // Add logic to sign in the associate user here (e.g., create a temporary application user)
+        var user = new ApplicationUser { UserName = associate.UserName };
+        await SignInManager.SignInAsync(user, Input.RememberMe);
     }
-
-    // If no user is found
-    identityErrors = new List<IdentityError>
-    {
-        new IdentityError
-        {
-            Description = "Invalid login attempt. Please check your credentials. [ESPANOL]Intento de inicio de sesión no válido. Por favor verifique sus credenciales."
-        }
-    };
-    Logger.LogWarning("Invalid login attempt for username: {UserName}", Input.UserName);
-}
-
 
     private sealed class InputModel
     {
@@ -168,4 +174,5 @@ public async Task LoginUser()
         public bool RememberMe { get; set; }
     }
 }
+
     

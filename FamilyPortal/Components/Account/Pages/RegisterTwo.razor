@@ -1,4 +1,4 @@
-@page "/Account/Register/Child"
+@page "/Account/Register/Associate"
 @layout Layout.LoginLayout
 @rendermode @(new InteractiveServerRenderMode(prerender: false))
 
@@ -12,7 +12,7 @@
 @inject NavigationManager NavigationManager
 @inject IEmailSender<ApplicationUser> EmailSender
 @inject ILogger<Register> Logger
-@inject ChildService ChildService
+@inject AssociateService AssociateService
 
 <PageTitle>Register</PageTitle>
 
@@ -29,26 +29,26 @@
     {
         <div class="mt-3 shadow overflow-hidden sm:rounded-md">
             <div class="px-4 bg-white dark:bg-black sm:p-6">
-            <!-- Step 1: Verify Child Information -->
-            <EditForm id="initialRegisterForm" Model="@child" OnValidSubmit="ValidateUser" FormName="initialRegisterForm">
+            <!-- Step 1: Verify Associate Information -->
+            <EditForm id="initialRegisterForm" Model="@associate" OnValidSubmit="ValidateUser" FormName="initialRegisterForm">
                 <Heading3>Enter your details to verify your identity.</Heading3>
                 <DataAnnotationsValidator />
                 <ValidationSummary class="mb-3 text-danger text-center font-semibold" />
                 <div class="flex flex-col gap-y-4">
                     <div>
                         <label for="firstName">First Name</label>
-                        <InputText id="firstName" @bind-Value="child.FirstName" class="input-class" placeholder ="Enter First Name"/>
-                        <ValidationMessage For="() => child.FirstName" />
+                        <InputText id="firstName" @bind-Value="associate.FirstName" class="input-class" placeholder ="Enter First Name"/>
+                        <ValidationMessage For="() => associate.FirstName" />
                     </div>
                     <div>
                         <label for="lastName">Last Name</label>
-                        <InputText id="lastName" @bind-Value="child.LastName" class="input-class" placeholder ="Enter Last Name"/>
-                        <ValidationMessage For="() => child.LastName" />
+                        <InputText id="lastName" @bind-Value="associate.LastName" class="input-class" placeholder ="Enter Last Name"/>
+                        <ValidationMessage For="() => associate.LastName" />
                     </div>
                     <div>
-                        <label for="childId">Child ID</label>
-                        <InputNumber id="childId" @bind-Value="child.ChildId" class="input-class" />
-                        <ValidationMessage For="() => child.ChildId" />
+                        <label for="associateId">CH ID</label>
+                        <InputNumber id="associateId" @bind-Value="associate.AssociateID" class="input-class" />
+                        <ValidationMessage For="() => associate.AssociateID" />
                     </div>
                     <div>
                         <PrimaryButton type="submit">Verify</PrimaryButton>
@@ -56,7 +56,6 @@
                 </div>
             </EditForm>
         </div>
-        
     </div>
     }
 
@@ -65,24 +64,24 @@
     {
         <div class="mt-3 shadow overflow-hidden sm:rounded-md">
             <div class="px-4 bg-white dark:bg-black sm:p-6">
-            <EditForm id="initialRegisterForm" Model="@child" OnValidSubmit="SaveChanges" FormName="SetupAccount">
+            <EditForm id="initialRegisterForm" Model="@associate" OnValidSubmit="SaveChanges" FormName="SetupAccount">
                 <Heading3>Set up Account</Heading3>
                 <DataAnnotationsValidator />
                 <ValidationSummary class="mb-3 text-danger text-center font-semibold" />
                 <div class="flex flex-col gap-y-4">
                     <div>
                         <label for="userName">Username</label>
-                        <InputText id="firstName" @bind-Value="child.UserName" class="input-class" placeholder ="Enter User Name" />
-                        <ValidationMessage For="() => child.UserName" />
+                        <InputText id="firstName" @bind-Value="associate.UserName" class="input-class" placeholder ="Enter User Name" />
+                        <ValidationMessage For="() => associate.UserName" />
                     </div>
                     <div>
                         <label for="password">Password</label>
-                        <InputText id="password" @bind-Value="child.PasswordHash" class="input-class"placeholder ="Enter Password"/>
-                        <ValidationMessage For="() => child.PasswordHash" />
+                        <InputText id="password" @bind-Value="associate.PasswordHash" class="input-class"placeholder ="Enter Password"/>
+                        <ValidationMessage For="() => associate.PasswordHash" />
                     </div>
                     <div>
     <label for="securityQuestion">Security Question</label>
-    <InputSelect id="securityQuestion" @bind-Value="child.SecurityQuestion" class="input-class">
+    <InputSelect id="securityQuestion" @bind-Value="associate.SecurityQuestion" class="input-class">
         <option value="">Select a security question</option>
         <option value="What was the name of your first pet?">What was the name of your first pet?</option>
         <option value="What is your mother's maiden name?">What is your mother's maiden name?</option>
@@ -90,13 +89,13 @@
         <option value="What is your favorite book?">What is your favorite book?</option>
         <option value="In what city were you born?">In what city were you born?</option>
     </InputSelect>
-    <ValidationMessage For="() => child.SecurityQuestion" />
+    <ValidationMessage For="() => associate.SecurityQuestion" />
 </div>
 
                     <div>
                         <label for="securityAnswer">Security Answer</label>
-                        <InputText id="securityAnswer" @bind-Value="child.SecurityAnswer" class="input-class" placeholder ="Enter Answer"/>
-                        <ValidationMessage For="() => child.SecurityAnswer" />
+                        <InputText id="securityAnswer" @bind-Value="associate.SecurityAnswer" class="input-class" placeholder ="Enter Answer"/>
+                        <ValidationMessage For="() => associate.SecurityAnswer" />
                     </div>
                     <div>
                         <PrimaryButton type="submit">Submit</PrimaryButton>
@@ -110,7 +109,7 @@
 </div>
 
 @code {
-    private Child child = new Child();
+    private Associate associate = new Associate();
 
     private bool isAccountSetup = false;
     private List<IdentityError>? identityErrors;
@@ -119,7 +118,7 @@
 
     protected override Task OnInitializedAsync()
     {
-        child = new Child(); // Reset child object to default state
+        associate = new Associate(); // Reset associate object to default state
         return base.OnInitializedAsync();
     }
 
@@ -132,12 +131,12 @@
     public async Task ValidateUser()
     {
         ClearErrors();//Clear previous error
-        Console.WriteLine($"Input FirstName: {child.FirstName ?? "null"}");
-        Console.WriteLine($"Input LastName: {child.LastName ?? "null"}");
-        Console.WriteLine($"Input ChildId: {child.ChildId}");
+        Console.WriteLine($"Input FirstName: {associate.FirstName ?? "null"}");
+        Console.WriteLine($"Input LastName: {associate.LastName ?? "null"}");
+        Console.WriteLine($"Input CHId: {associate.AssociateID}");
 
-        // Ensure ChildId is valid (not zero)
-        if (child.ChildId <= 0)
+        // Ensure CHId is valid (not zero)
+        if (associate.AssociateID == 0)
         {
             identityErrors = new List<IdentityError>
             {
@@ -149,11 +148,11 @@
             return;
         }
 
-        // Check if the child exists by FirstName, LastName, and ChildId
-        var existingChild = await ChildService.GetChildByNameAsync(child.FirstName, child.LastName, child.ChildId);
+        // Check if the Associate exists by FirstName, LastName, and AssociateId
+        var existingAssociate = await AssociateService.GetAssociateByNameAsync(associate.FirstName, associate.LastName, associate.AssociateID);
 
-        // If no child is found, or the ChildId does not match, return an error message
-        if (existingChild == null)
+        // If no associate is found, or the Id does not match, return an error message
+        if (existingAssociate == null)
         {
             identityErrors = new List<IdentityError>
         {
@@ -165,8 +164,8 @@
             return;
         }
 
-        // If the ChildId does not match, return a different error
-        if (existingChild.ChildId != child.ChildId)
+        // If the associateID does not match, return a different error
+        if (existingAssociate.AssociateID != associate.AssociateID)
         {
             identityErrors = new List<IdentityError>
         {
@@ -186,27 +185,27 @@
     public async Task SaveChanges()
 {
     ClearErrors(); // Clear previous errors
-    Console.WriteLine($"Input Username: {child.UserName ?? "null"}");
-    Console.WriteLine($"Input Password: {child.PasswordHash ?? "null"}");
-    Console.WriteLine($"Input SecurityQuestion: {child.SecurityQuestion ?? "null"}");
-    Console.WriteLine($"Input SecurityAnswer: {child.SecurityAnswer ?? "null"}");
+    Console.WriteLine($"Input Username: {associate.UserName ?? "null"}");
+    Console.WriteLine($"Input Password: {associate.PasswordHash ?? "null"}");
+    Console.WriteLine($"Input SecurityQuestion: {associate.SecurityQuestion ?? "null"}");
+    Console.WriteLine($"Input SecurityAnswer: {associate.SecurityAnswer ?? "null"}");
 
     // Validate Username
-    if (string.IsNullOrWhiteSpace(child.UserName))
+    if (string.IsNullOrWhiteSpace(associate.UserName))
     {
         AddError("Username is required.[ESPAÑOL]El nombre de usuario es requerido.");
     }
-    else if (child.UserName.Length > 28)
+    else if (associate.UserName.Length > 28)
     {
         AddError("Username cannot be more than 28 characters. [ESPAÑOL]El nombre usuario no puede tener más de 28 caracteres.");
     }
-    else if (!Regex.IsMatch(child.UserName, @"^[a-zA-Z0-9]*$"))
+    else if (!Regex.IsMatch(associate.UserName, @"^[a-zA-Z0-9]*$"))
     {
         AddError("Username cannot have special characters. [ESPAÑOL]El nombre usuario no puede tener caracteres especiales.");
     }
 
     // Validate Password
-    if (string.IsNullOrWhiteSpace(child.PasswordHash) || child.PasswordHash.Length < 8 || !Regex.IsMatch(child.PasswordHash, @"^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[^\s]{8,}$"))
+    if (string.IsNullOrWhiteSpace(associate.PasswordHash) || associate.PasswordHash.Length < 8 || !Regex.IsMatch(associate.PasswordHash, @"^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[^\s]{8,}$"))
     {
         AddError("The password must have at least one uppercase letter, one lowercase letter, one number, one special character and no spaces. [ESPAÑOL]Las contraseñas deben tener al menos una letra maýuscula, una letra minúscula, un dígito, un carácter especial y ningún espacio.");
     }
@@ -214,13 +213,13 @@
 
 
     // Validate Security Question
-    if (string.IsNullOrWhiteSpace(child.SecurityQuestion))
+    if (string.IsNullOrWhiteSpace(associate.SecurityQuestion))
     {
         AddError("Security question is required. [ESPAÑOL]Pregunta de seguridad es requerida.");
     }
 
     // Validate Security Answer
-    if (string.IsNullOrWhiteSpace(child.SecurityAnswer))
+    if (string.IsNullOrWhiteSpace(associate.SecurityAnswer))
     {
         AddError("Security answer is required. [ESPAÑOL]Respuesta a la pregunta de seguridad es requerida.");
     }
@@ -232,7 +231,7 @@
     }
 
     // If validation passes, show the account setup section
-    await ChildService.UpdateChildAsync(child);
+    await AssociateService.UpdateAssociateAccountAsync(associate);
     NavigationManager.NavigateTo("/"); // Redirect after saving
 }
 
@@ -251,8 +250,4 @@ private void NavigateBack()
     }
 
 
-
-
 }
-
-

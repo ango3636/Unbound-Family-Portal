@@ -18,20 +18,15 @@
             <Template>
                 <div class="draft-item listview-item">
 
-                    <!-- "To: [Child Name]" on top with bold text -->
                     <div class="text-lg mb-2 font-bold text-gray-800">To: @context.ChildName</div>
 
-                    <!-- Draft Message Preview -->
                     <span class="text-gray-700">@context.ELetterText.Substring(0, Math.Min(context.ELetterText.Length,
                     50))...</span>
 
-                    <!-- Button Container -->
                     <div class="flex space-x-2 button-container mt-2">
-                        <!-- Edit Draft Button -->
                         <PrimaryButton @onclick="() => EditDraft(context)" class="btn btn-primary">Edit Draft
                         </PrimaryButton>
 
-                        <!-- Delete Draft Button -->
                         <PrimaryButton @onclick="() => DeleteDraft(context)" class="btn btn-danger">Delete Draft
                         </PrimaryButton>
                     </div>
@@ -61,20 +56,17 @@
 
     private async Task EditDraft(ELetter draft)
     {
-        // Navigate to the WriteLetter page to edit the selected draft
         Navigation.NavigateTo($"/writealetter/{draft.ELetterID}");
     }
 
     private async Task DeleteDraft(ELetter draft)
     {
 
-        await LetterService.DeleteDraftAsync(draft.ELetterID); // Make sure to implement DeleteDraftAsync in your service
-        drafts.Remove(draft); // Remove from the list in the UI
-        StateHasChanged(); // Refresh the UI
+        await LetterService.DeleteDraftAsync(draft.ELetterID);
+        drafts.Remove(draft);
+        StateHasChanged();
 
     }
-
-
 
     // Example Associate ID, replace with actual logged-in user ID
     private int associateId = 1;

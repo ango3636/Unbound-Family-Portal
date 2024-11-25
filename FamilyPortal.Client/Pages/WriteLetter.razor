@@ -1,5 +1,4 @@
-@page "/writealetter"
-@page "/writealetter/{ELetterID}"
+@page "/writealetter/{ELetterID:int?}"
 @rendermode @(new InteractiveServerRenderMode(prerender: false))
 
 @using FamilyPortal.ServiceInterface
@@ -22,7 +21,6 @@
         <Heading1>Create New Letter</Heading1>
     }
 
-    <!-- Dropdown for selecting sponsor letter(s) to reply to -->
     <div class="k-form-field" style="padding-bottom: 10px;">
         <label class="k-form-label">Select A Sponsor:</label>
         <TelerikDropDownList Data="@SponsorLetters" @bind-Value="@SelectedSponsorLetter" Width="300px" />
@@ -30,17 +28,14 @@
 
     <p class="k-text-secondary">Last saved/submitted on: <strong>@LastSavedDate</strong></p>
 
-    <!-- Rich text editor for writing the letter -->
     <div class="k-form-field" style="padding-top: 10px;">
         <TelerikEditor @bind-Value="@TheEditorValue" Width="70%" Height="400px" ReadOnly="false"></TelerikEditor>
     </div>
 
-    <!-- Photo upload section (1-4 photos) -->
     <div class="k-form-field" style="padding: 10px;">
         <label class="k-form-label">Attach Photos (1-4):</label>
         <InputFile OnChange="HandlePhotoUpload" multiple="true" />
 
-        <!-- Save and Send Buttons with Confirmations -->
         <PrimaryButton @onclick="ShowSaveDraftWindow">Save Draft</PrimaryButton>
         <PrimaryButton @onclick="SendLetter">Send Letter</PrimaryButton>
 
@@ -100,32 +95,40 @@
 
     protected override async Task OnInitializedAsync()
     {
-        // Step 1: Fetch sponsor's children (letters) from SponsorService
         SponsorLetters = await SponsorService.GetChildrenBySponsorIdAsync(associateId);
 
-        // Step 2: Set the SelectedSponsorLetter to the first child by default (or based on user selection)
         if (SponsorLetters.Any())
         {
             SelectedSponsorLetter = SponsorLetters.First().Value; // ChildID
             childId = int.Parse(SelectedSponsorLetter); // Set the childId for further use
         }
 
-        // Step 3: Fetch the draft for the selected child if an ELetterID exists
-        if (ELetterID.HasValue) // If ELetterID is provided, we are editing a draft
+        if (ELetterID.HasValue)
         {
-            isEditingDraft = true;
-            var draft = await LetterService.GetDraftByIdAsync(ELetterID.Value);
-            if (draft != null)
-            {
-                TheEditorValue = draft.ELetterText; // Preload the draft content into the editor
-            }
+            // Fetch the draft using the provided ELetterID
+            await LoadDraft(ELetterID.Value);
         }
         else
         {
-            isEditingDraft = false; // If no ELetterID, we're creating a new letter
+            isEditingDraft = false; // New draft
         }
 
         await base.OnInitializedAsync();
+    }
+
+    private async Task LoadDraft(int eLetterId)
+    {
+        // Fetch the draft using the eLetterId
+        var draft = await LetterService.GetDraftByIdAsync(eLetterId);
+        if (draft != null)
+        {
+            isEditingDraft = true;
+            TheEditorValue = draft.ELetterText; // Preload the draft content into the editor
+        }
+        else
+        {
+            isEditingDraft = false;
+        }
     }
 
     private async Task HandlePhotoUpload(InputFileChangeEventArgs e)
@@ -167,12 +170,12 @@
 
         if (isEditingDraft)
         {
-            draftLetter.ELetterID = ELetterID.Value; // Assign the existing draft's ID if editing
-            await LetterService.UpdateDraftAsync(draftLetter); // Assuming you have an UpdateDraftAsync method
+            draftLetter.ELetterID = ELetterID.Value;
+            await LetterService.UpdateDraftAsync(draftLetter);
         }
         else
         {
-            await LetterService.SaveDraftAsync(draftLetter); // Save new draft
+            await LetterService.SaveDraftAsync(draftLetter);
         }
     }
 
@@ -215,11 +218,10 @@ Navigation.NavigateTo("/lettersent"); // Redirect after sending *@
     private async Task ShowSaveDraftWindow()
     {
         WindowIsVisible = true;
-        // Save the draft
         await SaveDraft();
     }
     private void CloseWindow()
     {
-        WindowIsVisible = false; // Close the window
+        WindowIsVisible = false;
     }
 }

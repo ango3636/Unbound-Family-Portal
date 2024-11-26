@@ -45,19 +45,19 @@ namespace FamilyPortal.ServiceInterface
             if (existingChild != null)
             {
                 //update account setup details
-            existingChild.UserName= child.UserName?.Trim();
-            existingChild.PasswordHash= child.PasswordHash;
-            existingChild.SecurityQuestion=child.SecurityQuestion;
-            existingChild.SecurityAnswer=child.SecurityAnswer;
+                existingChild.UserName = child.UserName?.Trim();
+                existingChild.PasswordHash = child.PasswordHash;
+                existingChild.SecurityQuestion = child.SecurityQuestion;
+                existingChild.SecurityAnswer = child.SecurityAnswer;
 
-            
-            _context.Child.Update(existingChild);
-            await _context.SaveChangesAsync();
+
+                _context.Child.Update(existingChild);
+                await _context.SaveChangesAsync();
 
 
             }
 
-            
+
         }
         public async Task<Child> GetChildByUsernameAsync(string userName)
         {
@@ -67,6 +67,6 @@ namespace FamilyPortal.ServiceInterface
         }
 
 
-        
+
     }
 }

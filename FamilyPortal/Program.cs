@@ -65,6 +65,7 @@ services.AddServiceStack(typeof(MyServices).Assembly);
 services.AddScoped<AssociateService>();
 services.AddScoped<SponsorService>();
 services.AddScoped<LetterService>();
+services.AddScoped<ChildService>();
 services.AddTelerikBlazor();
 
 var app = builder.Build();

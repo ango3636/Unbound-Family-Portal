@@ -5,6 +5,8 @@
 @inject SponsorService SponsorService
 @inject LetterService LetterService
 @inject NavigationManager Navigation
+@inject AuthenticationStateProvider AuthenticationStateProvider
+
 
 @using System.Text.RegularExpressions
 @using Telerik.Blazor
@@ -223,5 +225,6 @@ Navigation.NavigateTo("/lettersent"); // Redirect after sending *@
     private void CloseWindow()
     {
         WindowIsVisible = false;
+
     }
 }

@@ -8,4 +8,5 @@ public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options
     : IdentityDbContext<ApplicationUser>(options)
 {
     public DbSet<Associate> Associate { get; set; }
+    public DbSet<DigitalChildLetter> DigitalChildLetter { get; set; }
 }

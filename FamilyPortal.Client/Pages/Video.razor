@@ -1,0 +1,174 @@
+@page "/video/{VideoID}"
+@rendermode @(new InteractiveServerRenderMode (prerender: false))
+
+@using FamilyPortal.ServiceInterface
+@using Telerik.Blazor
+@using Microsoft.AspNetCore.Mvc.Rendering
+
+@inject IJSRuntime JS
+@inject VideoService VideoService
+@inject Video DigitalChildLetterID
+
+
+@if (isEditingVideoDraft)
+{
+    <Heading1>Edit Draft</Heading1>
+}
+else
+{
+    <Heading1>Create New Letter</Heading1>
+}
+<!--<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"> -->
+
+<Heading1>Record a Video</Heading1>
+
+<TelerikCard>
+    <CardHeader>
+        <div class="horizontal-container">
+            <CardTitle>To: </CardTitle>
+            <!-- Dropdown for selecting sponsor letter(s) to reply to -->
+            <div class="k-form-field" style="padding-bottom: 10px;">
+                <label class="k-form-label">Select A Sponsor:</label>
+                <!--<TelerikDropDownList Data="@SponsorLetters" @bind-Value="@SelectedSponsorLetter" Width="300px" />-->
+            </div>
+        </div>
+    </CardHeader>
+    <CardBody>
+        <div class="video-container">
+
+            @if (!isEditingVideoDraft)
+            {
+                <div class="skeleton-loader">
+                    @* <i class="fa-solid fa-film" style="font-size:60px; color:black; text-shadow:2px 2px 4px
+                #000000;"></i> *@
+                </div>
+            }
+
+            else
+            {
+                <video id="videoPreview" class="video-preview" width="400" controls autoplay muted></video>
+
+            }
+
+
+            <div class="horizontal-container">
+                <TelerikButton class="upload-button">Upload</TelerikButton>
+                <TelerikButton class="record-button">Record Video</TelerikButton>
+                <TelerikButton class="send-button">Save</TelerikButton>
+            </div>
+
+
+        </div>
+    </CardBody>
+
+</TelerikCard>
+
+
+
+<style>
+    .horizontal-container {
+        display: flex;
+        gap: 10px;
+    }
+
+    .video-preview {
+        margin: 10px;
+    }
+
+    .video-container {
+        display: flex;
+        flex-direction: column;
+        /* Stack the elements vertically */
+        align-items: center;
+        /* Center elements horizontally */
+        justify-content: center;
+        /* Center elements vertically */
+        height: 100%;
+        /* Take up full height of the CardBody */
+        text-align: center;
+        /* Align text content inside the buttons */
+    }
+
+    .record-button {
+        width: 115px;
+        margin: 5px;
+        background-color: #dadada;
+        border: 2px solid #DADADA;
+        border-radius: .5rem;
+
+    }
+
+    .upload-button {
+        width: 115px;
+        margin: 5px;
+        background-color: #b4b1ec;
+        border: 2px solid #b4b1ec;
+        border-radius: .5rem;
+    }
+
+    .send-button {
+        width: 115px;
+
+        margin: 5px;
+        background-color: #4BAD9E;
+        border: 2px solid #4BAD9E;
+        border-radius: .5rem;
+
+
+    }
+
+    .card-body {
+        display: flex;
+        justify-content: center;
+    }
+
+    .skeleton-loader {
+        position: relative;
+        /* Positioning context for pseudo-elements */
+        width: 400px;
+        height: 225px;
+        background-color: #e0e0e0;
+        overflow: hidden;
+    }
+</style>
+
+@code {
+
+    //[Parameter] public int? DigitalChildLetterId;
+    string LastSavedDate { get; set; } = DateTime.Now.ToString("MM/dd/yyyy");
+    List<SelectListItem> SponsorLetters = new();
+    string SelectedSponsorLetter { get; set; }
+    private bool isEditingVideoDraft = false;
+    bool WindowVisible = false;
+    int associateId = 1;// Example AssociateID, replace with actual dynamic data (like logged-in user's ID)
+    int childId = 1; // For demonstration; replace with actual logic to get the child ID
+
+    /*protected override async Task OnInitializedAsync(){
+
+    // Step 1: Fetch sponsor's children (letters) from SponsorService
+    //SponsorLetters = await SponsorService.GetChildrenBySponsorIdAsync(associateId);
+
+    // Step 2: Set the SelectedSponsorLetter to the first child by default (or based on user selection)
+    if (SponsorLetters.Any())
+    {
+    SelectedSponsorLetter = SponsorLetters.First().Value; // ChildID
+    childId = int.Parse(SelectedSponsorLetter); // Set the childId for further use
+    }
+
+    // Step 3: Fetch the draft for the selected child if an ELetterID exists
+    if (DigitalChildLetter.HasValue) // If ELetterID is provided, we are editing a draft
+    {
+    isEditingVideoDraft = true;
+    var draft = await VideoService.GetDraftByIdAsync(videoID);
+    if (draft != null)
+    {
+    TheEditorValue = draft.ELetterText; // Preload the draft content into the editor
+    }
+    }
+    else
+    {
+    isEditingDraft = false; // If no ELetterID, we're creating a new letter
+        }
+    } */
+
+}

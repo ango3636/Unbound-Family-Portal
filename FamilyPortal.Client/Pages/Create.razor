@@ -1,6 +1,78 @@
 @page "/create"
 @rendermode InteractiveAuto
+@inject NavigationManager Navigation
 
 <PageTitle>Create</PageTitle>
 
 <Heading1>Create/Edit Media</Heading1>
+
+<div class="mx-auto mt-16 max-w-7xl px-4 sm:mt-24">
+    <div class="k-card-list card-container">
+        <TelerikCard>
+            <CardHeader>
+                <CardTitle>Create</CardTitle>
+            </CardHeader>
+            <CardBody>
+                <div class="button-container">
+
+                    <a href="/writealetter" class="media-button">Write a Letter</a>
+                    <a href="/video" class="media-button">Record a Video</a>
+                    <a href="/uploadaphoto" class="media-button">Upload a Photo</a>
+
+                </div>
+
+
+            </CardBody>
+        </TelerikCard>
+
+        <TelerikCard>
+            <CardHeader>
+                <CardTitle>Drafts</CardTitle>
+            </CardHeader>
+            <CardBody>
+                <div class="button-container">
+
+                </div>
+            </CardBody>
+        </TelerikCard>
+
+    </div>
+</div>
+
+<style>
+    .button-container {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 10px;
+
+    }
+
+    .media-button {
+        color: white;
+        background-color: #572bb4;
+        border: 2px solid #572bb4;
+        border-radius: .5rem;
+        width: 200px;
+        height: 50px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+
+
+
+    }
+
+    .media-button:hover {
+        background-color: #b4b1ec;
+    }
+</style>
+
+@code {
+
+    private void toVideoPage()
+    {
+        Navigation.NavigateTo("/video");
+    }
+
+}

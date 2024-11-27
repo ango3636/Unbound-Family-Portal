@@ -1,132 +1,208 @@
 @page "/accountmanagement"
 
-@*
-    Pre-rendering is disabled for this page because it was causing the OnInitializedAsync method to be called before
-    the SaveChanges method was being called.  This was updating the values in the Associate object
-    with the values from the database.  This meant the values the user entered were being overwritten when the save button was pressed.
+@* Pre-rendering is disabled for this page because it was causing the OnInitializedAsync method to be called before
+the SaveChanges method was being called. This was updating the values in the Associate object
+with the values from the database. This meant the values the user entered were being overwritten when the save button
+was pressed.
 *@
 @rendermode @(new InteractiveServerRenderMode(prerender: false))
 @attribute [Authorize]
 @inherits AppAuthComponentBase
 
 @using FamilyPortal.ServiceInterface
-@inject AssociateService associateService
+@using Telerik.Blazor
 
+@inject AssociateService associateService
 @inject NavigationManager navigationManager
 
+<TelerikContainer>
+    <PageTitle>Account Management</PageTitle>
 
-<PageTitle>Account Management</PageTitle>
+    <Heading1>Account Management</Heading1>
 
-<Heading1>Account Management</Heading1>
-<div class="rounded-lg bg-white dark:bg-black overflow-hidden shadow dark:border dark:border-gray-800 mb-3">
-    <h2 class="sr-only" id="profile-overview-title">Profile Overview</h2>
-    <div class="bg-white dark:bg-black p-6">
-        <div class="sm:flex sm:items-center sm:justify-between">
-            <div class="sm:flex sm:space-x-5">
-                <div class="flex-shrink-0">
-                    <img class="mx-auto w-24 h-24 max-h-24 max-w-24 rounded-full" src=@User.GetPicture() alt="">
+    <div class="rounded-lg bg-white dark:bg-black overflow-hidden shadow dark:border dark:border-gray-800 mb-3">
+        <h2 class="sr-only" id="profile-overview-title">Profile Overview</h2>
+        <div class="bg-white dark:bg-black p-6">
+            <div class="sm:flex sm:items-center sm:justify-between">
+                <div class="sm:flex sm:space-x-5">
+                    <div class="flex-shrink-0">
+                        <img class="mx-auto w-24 h-24 max-h-24 max-w-24 rounded-full" src=@User.GetPicture() alt="">
+                    </div>
+                    <div class="mt-4 sm:mt-0 sm:pt-1 sm:text-left">
+                        <p class="text-sm font-medium text-gray-600 dark:text-gray-400">Welcome back,</p>
+                        <p class="text-xl font-bold text-gray-900 dark:text-gray-200 sm:text-2xl mb-2">
+                            @User.GetDisplayName()</p>
+                        @if (User.GetRoles().Length > 0)
+                        {
+                            <div class="mb-2 flex flex-wrap">
+                                @foreach (var role in User.GetRoles())
+                                {
+                                    <span @key="role" title="Role"
+                                        class="inline-flex items-center px-2.5 py-0.5 mr-1 mb-1 rounded-full text-xs font-medium bg-green-100 dark:bg-green-800 text-green-800 dark:text-green-100">
+                                        @role
+                                    </span>
+                                }
+                            </div>
+                        }
+                        @if (User.GetPermissions().Length > 0)
+                        {
+                            <div class="mb-2 flex flex-wrap">
+                                @foreach (var perm in User.GetPermissions())
+                                {
+                                    <span @key="perm" title="Role"
+                                        class="inline-flex items-center px-2.5 py-0.5 mr-1 mb-1 rounded-full text-xs font-medium bg-green-100 dark:bg-green-800 text-green-800 dark:text-green-100">
+                                        @perm
+                                    </span>
+                                }
+                            </div>
+                        }
+                    </div>
                 </div>
-                <div class="mt-4 sm:mt-0 sm:pt-1 sm:text-left">
-                    <p class="text-sm font-medium text-gray-600 dark:text-gray-400">Welcome back,</p>
-                    <p class="text-xl font-bold text-gray-900 dark:text-gray-200 sm:text-2xl mb-2">
-                        @User.GetDisplayName()</p>
-                    @if (User.GetRoles().Length > 0)
-                    {
-                        <div class="mb-2 flex flex-wrap">
-                            @foreach (var role in User.GetRoles())
-                            {
-                                <span @key="role" title="Role"
-                                class="inline-flex items-center px-2.5 py-0.5 mr-1 mb-1 rounded-full text-xs font-medium bg-green-100 dark:bg-green-800 text-green-800 dark:text-green-100">
-                                    @role
-                                </span>
-                            }
-                        </div>
-                    }
-                    @if (User.GetPermissions().Length > 0)
-                    {
-                        <div class="mb-2 flex flex-wrap">
-                            @foreach (var perm in User.GetPermissions())
-                            {
-                                <span @key="perm" title="Role"
-                                class="inline-flex items-center px-2.5 py-0.5 mr-1 mb-1 rounded-full text-xs font-medium bg-green-100 dark:bg-green-800 text-green-800 dark:text-green-100">
-                                    @perm
-                                </span>
-                            }
-                        </div>
-                    }
+                <div class="mt-5 flex justify-center sm:mt-0">
+                    <form action="Account/Logout" method="post">
+                        <AntiforgeryToken />
+                        <input type="hidden" name="ReturnUrl" value="@currentUrl" />
+                        <SecondaryButton type="submit">
+                            Sign Out
+                        </SecondaryButton>
+                    </form>
                 </div>
             </div>
-            <div class="mt-5 flex justify-center sm:mt-0">
-                <form action="Account/Logout" method="post">
-                    <AntiforgeryToken />
-                    <input type="hidden" name="ReturnUrl" value="@currentUrl" />
-                    <SecondaryButton type="submit">
-                        Sign Out
-                    </SecondaryButton>
-                </form>
+
+            <div>
+                @if (associate != null)
+                {
+                    <EditForm Model="@associate" OnValidSubmit="SaveChanges" FormName="UpdateAssociateForm">
+                        <DataAnnotationsValidator />
+                        <ValidationSummary />
+
+                        <div class="form-group associateInfo">
+                            <label class="font-bold" for="firstName">First Name</label>
+                            <div
+                                class="mt-1 relative rounded-md shadow dark:border dark:border-gray-800 mb-3 associateInfo">
+                                <InputText id="firstName" @bind-Value="associate.FirstName" class="form-control" />
+                            </div>
+                        </div>
+                        <div class="form-group associateInfo">
+                            <label class="font-bold" for="lastName">Last Name</label>
+                            <div
+                                class="mt-1 relative rounded-md shadow dark:border dark:border-gray-800 mb-3 associateInfo">
+                                <InputText id="lastName" @bind-Value="associate.LastName" class="form-control" />
+                            </div>
+                        </div>
+                        <div class="form-group associateInfo">
+                            <label class="font-bold" for="phoneNumber">Phone Number</label>
+                            <div
+                                class="mt-1 relative rounded-md shadow dark:border dark:border-gray-800 mb-3 associateInfo">
+                                <InputText id="phoneNumber" @bind-Value="associate.PhoneNumber" class="form-control" />
+                            </div>
+                        </div>
+
+                        <PrimaryButton type="button" class="btn btn-primary" @onclick="ToggleWindowVisibility">Save Update
+                        </PrimaryButton>
+
+                        <TelerikWindow @bind-Visible="@WindowIsVisible">
+                            <WindowTitle>
+                                Confirm Update
+                            </WindowTitle>
+                            <WindowContent>
+                                Are you sure you would like to save your changes?
+                            </WindowContent>
+                            <WindowActions>
+                                <WindowAction Name="Close" />
+                            </WindowActions>
+                            <WindowFooter>
+                                <PrimaryButton type="submit" class="btn btn-primary" @onclick="ConfirmSaveChanges">YES
+                                </PrimaryButton>
+                            </WindowFooter>
+                        </TelerikWindow>
+                    </EditForm>
+                }
             </div>
         </div>
-        <div>
-            @if (associate != null)
-            {
-                <EditForm Model="@associate" OnValidSubmit="SaveChanges" FormName="UpdateAssociateForm">
-                    <DataAnnotationsValidator />
-                    <ValidationSummary />
 
-                    <div class="form-group associateInfo">
-                        <label class="font-bold" for="firstName">First Name</label>
-                        <div class="mt-1 relative rounded-md shadow dark:border dark:border-gray-800 mb-3 associateInfo">
-                            <InputText id="firstName" @bind-Value="associate.FirstName" class="form-control" />
-                        </div>
-
-                    </div>
-                    <div class="form-group associateInfo">
-                        <label class="font-bold" for="lastName">Last Name</label>
-                        <div class="mt-1 relative rounded-md shadow dark:border dark:border-gray-800 mb-3 associateInfo">
-                            <InputText id="lastName" @bind-Value="associate.LastName" class="form-control" />
-                        </div>
-                    </div>
-                    <div class="form-group associateInfo">
-                        <label class="font-bold" for="phoneNumber">Phone Number</label>
-                        <div class="mt-1 relative rounded-md shadow dark:border dark:border-gray-800 mb-3 associateInfo">
-                            <InputText id="phoneNumber" @bind-Value="associate.PhoneNumber" class="form-control" />
-                        </div>
-                    </div>
-
-                    <PrimaryButton type="submit" class="btn btn-primary">Save</PrimaryButton>
-                </EditForm>
-            }
-        </div>
     </div>
-</div>
 
-@code {
+    @if (isFeedbackVisible)
+    {
+        <div class="alert alert-success mt-3">
+            Your changes have been saved successfully!
+        </div>
+    }
+    else if (isError)
+    {
+        <div class="alert alert-danger mt-3">
+            Something went wrong, please try again later.
+        </div>
+    }
+    </TelerikContainer>
+
+    @code {
     private string? currentUrl;
-    private Associate associate  = new Associate();
+    private Associate associate = new Associate();
+    private bool isSaving = false;
+    private bool isSuccess = false;
+    private bool isError = false;
+    private bool isFeedbackVisible = false; // Used for controlling the feedback visibility
+    private bool WindowIsVisible = false;
 
     protected override void OnInitialized()
     {
         currentUrl = navigationManager.ToBaseRelativePath(navigationManager.Uri);
     }
 
-    private string userId = "46276207-b638-46e9-b7e9-06b9179120ce"; // Example userId; replace with actual user context
+    private int associateId = 1;
 
     protected override async Task OnInitializedAsync()
     {
-        associate = await associateService.GetAssociateByUserIdAsync(userId); // Fetch associate by userId
+        associate = await associateService.GetAssociateByAssociateIdAsync(associateId); // Fetch associate by userId
     }
 
     private async Task SaveChanges()
     {
-        await associateService.UpdateAssociateAsync(associate);
-        navigationManager.NavigateTo("/accountmanagement"); // Redirect after saving
+        try
+        {
+            isSaving = true; // Show saving state
+            isSuccess = false; // Reset previous success
+            isError = false; // Reset error state
+            isFeedbackVisible = false; // Hide feedback initially
+
+            await associateService.UpdateAssociateAsync(associate);
+
+            isSuccess = true; // Mark success after saving
+            isFeedbackVisible = true; // Show success message
+        }
+        catch (Exception)
+        {
+            isError = true; // Mark error in case of failure
+            isFeedbackVisible = true; // Show error message
+        }
+        finally
+        {
+            isSaving = false; // Hide saving state
+            WindowIsVisible = false;
+            StateHasChanged(); // Force UI refresh
+
+            // Automatically hide the feedback message after 5 seconds
+            await Task.Delay(3000); // Wait for 5 seconds
+            isFeedbackVisible = false; // Hide feedback message after 5 seconds
+            StateHasChanged(); // Refresh UI to hide the feedback message
+        }
+    }
+    private void ToggleWindowVisibility()
+    {
+        WindowIsVisible = !WindowIsVisible;
+    }
+    private async Task ConfirmSaveChanges()
+    {
+        await SaveChanges();
     }
 }
 
 <style>
     .associateInfo {
         padding: 10px;
-        margin: 15px;
+        margin: 10px;
         font-weight: 200;
     }
 </style>

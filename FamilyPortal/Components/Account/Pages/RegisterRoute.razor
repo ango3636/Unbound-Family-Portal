@@ -1,0 +1,48 @@
+@page "/RegisterRoute"
+@layout Layout.LoginLayout
+@rendermode @(new InteractiveServerRenderMode(prerender: false))
+
+@inject NavigationManager NavigationManager
+
+<PageTitle>Register</PageTitle>
+
+<div class="mt-8 mx-auto max-w-lg">
+    <!-- Back Button -->
+    <div class="flex justify-start mt-4"> 
+        <PrimaryButton @onclick="NavigateBack" class="mr-auto">Back</PrimaryButton>
+    </div>
+
+    <Heading1 class="text-center mt-8">Register</Heading1>
+
+    <div class="mt-3 shadow overflow-hidden sm:rounded-md">
+        <div class="px-4 bg-white dark:bg-black sm:p-6">
+            <Heading3 class="text-center mb-6">Which kind of user are you?</Heading3>
+            <div class="flex flex-col gap-y-4">
+                <!-- Representative Button -->
+                <PrimaryButton @onclick="NavigateToRepresentative" class="w-full py-3">Representative</PrimaryButton>
+
+                <!-- Sponsored Member Button -->
+                <PrimaryButton @onclick="NavigateToSponsoredMember" class="w-full py-3">Sponsored Member</PrimaryButton>
+            </div>
+        </div>
+    </div>
+</div>
+
+@code {
+    private void NavigateBack()
+    {
+        NavigationManager.NavigateTo("/"); 
+    }
+
+    private void NavigateToRepresentative()
+    {
+        NavigationManager.NavigateTo("/Account/Register/Associate"); 
+    }
+
+    private void NavigateToSponsoredMember()
+    {
+        NavigationManager.NavigateTo("/Account/Register/Child"); 
+    }
+}
+
+

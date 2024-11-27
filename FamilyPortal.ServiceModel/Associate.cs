@@ -11,6 +11,12 @@ public class Associate
     public long CreatedOn { get; set; }
 
     public string? UserId { get; set; }
+
+    public string? UserName { get; set; }
+    public string? PasswordHash { get; set; }
+    public string? SecurityQuestion { get; set; }
+    public string? SecurityAnswer { get; set; }
+
 }
 
 [Tag("associate")]

@@ -8,19 +8,23 @@
                 <ul class="flex flex-wrap items-center justify-end w-full m-0">
 
                     <li class="relative flex flex-wrap just-fu-start m-0">
-                        <NavLink href="about" class="p-4 flex items-center justify-start mw-full hover:text-sky-500 dark:hover:text-sky-400" ActiveClass="text-blue-700 dark:text-blue-300">About</NavLink>
+                        <NavLink href="dashboard"
+                            class="p-4 flex items-center justify-start mw-full hover:text-sky-500 dark:hover:text-sky-400"
+                            ActiveClass="text-blue-700 dark:text-blue-300">Home</NavLink>
                     </li>
                     <li class="relative flex flex-wrap just-fu-start m-0">
-                        <NavLink href="deploy" class="p-4 flex items-center justify-start mw-full hover:text-sky-500 dark:hover:text-sky-400" ActiveClass="text-blue-700 dark:text-blue-300">Deploying</NavLink>
+                        <NavLink href="create"
+                            class="p-4 flex items-center justify-start mw-full hover:text-sky-500 dark:hover:text-sky-400"
+                            ActiveClass="text-blue-700 dark:text-blue-300">Create</NavLink>
                     </li>
-                    <li class="relative flex flex-wrap just-fu-start m-0">
-                        <NavLink href="privacy" class="p-4 flex items-center justify-start mw-full hover:text-sky-500 dark:hover:text-sky-400" ActiveClass="text-blue-700 dark:text-blue-300">Privacy</NavLink>
-                    </li>
+
 
                     <AuthorizeView Roles="Admin">
                         <Authorized>
                             <li class="relative flex flex-wrap just-fu-start m-0">
-                                <NavLink href="admin" class="p-4 flex items-center justify-start mw-full hover:text-sky-500 dark:hover:text-sky-400" ActiveClass="text-blue-700 dark:text-blue-300">Admin</NavLink>
+                                <NavLink href="admin"
+                                    class="p-4 flex items-center justify-start mw-full hover:text-sky-500 dark:hover:text-sky-400"
+                                    ActiveClass="text-blue-700 dark:text-blue-300">Admin</NavLink>
                             </li>
                         </Authorized>
                     </AuthorizeView>
@@ -30,9 +34,11 @@
                                 <div class="mx-3 relative">
                                     <div>
                                         <a href="Account/Manage"
-                                            class="max-w-xs bg-white dark:bg-black rounded-full flex items-center text-sm focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-cyan-500 lg:p-2 lg:rounded-md lg:hover:bg-gray-50 dark:lg:hover:bg-gray-900 dark:ring-offset-black" id="user-menu-button" aria-expanded="false" aria-haspopup="true">
+                                            class="max-w-xs bg-white dark:bg-black rounded-full flex items-center text-sm focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-cyan-500 lg:p-2 lg:rounded-md lg:hover:bg-gray-50 dark:lg:hover:bg-gray-900 dark:ring-offset-black"
+                                            id="user-menu-button" aria-expanded="false" aria-haspopup="true">
                                             <img class="h-8 w-8 rounded-full" src=@User.GetProfileUrl() alt="">
-                                            <span class="hidden ml-3 text-gray-700 dark:text-gray-300 text-sm font-medium lg:block">
+                                            <span
+                                                class="hidden ml-3 text-gray-700 dark:text-gray-300 text-sm font-medium lg:block">
                                                 <span class="sr-only">Open user menu for </span>
                                                 @User.GetDisplayName()
                                             </span>
@@ -100,4 +106,3 @@
         NavigationManager.LocationChanged -= OnLocationChanged;
     }
 }
-

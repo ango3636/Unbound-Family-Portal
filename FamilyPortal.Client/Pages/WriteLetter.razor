@@ -1,0 +1,230 @@
+@page "/writealetter/{ELetterID:int?}"
+@rendermode @(new InteractiveServerRenderMode(prerender: false))
+
+@using FamilyPortal.ServiceInterface
+@inject SponsorService SponsorService
+@inject LetterService LetterService
+@inject NavigationManager Navigation
+@inject AuthenticationStateProvider AuthenticationStateProvider
+
+
+@using System.Text.RegularExpressions
+@using Telerik.Blazor
+@using Microsoft.AspNetCore.Mvc.Rendering;
+
+<TelerikContainer>
+
+    @if (isEditingDraft)
+    {
+        <Heading1>Edit Draft</Heading1>
+    }
+    else
+    {
+        <Heading1>Create New Letter</Heading1>
+    }
+
+    <div class="k-form-field" style="padding-bottom: 10px;">
+        <label class="k-form-label">Select A Sponsor:</label>
+        <TelerikDropDownList Data="@SponsorLetters" @bind-Value="@SelectedSponsorLetter" Width="300px" />
+    </div>
+
+    <p class="k-text-secondary">Last saved/submitted on: <strong>@LastSavedDate</strong></p>
+
+    <div class="k-form-field" style="padding-top: 10px;">
+        <TelerikEditor @bind-Value="@TheEditorValue" Width="70%" Height="400px" ReadOnly="false"></TelerikEditor>
+    </div>
+
+    <div class="k-form-field" style="padding: 10px;">
+        <label class="k-form-label">Attach Photos (1-4):</label>
+        <InputFile OnChange="HandlePhotoUpload" multiple="true" />
+
+        <PrimaryButton @onclick="ShowSaveDraftWindow">Save Draft</PrimaryButton>
+        <PrimaryButton @onclick="SendLetter">Send Letter</PrimaryButton>
+
+
+    </div>
+
+    <TelerikWindow @bind-Visible="@WindowIsVisible">
+        <WindowTitle>
+            Draft Saved
+        </WindowTitle>
+        <WindowContent>
+            Your draft has been successfully saved.
+        </WindowContent>
+        <WindowActions>
+            <WindowAction Name="Close" />
+        </WindowActions>
+        <WindowFooter>
+            <PrimaryButton @onclick="CloseWindow">OK</PrimaryButton>
+        </WindowFooter>
+    </TelerikWindow>
+
+    @if (UploadedPhotos.Any())
+    {
+        <div class="k-form-field">
+            <label class="k-form-label">Uploaded Photos:</label>
+            <div class="k-file-list">
+                @foreach (var photo in UploadedPhotos)
+                {
+                    <div class="k-file-item" style="display: inline-block; margin: 5px;">
+                        <img src="@photo" alt="Uploaded photo" style="width: 100px; height: 100px;" class="k-image" />
+                        <button @onclick="@(() => RotatePhoto(photo))" class="k-button k-button-icon k-primary"
+                            style="margin-top: 5px;">
+                            <span class="k-icon k-i-rotate"></span> Rotate
+                        </button>
+                    </div>
+                }
+            </div>
+        </div>
+    }
+    </TelerikContainer>
+
+    @code {
+    [Parameter] public int? ELetterID { get; set; }
+    // Editor content
+    string TheEditorValue { get; set; } = "Write A Message";
+    List<SelectListItem> SponsorLetters = new();
+    string SelectedSponsorLetter { get; set; }
+    string LastSavedDate { get; set; } = DateTime.Now.ToString("MM/dd/yyyy");
+    List<string> UploadedPhotos = new();
+    bool IsAutosaving { get; set; }
+    private bool isEditingDraft = false;
+    private List<string> UploadedFileBlobIds { get; set; } = new List<string>();
+    bool WindowIsVisible = false;
+
+    int associateId = 1;// Example AssociateID, replace with actual dynamic data (like logged-in user's ID)
+    int childId = 1; // For demonstration; replace with actual logic to get the child ID
+
+    protected override async Task OnInitializedAsync()
+    {
+        SponsorLetters = await SponsorService.GetChildrenBySponsorIdAsync(associateId);
+
+        if (SponsorLetters.Any())
+        {
+            SelectedSponsorLetter = SponsorLetters.First().Value; // ChildID
+            childId = int.Parse(SelectedSponsorLetter); // Set the childId for further use
+        }
+
+        if (ELetterID.HasValue)
+        {
+            // Fetch the draft using the provided ELetterID
+            await LoadDraft(ELetterID.Value);
+        }
+        else
+        {
+            isEditingDraft = false; // New draft
+        }
+
+        await base.OnInitializedAsync();
+    }
+
+    private async Task LoadDraft(int eLetterId)
+    {
+        // Fetch the draft using the eLetterId
+        var draft = await LetterService.GetDraftByIdAsync(eLetterId);
+        if (draft != null)
+        {
+            isEditingDraft = true;
+            TheEditorValue = draft.ELetterText; // Preload the draft content into the editor
+        }
+        else
+        {
+            isEditingDraft = false;
+        }
+    }
+
+    private async Task HandlePhotoUpload(InputFileChangeEventArgs e)
+    {
+        if (UploadedPhotos.Count + e.FileCount > 4)
+        {
+            // Handle the error here (e.g., show an alert or error message)
+            return;
+        }
+
+        // Process each uploaded photo
+        foreach (var file in e.GetMultipleFiles(4 - UploadedPhotos.Count))
+        {
+            var buffer = new byte[file.Size];
+            await file.OpenReadStream().ReadAsync(buffer);
+            UploadedPhotos.Add(Convert.ToBase64String(buffer)); // Save photo as Base64 for simplicity
+        }
+    }
+
+    private void RotatePhoto(string photo)
+    {
+        // Rotation logic for photo, if required
+    }
+
+    private async Task SaveDraft()
+    {
+        var plainText = ConvertHtmlToPlainText(TheEditorValue);
+
+        var draftLetter = new ELetter
+            {
+                ELetterText = plainText,
+                AssociateID = 1,
+                ChildID = 1,
+                CreatedOn = DateTimeOffset.UtcNow.ToUnixTimeSeconds(),
+                BlobID = string.Join(",", UploadedFileBlobIds),
+                IsDraft = 1,
+                ChildName = SelectedSponsorLetter
+            };
+
+        if (isEditingDraft)
+        {
+            draftLetter.ELetterID = ELetterID.Value;
+            await LetterService.UpdateDraftAsync(draftLetter);
+        }
+        else
+        {
+            await LetterService.SaveDraftAsync(draftLetter);
+        }
+    }
+
+    private async Task SendLetter()
+    {
+        @* var letter = new ELetter
+{
+ELetterText = TheEditorValue,
+IsDraft = false,
+CreatedOn = DateTimeOffset.UtcNow.ToUnixTimeSeconds()
+};
+
+if (isEditingDraft)
+{
+letter.ELetterID = ELetterID.Value; // Assign the draft ID if editing
+await LetterService.SendLetterAsync(letter); // Send the letter
+}
+else
+{
+await LetterService.SendLetterAsync(letter); // Send a new letter
+}
+
+Navigation.NavigateTo("/lettersent"); // Redirect after sending *@
+    }
+    public static string ConvertHtmlToPlainText(string input)
+    {
+        if (string.IsNullOrEmpty(input))
+            return input;
+
+        // Convert <p> tags to new lines
+        input = Regex.Replace(input, "<p.*?>", "\n");
+        input = Regex.Replace(input, "</p>", "\n");
+
+        // Remove other HTML tags
+        input = Regex.Replace(input, "<.*?>", string.Empty);
+
+        return input;
+    }
+
+    private async Task ShowSaveDraftWindow()
+    {
+        WindowIsVisible = true;
+        await SaveDraft();
+    }
+    private void CloseWindow()
+    {
+        WindowIsVisible = false;
+
+    }
+}

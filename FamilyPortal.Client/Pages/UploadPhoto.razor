@@ -1,0 +1,103 @@
+@page "/upload_photo"
+
+
+@using System.ComponentModel.DataAnnotations
+@using Microsoft.AspNetCore.Components.Forms
+
+<PageTitle>Upload Photo</PageTitle>
+
+<div class="mt-8 mx-auto max-w-lg">
+    <div class="max-w-xl">
+        <Heading1>Upload Your Photo</Heading1>
+        <StatusMessage class="mb-3" Message="@errorMessage" />
+        <section class="mt-4 sm:shadow overflow-hidden sm:rounded-md">
+            <EditForm Model="PhotoInput" OnValidSubmit="HandleUpload">
+                <div class="px-4 bg-white dark:bg-black sm:p-6">
+                    <ValidationSummary class="mb-3 text-danger text-center font-semibold" />
+                    <div class="flex flex-col gap-y-4">
+                        <div>
+                            <label class="@TextInput.LabelClasses">Select Photo</label>
+                            <InputFile OnChange="OnPhotoSelected" accept=".jpg,.jpeg" />
+                            @if (errorMessage != null)
+                            {
+                                <p class="text-sm text-red-500 mt-2">@errorMessage</p>
+                            }
+                        </div>
+
+                        <div>
+                            @if (PhotoPreview != null)
+                            {
+                                <div class="relative">
+                                    <img src="@PhotoPreview" alt="Preview" class="border rounded-lg w-full max-h-96" />
+                                    <p class="mt-2 text-sm">Drag to adjust within 480 x 640 frame.</p>
+                                    <!-- Crop/Rotate UI placeholder -->
+                                </div>
+                            }
+                        </div>
+
+                        <div>
+                            <PrimaryButton id="upload-submit" type="submit">Submit Photo</PrimaryButton>
+                        </div>
+
+                        @if (confirmationMessage != null)
+                        {
+                            <div class="mt-4 text-sm text-green-500">
+                                <p>@confirmationMessage</p>
+                            </div>
+                        }
+                    </div>
+                </div>
+            </EditForm>
+        </section>
+    </div>
+</div>
+
+@code {
+    private string? errorMessage;
+    private string? confirmationMessage;
+    private IBrowserFile? SelectedFile;
+    private string? PhotoPreview;
+
+    private UploadInputModel PhotoInput { get; set; } = new();
+
+    private async Task OnPhotoSelected(InputFileChangeEventArgs e)
+    {
+        SelectedFile = e.File;
+        if (!SelectedFile.ContentType.Contains("image/jpeg"))
+        {
+            errorMessage = "Please select a .jpg or .jpeg file.";
+            return;
+        }
+
+        if (SelectedFile.Size > 5 * 1024 * 1024) // 5MB max
+        {
+            errorMessage = "File size is too large. Maximum allowed size is 5MB.";
+            return;
+        }
+
+        using var stream = SelectedFile.OpenReadStream();
+        var buffer = new byte[SelectedFile.Size];
+        await stream.ReadAsync(buffer);
+
+        PhotoPreview = $"data:{SelectedFile.ContentType};base64,{Convert.ToBase64String(buffer)}";
+        errorMessage = null;
+    }
+
+    private async Task HandleUpload()
+    {
+        if (SelectedFile == null)
+        {
+            errorMessage = "No photo selected.";
+            return;
+        }
+
+        // Here you can process and save the photo (e.g., send it to an API)
+        confirmationMessage = "Photo uploaded successfully!";
+    }
+
+    private sealed class UploadInputModel
+    {
+        public bool IsRetired { get; set; }
+        public DateTime? LastPhotoReceivedDate { get; set; }
+    }
+}

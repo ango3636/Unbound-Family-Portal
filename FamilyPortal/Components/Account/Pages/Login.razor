@@ -57,7 +57,10 @@
 
                         <div class="mt-8 text-sm">
                             <p class="mb-3">
-                                <HyperLink class="font-semibold" id="forgot-password" href="Account/ForgotPassword">Forgot your username or password?</HyperLink>
+                                <HyperLink class="font-semibold" id="forgot-password" href="/ForgotUsernameRoute">Forgot your username?</HyperLink>
+                            </p>
+                            <p class="mb-3">
+                                <HyperLink class="font-semibold" id="forgot-password" href="Account/ForgotPassword">Forgot your password?</HyperLink>
                             </p>
                             <p class="mb-3">
                                 <HyperLink class="font-semibold" href="@(NavigationManager.GetUriWithQueryParameters("/RegisterRoute", new Dictionary<string, object?> { ["ReturnUrl"] = ReturnUrl }))">Register as a new user</HyperLink>

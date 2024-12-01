@@ -1,0 +1,141 @@
+@page "/Account/ForgotUsernameChild"
+@layout Layout.LoginLayout
+
+@rendermode @(new InteractiveServerRenderMode(prerender: false))
+
+@using System.ComponentModel.DataAnnotations
+@using Microsoft.AspNetCore.Identity
+@using FamilyPortal.Data
+@using FamilyPortal.ServiceInterface
+
+@inject NavigationManager NavigationManager
+@inject UserManager<ApplicationUser> UserManager
+@inject IEmailSender<ApplicationUser> EmailSender
+@inject ChildService ChildService
+
+<PageTitle>Forgot your Username?</PageTitle>
+
+<div class="mt-8 mx-auto max-w-lg">
+    <Heading1>Forgot your Username?</Heading1>
+    <Heading3>Please enter your CH ID to recover your username.</Heading3>
+
+    <StatusMessage Message="@Message" />
+    <div class="mt-3 shadow overflow-hidden sm:rounded-md">
+        <div class="px-4 bg-white dark:bg-black sm:p-6">
+        <EditForm Model="@child" asp-route-returnUrl="@ReturnUrl" FormName="forgot-username" OnValidSubmit="ValidateUser">
+            <DataAnnotationsValidator />
+            <ValidationSummary class="mb-3 text-danger text-center font-semibold" />
+                <div class="flex flex-col gap-y-4">
+                    <div>
+                        <label for="ChID">CH ID</label>
+                        <div class="mt-1 relative rounded-md shadow-sm">
+                            <InputNumber id="ChID" @bind-Value="child.ChildId" class="input-class" placeholder="<example id>" />
+                        </div>
+                        <ValidationMessage For="() => child.ChildId" class="mt-2 text-danger text-sm" />
+                    </div>
+
+                @if (showUsername)
+                {
+                    <div>
+                        <p>
+                            Your username is:
+                        </p>
+                        <p>
+                            @existingChild.UserName
+                        </p>
+                    </div>
+                }
+                else
+                {
+                    <div>
+                        <PrimaryButton type="submit">Recover Username</PrimaryButton>
+                    </div>
+                }
+
+                    <div class="mt-8 text-sm">
+                        <p class="mb-3">
+                            <HyperLink class="font-semibold" id="login" href="">Login</HyperLink>
+                        </p>
+                        <p class="mb-3">
+                            <HyperLink class="font-semibold" id="forgot-password" href="Account/ForgotPassword">Forgot your username?</HyperLink>
+                        </p>
+                    </div>
+                </div>
+            </EditForm>
+        </div>
+    </div>
+</div>
+
+@code {
+    private Child child = new Child();
+    private Child existingChild = new Child();
+
+    private string? ReturnUrl { get; set; }
+
+    private bool showUsername = false;
+    private List<IdentityError>? identityErrors;
+    private string? Message => identityErrors is null ? null : string.Join(", ", identityErrors.Select(e => e.Description));
+
+    protected override Task OnInitializedAsync()
+    {
+        child = new Child(); // Reset child object to default state
+        return base.OnInitializedAsync();
+    }
+
+    private void ClearErrors()
+    {
+        identityErrors = null;
+    }
+
+    public async Task ValidateUser()
+    {
+        ClearErrors(); //Clear previous error
+        Console.WriteLine($"Input ChildId: {child.ChildId}");
+
+        // Ensure ChildId is valid (not zero)
+        if (child.ChildId == 0)
+        {
+            identityErrors = new List<IdentityError>
+            {
+                new IdentityError
+                {
+                    Description = "Please enter a valid Child ID. [ESPAÑOL]Por Favor, introduzca un Child ID valido."
+                }
+            };
+            return;
+        }
+
+        // Check if the child exists by FirstName, LastName, and ChildId
+        existingChild = await ChildService.GetChildByIdAsync(child.ChildId);
+
+        // If no child is found, or the ChildId does not match, return an error message
+        if (existingChild == null)
+        {
+            identityErrors = new List<IdentityError>
+            {
+                new IdentityError
+                {
+                    Description = "We cannot find you according to the information entered. Please try again or contact someone from your local office for more help. [ESPAÑOL]No podemos encontrarlo según la información ingresada. Inténtelo de nuevo o comuníquese con alguien de su oficina local para obtener más ayuda."
+                }
+            };
+            return;
+        }
+
+        // If the ChildId does not match, return a different error
+        if (existingChild.ChildId != child.ChildId)
+        {
+            identityErrors = new List<IdentityError>
+            {
+                new IdentityError
+                {
+                    Description = "The provided Child ID does not match our records. [ESPAÑOL]La identificación infantil proporcionada no coincide con nuestros registros."
+                }
+            };
+            return;
+        }
+
+        // If validation is successful, show the user's username
+        showUsername = true;
+    }
+
+}

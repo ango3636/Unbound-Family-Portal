@@ -1,174 +1,281 @@
-@page "/video/{VideoID}"
-@rendermode @(new InteractiveServerRenderMode (prerender: false))
+@page "/video"
+@rendermode @(new InteractiveServerRenderMode(prerender: false))
 
 @using FamilyPortal.ServiceInterface
-@using Telerik.Blazor
-@using Microsoft.AspNetCore.Mvc.Rendering
-
-@inject IJSRuntime JS
+@inject SponsorService SponsorService
 @inject VideoService VideoService
-@inject Video DigitalChildLetterID
+@inject LetterService LetterService
+@inject NavigationManager Navigation
+@inject AuthenticationStateProvider AuthenticationStateProvider
 
+@using System.Text.RegularExpressions
+@using Telerik.Blazor
+@using Microsoft.AspNetCore.Mvc.Rendering;
 
-@if (isEditingVideoDraft)
-{
-    <Heading1>Edit Draft</Heading1>
-}
-else
-{
-    <Heading1>Create New Letter</Heading1>
-}
-<!--<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"> -->
+<TelerikContainer>
 
-<Heading1>Record a Video</Heading1>
-
-<TelerikCard>
-    <CardHeader>
-        <div class="horizontal-container">
-            <CardTitle>To: </CardTitle>
-            <!-- Dropdown for selecting sponsor letter(s) to reply to -->
-            <div class="k-form-field" style="padding-bottom: 10px;">
-                <label class="k-form-label">Select A Sponsor:</label>
-                <!--<TelerikDropDownList Data="@SponsorLetters" @bind-Value="@SelectedSponsorLetter" Width="300px" />-->
-            </div>
-        </div>
-    </CardHeader>
-    <CardBody>
-        <div class="video-container">
-
-            @if (!isEditingVideoDraft)
-            {
-                <div class="skeleton-loader">
-                    @* <i class="fa-solid fa-film" style="font-size:60px; color:black; text-shadow:2px 2px 4px
-                #000000;"></i> *@
-                </div>
-            }
-
-            else
-            {
-                <video id="videoPreview" class="video-preview" width="400" controls autoplay muted></video>
-
-            }
-
-
-            <div class="horizontal-container">
-                <TelerikButton class="upload-button">Upload</TelerikButton>
-                <TelerikButton class="record-button">Record Video</TelerikButton>
-                <TelerikButton class="send-button">Save</TelerikButton>
-            </div>
-
-
-        </div>
-    </CardBody>
-
-</TelerikCard>
-
-
-
-<style>
-    .horizontal-container {
-        display: flex;
-        gap: 10px;
-    }
-
-    .video-preview {
-        margin: 10px;
-    }
-
-    .video-container {
-        display: flex;
-        flex-direction: column;
-        /* Stack the elements vertically */
-        align-items: center;
-        /* Center elements horizontally */
-        justify-content: center;
-        /* Center elements vertically */
-        height: 100%;
-        /* Take up full height of the CardBody */
-        text-align: center;
-        /* Align text content inside the buttons */
-    }
-
-    .record-button {
-        width: 115px;
-        margin: 5px;
-        background-color: #dadada;
-        border: 2px solid #DADADA;
-        border-radius: .5rem;
-
-    }
-
-    .upload-button {
-        width: 115px;
-        margin: 5px;
-        background-color: #b4b1ec;
-        border: 2px solid #b4b1ec;
-        border-radius: .5rem;
-    }
-
-    .send-button {
-        width: 115px;
-
-        margin: 5px;
-        background-color: #4BAD9E;
-        border: 2px solid #4BAD9E;
-        border-radius: .5rem;
-
-
-    }
-
-    .card-body {
-        display: flex;
-        justify-content: center;
-    }
-
-    .skeleton-loader {
-        position: relative;
-        /* Positioning context for pseudo-elements */
-        width: 400px;
-        height: 225px;
-        background-color: #e0e0e0;
-        overflow: hidden;
-    }
-</style>
-
-@code {
-
-    //[Parameter] public int? DigitalChildLetterId;
-    string LastSavedDate { get; set; } = DateTime.Now.ToString("MM/dd/yyyy");
-    List<SelectListItem> SponsorLetters = new();
-    string SelectedSponsorLetter { get; set; }
-    private bool isEditingVideoDraft = false;
-    bool WindowVisible = false;
-    int associateId = 1;// Example AssociateID, replace with actual dynamic data (like logged-in user's ID)
-    int childId = 1; // For demonstration; replace with actual logic to get the child ID
-
-    /*protected override async Task OnInitializedAsync(){
-
-    // Step 1: Fetch sponsor's children (letters) from SponsorService
-    //SponsorLetters = await SponsorService.GetChildrenBySponsorIdAsync(associateId);
-
-    // Step 2: Set the SelectedSponsorLetter to the first child by default (or based on user selection)
-    if (SponsorLetters.Any())
+    @if (isEditingDraft)
     {
-    SelectedSponsorLetter = SponsorLetters.First().Value; // ChildID
-    childId = int.Parse(SelectedSponsorLetter); // Set the childId for further use
-    }
-
-    // Step 3: Fetch the draft for the selected child if an ELetterID exists
-    if (DigitalChildLetter.HasValue) // If ELetterID is provided, we are editing a draft
-    {
-    isEditingVideoDraft = true;
-    var draft = await VideoService.GetDraftByIdAsync(videoID);
-    if (draft != null)
-    {
-    TheEditorValue = draft.ELetterText; // Preload the draft content into the editor
-    }
+        <Heading1>Edit Draft</Heading1>
     }
     else
     {
-    isEditingDraft = false; // If no ELetterID, we're creating a new letter
-        }
-    } */
+        <Heading1>Record New Video</Heading1>
+    }
 
+    <div class="k-form-field" style="padding-bottom: 10px;">
+        <label class="k-form-label">Select A Sponsor:</label>
+        <TelerikDropDownList Data="@SponsorLetters" @bind-Value="@SelectedSponsorLetter" Width="300px" />
+    </div>
+
+    <p class="k-text-secondary">Last saved/submitted on: <strong>@LastSavedDate</strong></p>
+
+    @*VIDEO PREVIEW / BOX*@
+    @if (VideoValue.IsNullOrEmpty())
+    {
+        <div class="k-form-field">
+            <label class="k-form-label">Uploaded Video:</label>
+            <div class "k-file-item" style="margin: 10px;">
+                <video id="videoPreview" autoplay Width="70%" Height="400px" ; border: 1px solid #ccc;"></video>
+            </div>
+        </div>
+    }
+
+    else
+    {
+        <div class="k-form-field">
+            <label class="k-form-label">Live Preview:</label>
+            <video src="@VideoValue" id="videoPreview" autoplay Width="70%" Height="400px" ; border: 1px solid
+                #ccc;">@videoFileName</video>
+        </div>
+    }
+
+    <div class="k-form-field" style="padding: 10px;">
+        <label class="k-form-label">Select Video:</label>
+        <InputFile OnChange="HandleVideoUpload" Accept=".mp4,.webm,.ogg,.mkv" />
+
+        <PrimaryButton @onclick="ShowSaveDraftWindow">Save Draft</PrimaryButton>
+        <PrimaryButton @onclick="SendVideo">Send Video</PrimaryButton>
+
+
+    </div>
+
+    <TelerikWindow @bind-Visible="@WindowIsVisible">
+        <WindowTitle>
+            Draft Saved
+        </WindowTitle>
+        <WindowContent>
+            Your draft has been successfully saved.
+        </WindowContent>
+        <WindowActions>
+            <WindowAction Name="Close" />
+        </WindowActions>
+        <WindowFooter>
+            <PrimaryButton @onclick="CloseWindow">OK</PrimaryButton>
+        </WindowFooter>
+    </TelerikWindow>
+
+    <TelerikWindow @bind-Visible="@SendWindowIsVisible">
+        <WindowTitle>
+            Video Sent
+        </WindowTitle>
+        <WindowContent>
+            Your video has been sent to the recipient
+        </WindowContent>
+        <WindowActions>
+            <WindowAction Name="Close" />
+        </WindowActions>
+        <WindowFooter>
+            <PrimaryButton @onclick="CloseWindow">OK</PrimaryButton>
+        </WindowFooter>
+    </TelerikWindow>
+
+
+</TelerikContainer>
+
+@code {
+    [Parameter] public int? VideoID { get; set; }
+    string VideoValue { get; set; } = string.Empty;
+    string videoFileName { get; set; } = string.Empty;
+    private string videoDraft;
+    private string VideoBlobId { get; set; } = string.Empty;
+    string LastSavedDate { get; set; } = DateTime.Now.ToString("MM/dd/yyyy");
+    string errorMessage;
+
+
+    List<SelectListItem> SponsorLetters = new();
+    string SelectedSponsorLetter { get; set; }
+
+
+    bool IsAutosaving { get; set; }
+    private bool isEditingDraft = false;
+    bool WindowIsVisible = false;
+    bool SendWindowIsVisible = false;
+    int associateId = 1;// Example AssociateID, replace with actual dynamic data (like logged-in user's ID)
+    int childId = 1; // For demonstration; replace with actual logic to get the child ID
+
+    protected override async Task OnInitializedAsync()
+    {
+        // Load sponsor letters associated with the user
+        SponsorLetters = await SponsorService.GetChildrenBySponsorIdAsync(associateId);
+
+        if (SponsorLetters.Any())
+        {
+            SelectedSponsorLetter = SponsorLetters.First().Value; // Set the first sponsor letter by default
+            childId = int.Parse(SelectedSponsorLetter); // Convert it to an integer for use
+        }
+
+        if (VideoID.HasValue)
+        {
+            // Fetch the video draft using the provided VideoID
+            var draft = await VideoService.GetDraftByIdAsync(VideoID.Value);
+
+            if (draft != null)
+            {
+                isEditingDraft = true; // We're editing an existing draft
+                LastSavedDate = draft.CreatedOn.ToString("MM/dd/yyyy");
+            }
+            else
+            {
+                isEditingDraft = false; // If no draft exists, mark it as a new draft
+            }
+        }
+        else
+        {
+            isEditingDraft = false; // Mark it as a new draft if no VideoID is provided
+        }
+
+        await base.OnInitializedAsync();
+    }
+
+    private async Task LoadDraft(int videoId)
+    {
+        // Fetch the draft using the eLetterId
+        var draft = await VideoService.GetDraftByIdAsync(videoId);
+        if (draft != null)
+        {
+            isEditingDraft = true;
+            VideoValue = draft.FileName; // Preload the draft content into the editor
+        }
+        else
+        {
+            isEditingDraft = false;
+        }
+    }
+
+    private async Task HandleVideoUpload(InputFileChangeEventArgs e)
+    {
+
+        var SelectedFile = e.File;
+
+        if (SelectedFile.Size > 5 * 1024 * 1024) // 5MB max
+        {
+            errorMessage = "File size is too large. Maximum allowed size is 5MB.";
+            return;
+        }
+
+        using var stream = SelectedFile.OpenReadStream();
+        var buffer = new byte[SelectedFile.Size];
+        await stream.ReadAsync(buffer);
+
+        VideoValue = $"data:{SelectedFile.ContentType};base64,{Convert.ToBase64String(buffer)}";
+        videoFileName = SelectedFile.Name;
+        VideoBlobId = "12345";
+        Console.WriteLine(videoFileName);
+        errorMessage = null;
+    }
+
+
+    private async Task SaveDraft()
+    {
+        //var plainText = ConvertHtmlToPlainText(VideoValue);
+
+        var draftVideo = new DigitalChildLetter
+            {
+                FileName = videoFileName,
+                AssociateID = 1,
+                ChildID = 1,
+                CreatedOn = DateTimeOffset.UtcNow.ToUnixTimeSeconds(),
+                BlobID = VideoBlobId,
+                IsDraft = 1,
+                ChildName = SelectedSponsorLetter
+            };
+
+        /*if (isEditingDraft)
+        {
+        draftVideo.VideoID = VideoID.Value;
+        await VideoService.UpdateVideoDraftAsync(draftVideo);
+        }
+        else
+        {
+        await VideoService.SaveVideoDraftAsync(draftVideo);
+        }*/
+
+        try
+        {
+            if (isEditingDraft)
+            {
+                draftVideo.VideoID = VideoID.Value;
+                await VideoService.UpdateVideoDraftAsync(draftVideo);
+                Console.WriteLine("Draft updated successfully.");
+            }
+            else
+            {
+                await VideoService.SaveVideoDraftAsync(draftVideo);
+                Console.WriteLine("Draft saved successfully.");
+            }
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error saving draft: {ex.Message}");
+        }
+
+    }
+
+    private async Task SendVideo()
+    {
+
+        var video = new DigitalChildLetter
+            {
+                FileName = videoFileName,
+                IsDraft = 0,
+                CreatedOn = DateTimeOffset.UtcNow.ToUnixTimeSeconds()
+            };
+        //await VideoService.SendVideoAsync(video);
+
+        //Navigation.NavigateTo("/videosent"); // Redirect after sending *@
+    }
+
+    public static string ConvertHtmlToPlainText(string input)
+    {
+        if (string.IsNullOrEmpty(input))
+            return input;
+
+        // Convert <p> tags to new lines
+        input = Regex.Replace(input, "<p.*?>", "\n");
+        input = Regex.Replace(input, "</p>", "\n");
+
+        // Remove other HTML tags
+        input = Regex.Replace(input, "<.*?>", string.Empty);
+
+        return input;
+    }
+
+    private async Task ShowSaveDraftWindow()
+    {
+        WindowIsVisible = true;
+        await SaveDraft();
+    }
+
+    private async Task ShowSendVideotWindow()
+    {
+        SendWindowIsVisible = true;
+        await SaveDraft();
+    }
+    private void CloseWindow()
+    {
+        WindowIsVisible = false;
+        SendWindowIsVisible = false;
+
+    }
 }

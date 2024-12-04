@@ -66,6 +66,7 @@ services.AddScoped<AssociateService>();
 services.AddScoped<SponsorService>();
 services.AddScoped<LetterService>();
 services.AddScoped<ChildService>();
+services.AddScoped<VideoService>();
 services.AddTelerikBlazor();
 
 var app = builder.Build();

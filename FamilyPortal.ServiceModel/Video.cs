@@ -10,10 +10,11 @@ public class DigitalChildLetter
     public int ChildID { get; set; }
     public int AssociateID { get; set; }
     public string BlobID { get; set; }
-    public int VideoID { get; set; }
+    public int? VideoID { get; set; }
     public string FileName { get; set; }
-    public int CreatedOn { get; set; }
-    public int DraftStatus { get; set; }
+    public long CreatedOn { get; set; }
+    public int IsDraft { get; set; }
+    public string ChildName { get; set; }
 
 
 }

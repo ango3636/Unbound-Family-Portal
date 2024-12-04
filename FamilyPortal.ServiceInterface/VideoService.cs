@@ -10,9 +10,9 @@ namespace FamilyPortal.ServiceInterface
 
         private readonly ApplicationDbContext _context;
 
-        public VideoService(ApplicationDbContext dbContext)
+        public VideoService(ApplicationDbContext context)
         {
-            _context = dbContext;
+            _context = context;
         }
 
         // FETCH VIDEO BY CHILDID
@@ -29,14 +29,14 @@ namespace FamilyPortal.ServiceInterface
         {
             // Fetch the draft for the associate and child by checking IsDraft
             return await _context.DigitalChildLetter
-                .Where(e => e.DigitalChildLetterID == digitalChildLetterId && e.ChildID == childId && e.DraftStatus == 1)
+                .Where(e => e.DigitalChildLetterID == digitalChildLetterId && e.ChildID == childId && e.IsDraft == 1)
                 .FirstOrDefaultAsync();
         }
         //BY ASSOCIATEID
         public async Task<List<DigitalChildLetter>> GetDraftsByAssociateIdAsync(int associateId)
         {
             return await _context.DigitalChildLetter
-                .Where(e => e.AssociateID == associateId && e.DraftStatus == 1)
+                .Where(e => e.AssociateID == associateId && e.IsDraft == 1)
                 .ToListAsync();
         }
         //BY DIGITALCHILD LETTER ID
@@ -44,10 +44,21 @@ namespace FamilyPortal.ServiceInterface
         {
             // Query the database to find the draft with the given ELetterID
             var draft = await _context.DigitalChildLetter
-                .Where(e => e.VideoID == videoID && e.DraftStatus == 1)  // Ensure it's a draft
+                .Where(e => e.VideoID == videoID && e.IsDraft == 1)  // Ensure it's a draft
                 .FirstOrDefaultAsync();  // Get the first matching draft or null
             return draft;  // Returns the draft or null if not found
         }
+
+        public async Task<string> GetChildNameByIdAsync(int childId)
+        {
+            var child = await _context.Child
+                                    .Where(c => c.ChildId == childId)
+                                    .FirstOrDefaultAsync();
+
+            return child != null ? $"{child.FirstName} {child.LastName}" : "Unknown";
+        }
+
+
         // //BY CHILD NAME -- CAN ONLY IMPLEMENT WHEN CHILD.CS TABLE HAS BEEN PULLED
         // public async Task<string> GetChildNameByIdAsync(int childId)
         // {
@@ -59,29 +70,56 @@ namespace FamilyPortal.ServiceInterface
         //----------------------------------------------------------------
 
         //SAVING, DELETING, AND SENDING
-        public async Task SaveVideoDraftAsync(DigitalChildLetter videoDraft)
+
+        public async Task SaveVideoDraftAsync(DigitalChildLetter draft)
         {
             // Set IsDraft to true before saving
-            videoDraft.DraftStatus = 1;
-            _context.DigitalChildLetter.Add(videoDraft);
+            draft.IsDraft = 1;
+
+            _context.DigitalChildLetter.Add(draft);
             await _context.SaveChangesAsync();
         }
 
-        public async Task SendVideoAsync(int DigitalChildLetterID)
+        public async Task SendVideoAsync(int videoId)
         {
-            var letter = await _context.DigitalChildLetter.FindAsync(DigitalChildLetterID);
-            if (letter != null)
+            var video = await _context.DigitalChildLetter.FindAsync(videoId);
+
+            if (video != null)
             {
-                letter.DraftStatus = 0;  // Mark the letter as sent
-                _context.Update(letter);
+                video.IsDraft = 0;  // Mark the letter as sent
+                _context.Update(video);
                 await _context.SaveChangesAsync();
             }
         }
 
-        public async Task DeleteDraftAsync(int digitalChildLetterId)
+        public async Task UpdateVideoDraftAsync(DigitalChildLetter draft)
         {
-            var draft = await _context.DigitalChildLetter.FindAsync(digitalChildLetterId);
-            if (draft != null && draft.DraftStatus == 1)
+            // Find the existing draft from the database
+            var existingDraft = await _context.DigitalChildLetter
+                .Where(e => e.VideoID == draft.VideoID && e.IsDraft == 1)
+                .FirstOrDefaultAsync();
+
+            if (existingDraft != null)
+            {
+                // Update the properties of the existing draft
+                existingDraft.FileName = draft.FileName;  // Update the letter text
+                existingDraft.BlobID = draft.BlobID;  // Update the photos (if any)
+                existingDraft.CreatedOn = DateTimeOffset.UtcNow.ToUnixTimeSeconds();  // Update creation date if needed
+
+                // Save the changes to the database
+                await _context.SaveChangesAsync();
+            }
+            else
+            {
+                // Handle the case where the draft wasn't found (optional)
+                throw new InvalidOperationException("Draft not found or is already sent.");
+            }
+        }
+
+        public async Task DeleteVideoDraftAsync(int? videoId)
+        {
+            var draft = await _context.DigitalChildLetter.FindAsync(videoId);
+            if (draft != null && draft.IsDraft == 1)
             {
                 _context.DigitalChildLetter.Remove(draft);
                 await _context.SaveChangesAsync();

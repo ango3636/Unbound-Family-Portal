@@ -17,7 +17,7 @@
 
 <div class="form-group">
     <label for="videoFile">Upload a Video</label>
-    <input type="file" id="videoFile" @onchange="OnFileSelected" class="form-control" />
+    @* <input type="file" id="videoFile" @onchange="OnFileSelected" class="form-control" /> *@
 </div>
 
 <div class="form-group">
@@ -50,25 +50,25 @@
     private string BlobId; // Represents the uploaded video blob ID
     private Stream RecordedStream;
 
-    private async Task OnFileSelected(ChangeEventArgs e)
+    /* private async Task OnFileSelected(ChangeEventArgs e)
     {
-        try
-        {
-            var file = ((Microsoft.AspNetCore.Components.Forms.InputFileChangeEventArgs)e).File;
-            if (file != null)
-            {
-                // Process file as a Blob (or upload it to a storage service, e.g., Azure Blob Storage)
-                BlobId = await UploadVideoToStorage(file);
-                videoDraft.BlobID = BlobId;
-                videoDraft.FileName = file.Name;
-                StatusMessage = "Video uploaded successfully!";
-            }
-        }
-        catch (Exception ex)
-        {
-            ErrorMessage = $"Error uploading video: {ex.Message}";
-        }
+    try
+    {
+    var file = ((Microsoft.AspNetCore.Components.Forms.InputFileChangeEventArgs)e).File;
+    if (file != null)
+    {
+    // Process file as a Blob (or upload it to a storage service, e.g., Azure Blob Storage)
+    BlobId = await UploadVideoToStorage(file);
+    videoDraft.BlobID = BlobId;
+    videoDraft.FileName = file.Name;
+    StatusMessage = "Video uploaded successfully!";
     }
+    }
+    catch (Exception ex)
+    {
+    ErrorMessage = $"Error uploading video: {ex.Message}";
+    }
+    } */
 
     private async Task<string> UploadVideoToStorage(Microsoft.AspNetCore.Components.Forms.IBrowserFile file)
     {

@@ -9,5 +9,10 @@ public class ApplicationUser : IdentityUser
     public string? LastName { get; set; }
     public string? DisplayName { get; set; }
     public string? ProfileUrl { get; set; }
+
+    public void SetCurrentUserDisplayName(string displayName)
+    {
+        DisplayName = displayName;
+    }
 }
 

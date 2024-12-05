@@ -1,5 +1,17 @@
 @page "/dashboard"
-@rendermode InteractiveAuto
+@* @rendermode InteractiveAuto *@
+@* @rendermode @(new InteractiveServerRenderMode(prerender: false)) *@
+
+@inherits AppAuthComponentBase
+
+@using FamilyPortal.ServiceInterface
+@using FamilyPortal.Data
+
+@inject AssociateService AssociateService
+@inject ChildService ChildService
+@inject LetterService LetterService
+@inject ApplicationUser ApplicationUser
+@inject NavigationManager navigationManager
 
 <PageTitle>Dashboard</PageTitle>
 
@@ -13,14 +25,27 @@
                     <CardTitle>Mailbox ()</CardTitle>
                 </CardHeader>
                 <TelerikListView Data="@ListViewData" Pageable="true">
-                    @* <HeaderTemplate>
-                    <h1>Mailbox ()</h1>
-                    </HeaderTemplate> *@
+                    <HeaderTemplate>
+                        @if (letters == null || !letters.Any())
+                        {
+                            <h1 style="padding: 10px;">No current letters!</h1>
+                        }
+                        else
+                        {
+                            <h1 style="padding: 10px;">Current Letters</h1>
+                        }
+                    </HeaderTemplate>
                     <Template>
-                        <div class="listview-item">
-                            <h3>@context.Name</h3>
-                            <h5>@context.Message</h5>
-                        </div>
+                        @if (letters != null && letters.Any())
+                        {
+                            @foreach (ELetter letter in letters)
+                            {
+                                <div class="listview-item">
+                                    <h3>From: @AssociateService.GetAssociateNameByAssociateIdAsync(letter.AssociateID).Result</h3>
+                                    <h5>@letter.ELetterText</h5>
+                                </div>
+                            }
+                        }
                     </Template>
                 </TelerikListView>
             </TelerikCard>
@@ -73,7 +98,15 @@
 </div>
 
 @code {
-    List<SampleData> ListViewData { get; set; } = Enumerable.Range(1, 2).Select(x => new SampleData
+    private Associate existingAssociate = new Associate();
+    private Child existingChild = new Child();
+    private List<ELetter>? letters;
+    private List<ELetter>? notDraftLetters = new List<ELetter>();
+    private string? associateName;
+    private int childId;
+    private int associateId;
+
+    List<SampleData> ListViewData { get; set; } = Enumerable.Range(1, 1).Select(x => new SampleData
         {
             Id = x,
             Name = $"Sponsor Name {x}",
@@ -81,22 +114,64 @@
         }).ToList();
 
     public class SampleData
+    @* using FamilyPortal.Data; *@
     {
         public int Id { get; set; }
         public string Name { get; set; }
         public string Message { get; set; }
     }
+
+    protected override async Task OnInitializedAsync()
+    {
+        string? username = ApplicationUser.DisplayName;
+
+        if (username == null)
+        {
+            //output error
+        }
+        else
+        {
+            // Attempt to authenticate as a child user
+            existingChild = await ChildService.GetChildByUsernameAsync(username);
+
+            // Attempt to authenticate as an associate user
+            existingAssociate = await AssociateService.GetAssociateByUsernameAsync(username);
+
+            if (existingChild != null) // child user is found
+            {
+                childId = existingChild.ChildId;
+
+                //retrieve letters sent to child
+                letters = await LetterService.GetLettersByChildId(childId);
+            }
+            else if (existingAssociate != null) // associate user is found
+            {
+                associateId = existingAssociate.AssociateID;
+            }
+            else // no user is found
+            {
+                @* identityErrors = new List<IdentityError>
+                {
+                    new IdentityError
+                    {
+                        Description = "We cannot find you according to the information entered. Please try again or contact someone from your local office for more help. [ESPAÑOL]No podemos encontrarlo según la información ingresada. Inténtelo de nuevo o comuníquese con alguien de su oficina local para obtener más ayuda."
+                    }
+                }; *@
+                return;
+            }
+        }
+    }
 }
 
 <style>
     .listview-item {
-        height: 75px;
         width: 900px;
         display: inline-block;
         margin: 10px;
         border: 1px solid black;
         border-radius: 10px;
         padding: 10px;
+        word-wrap: break-word;
     }
 
     .card-container {

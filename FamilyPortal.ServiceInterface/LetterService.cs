@@ -104,6 +104,16 @@ namespace FamilyPortal.ServiceInterface
             return child != null ? $"{child.FirstName} {child.LastName}" : "Unknown";
         }
 
+        //returns letters that are not drafts
+        public async Task<List<ELetter>> GetLettersByChildId(int childId)
+        {
+            var letters = await _context.ELetter
+                                    .Where(e => e.ChildID == childId && e.IsDraft == 0)
+                                    .ToListAsync();
+
+            return letters != null ? letters : null;
+        }
+
     }
 
 }

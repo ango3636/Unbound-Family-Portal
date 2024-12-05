@@ -13,6 +13,7 @@
 @inject IdentityRedirectManager RedirectManager
 @inject ChildService ChildService
 @inject AssociateService AssociateService
+@inject ApplicationUser ApplicationUser
 
 <PageTitle>Log in</PageTitle>
 
@@ -57,7 +58,10 @@
 
                         <div class="mt-8 text-sm">
                             <p class="mb-3">
-                                <HyperLink class="font-semibold" id="forgot-password" href="Account/ForgotPassword">Forgot your username or password?</HyperLink>
+                                <HyperLink class="font-semibold" id="forgot-password" href="/ForgotUsernameRoute">Forgot your username?</HyperLink>
+                            </p>
+                            <p class="mb-3">
+                                <HyperLink class="font-semibold" id="forgot-password" href="Account/ForgotPassword">Forgot your password?</HyperLink>
                             </p>
                             <p class="mb-3">
                                 <HyperLink class="font-semibold" href="@(NavigationManager.GetUriWithQueryParameters("/RegisterRoute", new Dictionary<string, object?> { ["ReturnUrl"] = ReturnUrl }))">Register as a new user</HyperLink>
@@ -120,6 +124,7 @@
         var existingChild = await ChildService.GetChildByLoginInfoAsync(Input.UserName, Input.Password);
         if (existingChild != null)
         {
+            ApplicationUser.SetCurrentUserDisplayName(existingChild.UserName);
             Logger.LogInformation("Child user logged in.");
             await SignInChildUser(existingChild);  // Sign in the child user
             NavigationManager.NavigateTo("/Dashboard");  // Redirect to Dashboard
@@ -130,6 +135,7 @@
         var existingAssociate = await AssociateService.GetAssociateByLoginInfoAsync(Input.UserName, Input.Password);
         if (existingAssociate != null)
         {
+            ApplicationUser.SetCurrentUserDisplayName(existingAssociate.UserName);
             Logger.LogInformation("Associate user logged in.");
             await SignInAssociateUser(existingAssociate);  // Sign in the associate user
             NavigationManager.NavigateTo("/Dashboard");  // Redirect to Dashboard

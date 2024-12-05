@@ -66,6 +66,7 @@ services.AddScoped<AssociateService>();
 services.AddScoped<SponsorService>();
 services.AddScoped<LetterService>();
 services.AddScoped<ChildService>();
+services.AddSingleton<ApplicationUser>();
 services.AddTelerikBlazor();
 
 var app = builder.Build();

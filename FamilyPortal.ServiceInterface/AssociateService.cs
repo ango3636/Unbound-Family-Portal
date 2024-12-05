@@ -36,6 +36,23 @@ namespace FamilyPortal.ServiceInterface
                                  .FirstOrDefaultAsync();
         }
 
+        // Method to check if an associate exists based on username
+        public async Task<Associate> GetAssociateByUsernameAsync(string username)
+        {
+            return await _context.Associate
+                                 .Where(c => c.UserName == username)
+                                 .FirstOrDefaultAsync();
+        }
+
+        public async Task<string> GetAssociateNameByAssociateIdAsync(int associateId)
+        {
+            var associate = await _context.Associate
+                                .Where(a => a.AssociateID == associateId)
+                                .FirstOrDefaultAsync();
+
+            return associate != null ? $"{associate.FirstName} {associate.LastName}" : "Unknown";
+        }
+
 
         public async Task UpdateAssociateAsync(Associate associate)
         {

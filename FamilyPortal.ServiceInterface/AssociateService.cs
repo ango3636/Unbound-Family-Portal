@@ -44,6 +44,15 @@ namespace FamilyPortal.ServiceInterface
                                  .FirstOrDefaultAsync();
         }
 
+        public async Task<string> GetAssociateNameByAssociateIdAsync(int associateId)
+        {
+            var associate = await _context.Associate
+                                .Where(a => a.AssociateID == associateId)
+                                .FirstOrDefaultAsync();
+
+            return associate != null ? $"{associate.FirstName} {associate.LastName}" : "Unknown";
+        }
+
 
         public async Task UpdateAssociateAsync(Associate associate)
         {

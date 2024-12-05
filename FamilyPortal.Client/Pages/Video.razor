@@ -97,7 +97,7 @@
 
 </TelerikContainer>
 
-<script src="~/js/recordVideo.js"></script>
+<!--<script src="~/js/recordVideo.js"></script>-->
 
 
 @code {
@@ -177,15 +177,6 @@
         Console.WriteLine("START OF HANDLE VIDEO UPLOAD");
         var SelectedFile = e.File;
 
-
-
-        /* if (SelectedFile.Size > 5 * 1024 * 1024) // 5MB max
-        {
-        Console.WriteLine("INSIDE THE IF STATEMENT");
-        errorMessage = "File size is too large. Maximum allowed size is 5MB.";
-        return;
-        } */
-
         using var stream = SelectedFile.OpenReadStream();
         var buffer = new byte[SelectedFile.Size];
         await stream.ReadAsync(buffer);
@@ -210,7 +201,7 @@
                 AssociateID = 1,
                 ChildID = 1,
                 CreatedOn = DateTimeOffset.UtcNow.ToUnixTimeSeconds(),
-                BlobID = VideoBlobId,
+                BlobID = "VideoBlob",
                 IsDraft = 1,
                 ChildName = SelectedSponsorLetter
             };
@@ -275,15 +266,15 @@
         return input;
     }
 
-    protected override async Task OnAfterRenderAsync(bool firstRender)
+    /*protected override async Task OnAfterRenderAsync(bool firstRender)
     {
-        if (firstRender)
-        {
-            await JS.InvokeVoidAsync("startRecording");
-            await JS.InvokeVoidAsync("stopRecording");
+    if (firstRender)
+    {
+    await JS.InvokeVoidAsync("startRecording");
+    await JS.InvokeVoidAsync("stopRecording");
 
-        }
     }
+    }*/
 
 
     private async Task ShowSaveDraftWindow()
@@ -315,7 +306,7 @@
 
 }
 
-<script>
+<!--<script>
     let mediaRecorder;
     let recordedBlobs;
 
@@ -363,4 +354,4 @@
         a.click();
         window.URL.revokeObjectURL(url);
     }
-</script>
+</script> -->

@@ -13,6 +13,7 @@ using FamilyPortal.Client.Pages;
 using Telerik.Blazor.Services;
 using FamilyPortal.ServiceModel;
 
+
 var builder = WebApplication.CreateBuilder(args);
 
 var services = builder.Services;
@@ -111,7 +112,6 @@ BlazorConfig.Set(new()
     EnableLogging = app.Environment.IsDevelopment(),
     EnableVerboseLogging = app.Environment.IsDevelopment(),
 });
-
 
 
 

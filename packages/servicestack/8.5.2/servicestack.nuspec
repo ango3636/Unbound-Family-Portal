@@ -1,0 +1,82 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2013/05/nuspec.xsd">
+  <metadata>
+    <id>ServiceStack</id>
+    <version>8.5.2</version>
+    <title>ServiceStack webservice framework: Faster, Cleaner, Modern WCF alternative</title>
+    <authors>ServiceStack</authors>
+    <requireLicenseAcceptance>true</requireLicenseAcceptance>
+    <licenseUrl>https://servicestack.net/terms</licenseUrl>
+    <projectUrl>https://github.com/ServiceStack/ServiceStack</projectUrl>
+    <iconUrl>https://servicestack.net/img/logo-128.png</iconUrl>
+    <description>ServiceStack is a simple and fast alternative to WCF, MVC and Web API in one cohesive framework for all your services and web apps that's intuitive and Easy to use!
+
+    To get started see: https://servicestack.net/getting-started</description>
+    <releaseNotes>https://docs.servicestack.net/release-notes-history</releaseNotes>
+    <copyright>© 2008-2022 ServiceStack, Inc</copyright>
+    <tags>Fast JSON XML CSV HTML SOAP JSV REST Web Service Framework ServiceStack</tags>
+    <repository type="git" url="https://github.com/ServiceStack/ServiceStack.git" commit="01c2d90ca1e12f291771bf0318c32bdad773cb14" />
+    <dependencies>
+      <group targetFramework=".NETFramework4.7.2">
+        <dependency id="ServiceStack.Text" version="8.5.2" exclude="Build,Analyzers" />
+        <dependency id="ServiceStack.Client" version="8.5.2" exclude="Build,Analyzers" />
+        <dependency id="ServiceStack.Common" version="8.5.2" exclude="Build,Analyzers" />
+        <dependency id="ServiceStack.Interfaces" version="8.5.2" exclude="Build,Analyzers" />
+        <dependency id="Microsoft.Bcl.AsyncInterfaces" version="8.0.0" exclude="Build,Analyzers" />
+        <dependency id="Microsoft.Extensions.DependencyInjection" version="8.0.0" exclude="Build,Analyzers" />
+      </group>
+      <group targetFramework="net6.0">
+        <dependency id="ServiceStack.Text" version="8.5.2" exclude="Build,Analyzers" />
+        <dependency id="ServiceStack.Client" version="8.5.2" exclude="Build,Analyzers" />
+        <dependency id="ServiceStack.Common" version="8.5.2" exclude="Build,Analyzers" />
+        <dependency id="ServiceStack.Interfaces" version="8.5.2" exclude="Build,Analyzers" />
+      </group>
+      <group targetFramework="net8.0">
+        <dependency id="ServiceStack.Text" version="8.5.2" exclude="Build,Analyzers" />
+        <dependency id="ServiceStack.Client" version="8.5.2" exclude="Build,Analyzers" />
+        <dependency id="ServiceStack.Common" version="8.5.2" exclude="Build,Analyzers" />
+        <dependency id="ServiceStack.Interfaces" version="8.5.2" exclude="Build,Analyzers" />
+      </group>
+      <group targetFramework=".NETStandard2.0">
+        <dependency id="ServiceStack.Text" version="8.5.2" exclude="Build,Analyzers" />
+        <dependency id="ServiceStack.Client" version="8.5.2" exclude="Build,Analyzers" />
+        <dependency id="ServiceStack.Common" version="8.5.2" exclude="Build,Analyzers" />
+        <dependency id="ServiceStack.Interfaces" version="8.5.2" exclude="Build,Analyzers" />
+        <dependency id="Microsoft.AspNetCore.Cryptography.KeyDerivation" version="2.2.0" exclude="Build,Analyzers" />
+        <dependency id="Microsoft.AspNetCore.Hosting" version="2.2.7" exclude="Build,Analyzers" />
+        <dependency id="Microsoft.AspNetCore.Hosting.Abstractions" version="2.2.0" exclude="Build,Analyzers" />
+        <dependency id="Microsoft.AspNetCore.Http" version="2.2.2" exclude="Build,Analyzers" />
+        <dependency id="Microsoft.AspNetCore.Http.Abstractions" version="2.2.0" exclude="Build,Analyzers" />
+        <dependency id="Microsoft.AspNetCore.Http.Extensions" version="2.2.0" exclude="Build,Analyzers" />
+        <dependency id="Microsoft.Extensions.Configuration.Binder" version="2.2.4" exclude="Build,Analyzers" />
+        <dependency id="Microsoft.Extensions.Configuration.UserSecrets" version="2.2.0" exclude="Build,Analyzers" />
+        <dependency id="Microsoft.Extensions.DependencyInjection" version="2.2.0" exclude="Build,Analyzers" />
+        <dependency id="Microsoft.Extensions.DependencyInjection.Abstractions" version="2.2.0" exclude="Build,Analyzers" />
+        <dependency id="Microsoft.Extensions.Logging.Abstractions" version="2.2.0" exclude="Build,Analyzers" />
+        <dependency id="Microsoft.Extensions.Primitives" version="2.2.0" exclude="Build,Analyzers" />
+        <dependency id="System.ComponentModel.Annotations" version="5.0.0" exclude="Build,Analyzers" />
+        <dependency id="System.Linq.Queryable" version="4.3.0" exclude="Build,Analyzers" />
+        <dependency id="System.Memory" version="4.6.0" exclude="Build,Analyzers" />
+        <dependency id="System.Reflection.Emit" version="4.7.0" exclude="Build,Analyzers" />
+        <dependency id="System.Threading.Thread" version="4.3.0" exclude="Build,Analyzers" />
+      </group>
+    </dependencies>
+    <frameworkReferences>
+      <group targetFramework="net6.0">
+        <frameworkReference name="Microsoft.AspNetCore.App" />
+      </group>
+      <group targetFramework="net8.0">
+        <frameworkReference name="Microsoft.AspNetCore.App" />
+      </group>
+      <group targetFramework=".NETFramework4.7.2" />
+      <group targetFramework=".NETStandard2.0" />
+    </frameworkReferences>
+    <frameworkAssemblies>
+      <frameworkAssembly assemblyName="System.ComponentModel.DataAnnotations" targetFramework=".NETFramework4.7.2" />
+      <frameworkAssembly assemblyName="System.Configuration" targetFramework=".NETFramework4.7.2" />
+      <frameworkAssembly assemblyName="System.Net" targetFramework=".NETFramework4.7.2" />
+      <frameworkAssembly assemblyName="System.ServiceModel" targetFramework=".NETFramework4.7.2" />
+      <frameworkAssembly assemblyName="System.Web" targetFramework=".NETFramework4.7.2" />
+    </frameworkAssemblies>
+  </metadata>
+</package>

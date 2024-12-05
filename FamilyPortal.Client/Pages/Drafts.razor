@@ -5,51 +5,84 @@
 @using Telerik.Blazor
 
 @inject LetterService LetterService
+@inject VideoService VideoService
 @inject NavigationManager Navigation
 
 <PageTitle>Draft Letters</PageTitle>
 
 <!-- Drafts List -->
 <TelerikContainer>
-    <Heading1>Your Draft Letters</Heading1>
+    <Heading1>Your Drafts</Heading1>
 
     @if (drafts != null && drafts.Any())
     {
 
-        <TelerikListView Data="@drafts">
-            <Template>
-                <div class="draft-item listview-item">
-
-                    <div class="text-lg mb-2 font-bold text-gray-800">To: @context.ChildName</div>
-
-                    <span class="text-gray-700">@context.ELetterText.Substring(0, Math.Min(context.ELetterText.Length,
-                    50))...</span>
-
-                    <div class="flex space-x-2 button-container mt-2">
-                        <PrimaryButton @onclick="() => EditDraft(context)" class="btn btn-primary">Edit Draft
-                        </PrimaryButton>
-
-                        <PrimaryButton @onclick="ShowDeleteWindow" class="btn btn-danger">Delete Draft
-                        </PrimaryButton>
-                    </div>
-                </div>
-
-                <TelerikWindow @bind-Visible="@WindowIsVisible">
-                    <WindowTitle>
-                        Delete Draft?
-                    </WindowTitle>
-                    <WindowContent>
-                        Are you sure you want to delete this draft?
-                    </WindowContent>
-                    <WindowActions>
-                        <WindowAction Name="Close" />
-                    </WindowActions>
-                    <WindowFooter>
-                        <PrimaryButton @onclick="() => DeleteDraft(context)">CONFIRM</PrimaryButton>
-                    </WindowFooter>
-                </TelerikWindow>
-            </Template>
-        </TelerikListView>
+        <div class="listview-container">
+            <div>
+                <div class="text-lg mb-2 font-bold text-gray-800">Letters</div>
+                <TelerikListView Data="@drafts">
+                    <Template>
+                        <div class="draft-item listview-item">
+                            <div class="text-lg mb-2 font-bold text-gray-800">To: @context.ChildName</div>
+                            <span class="text-gray-700">@context.ELetterText.Substring(0,
+                            Math.Min(context.ELetterText.Length,
+                            50))...</span>
+                            <div class="flex space-x-2 button-container mt-2">
+                                <PrimaryButton @onclick="() => EditDraft(context)" class="btn btn-primary">Edit Draft
+                                </PrimaryButton>
+                                <PrimaryButton @onclick="ShowDeleteWindow" class="btn btn-danger">Delete Draft
+                                </PrimaryButton>
+                            </div>
+                        </div>
+                        <TelerikWindow @bind-Visible="@WindowIsVisible">
+                            <WindowTitle>
+                                Delete Draft?
+                            </WindowTitle>
+                            <WindowContent>
+                                Are you sure you want to delete this draft?
+                            </WindowContent>
+                            <WindowActions>
+                                <WindowAction Name="Close" />
+                            </WindowActions>
+                            <WindowFooter>
+                                <PrimaryButton @onclick="() => DeleteDraft(context)">CONFIRM</PrimaryButton>
+                            </WindowFooter>
+                        </TelerikWindow>
+                    </Template>
+                </TelerikListView>
+            </div>
+            <div>
+                <div class="text-lg mb-2 font-bold text-gray-800">Videos</div>
+                <TelerikListView Data="@videoDrafts">
+                    <Template>
+                        <div class="draft-item listview-item">
+                            <div class="text-lg mb-2 font-bold text-gray-800">To: @context.ChildName</div>
+                            <span class="text-gray-700">@context.DigitalChildLetterID</span>
+                            <div class="flex space-x-2 button-container mt-2">
+                                <PrimaryButton @onclick="() => EditVideoDraft(context)" class="btn btn-primary">Edit Draft
+                                </PrimaryButton>
+                                <PrimaryButton @onclick="ShowDeleteWindow" class="btn btn-danger">Delete Draft
+                                </PrimaryButton>
+                            </div>
+                        </div>
+                        <TelerikWindow @bind-Visible="@WindowIsVisible">
+                            <WindowTitle>
+                                Delete Draft?
+                            </WindowTitle>
+                            <WindowContent>
+                                Are you sure you want to delete this draft?
+                            </WindowContent>
+                            <WindowActions>
+                                <WindowAction Name="Close" />
+                            </WindowActions>
+                            <WindowFooter>
+                                <PrimaryButton @onclick="() => DeleteVideoDraft(context)">CONFIRM</PrimaryButton>
+                            </WindowFooter>
+                        </TelerikWindow>
+                    </Template>
+                </TelerikListView>
+            </div>
+        </div>
     }
     else
     {
@@ -62,16 +95,25 @@
 
 @code {
     private List<ELetter> drafts = new();
+    private List<DigitalChildLetter> videoDrafts = new();
     private ELetter selectedDraft;
+    private DigitalChildLetter selectedVideoDraft;
     bool WindowIsVisible = false;
 
     protected override async Task OnInitializedAsync()
     {
         // Fetch drafts for the associate (user) from the database
         drafts = await LetterService.GetDraftsByAssociateIdAsync(associateId);
+        videoDrafts = await VideoService.GetDraftsByAssociateIdAsync(associateId);
+
         foreach (var draft in drafts)
         {
             draft.ChildName = await LetterService.GetChildNameByIdAsync(draft.ChildID);
+        }
+
+        foreach (var draft in videoDrafts)
+        {
+            draft.ChildName = await VideoService.GetChildNameByIdAsync(draft.ChildID);
         }
     }
 
@@ -80,11 +122,27 @@
         Navigation.NavigateTo($"/writealetter/{draft.ELetterID}");
     }
 
+    private async Task EditVideoDraft(DigitalChildLetter draft)
+    {
+        Navigation.NavigateTo($"/video/{draft.VideoID}");
+    }
+
     private async Task DeleteDraft(ELetter draft)
     {
 
         await LetterService.DeleteDraftAsync(draft.ELetterID);
         drafts.Remove(draft);
+
+        WindowIsVisible = false;
+        Navigation.NavigateTo(Navigation.Uri, forceLoad: true);
+
+    }
+
+    private async Task DeleteVideoDraft(DigitalChildLetter draft)
+    {
+
+        await VideoService.DeleteVideoDraftAsync(draft.DigitalChildLetterID);
+        videoDrafts.Remove(draft);
 
         WindowIsVisible = false;
         Navigation.NavigateTo(Navigation.Uri, forceLoad: true);
@@ -114,5 +172,10 @@
 
     .button-container {
         margin-top: 15px;
+    }
+
+    .listview-container {
+        display: flex;
+        gap: 10px;
     }
 </style>

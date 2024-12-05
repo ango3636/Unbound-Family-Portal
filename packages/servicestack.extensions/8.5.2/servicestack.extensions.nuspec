@@ -1,0 +1,54 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2013/05/nuspec.xsd">
+  <metadata>
+    <id>ServiceStack.Extensions</id>
+    <version>8.5.2</version>
+    <title>ServiceStack.Extensions</title>
+    <authors>ServiceStack</authors>
+    <requireLicenseAcceptance>true</requireLicenseAcceptance>
+    <licenseUrl>https://servicestack.net/terms</licenseUrl>
+    <projectUrl>https://github.com/ServiceStack/ServiceStack</projectUrl>
+    <iconUrl>https://servicestack.net/img/logo-128.png</iconUrl>
+    <description>ServiceStack extensions for .NET Core Apps, including GrpcFeature</description>
+    <releaseNotes>https://docs.servicestack.net/release-notes-history</releaseNotes>
+    <copyright>© 2008-2022 ServiceStack, Inc</copyright>
+    <tags>ServiceStack gRPC server GrpcFeature</tags>
+    <repository type="git" url="https://github.com/ServiceStack/ServiceStack.git" commit="01c2d90ca1e12f291771bf0318c32bdad773cb14" />
+    <dependencies>
+      <group targetFramework="net6.0">
+        <dependency id="ServiceStack.Text" version="8.5.2" exclude="Build,Analyzers" />
+        <dependency id="ServiceStack.Client" version="8.5.2" exclude="Build,Analyzers" />
+        <dependency id="ServiceStack.Common" version="8.5.2" exclude="Build,Analyzers" />
+        <dependency id="ServiceStack.GrpcClient" version="8.5.2" exclude="Build,Analyzers" />
+        <dependency id="ServiceStack.Interfaces" version="8.5.2" exclude="Build,Analyzers" />
+        <dependency id="ServiceStack" version="8.5.2" exclude="Build,Analyzers" />
+        <dependency id="Grpc.AspNetCore.Server" version="2.67.0" exclude="Build,Analyzers" />
+        <dependency id="Grpc.Core.Api" version="2.67.0" exclude="Build,Analyzers" />
+        <dependency id="Microsoft.AspNetCore.Authentication.JwtBearer" version="6.0.31" exclude="Build,Analyzers" />
+        <dependency id="Microsoft.AspNetCore.Identity.EntityFrameworkCore" version="6.0.31" exclude="Build,Analyzers" />
+        <dependency id="Microsoft.IdentityModel.Tokens" version="8.2.1" exclude="Build,Analyzers" />
+        <dependency id="System.IdentityModel.Tokens.Jwt" version="8.2.1" exclude="Build,Analyzers" />
+        <dependency id="System.Threading.Channels" version="8.0.0" exclude="Build,Analyzers" />
+        <dependency id="protobuf-net" version="3.2.45" exclude="Build,Analyzers" />
+        <dependency id="protobuf-net.Grpc.AspNetCore" version="1.2.2" exclude="Build,Analyzers" />
+      </group>
+      <group targetFramework="net8.0">
+        <dependency id="ServiceStack.Text" version="8.5.2" exclude="Build,Analyzers" />
+        <dependency id="ServiceStack.Client" version="8.5.2" exclude="Build,Analyzers" />
+        <dependency id="ServiceStack.Common" version="8.5.2" exclude="Build,Analyzers" />
+        <dependency id="ServiceStack.GrpcClient" version="8.5.2" exclude="Build,Analyzers" />
+        <dependency id="ServiceStack.Interfaces" version="8.5.2" exclude="Build,Analyzers" />
+        <dependency id="ServiceStack" version="8.5.2" exclude="Build,Analyzers" />
+        <dependency id="Grpc.AspNetCore.Server" version="2.67.0" exclude="Build,Analyzers" />
+        <dependency id="Grpc.Core.Api" version="2.67.0" exclude="Build,Analyzers" />
+        <dependency id="Microsoft.AspNetCore.Authentication.JwtBearer" version="8.0.11" exclude="Build,Analyzers" />
+        <dependency id="Microsoft.AspNetCore.Identity.EntityFrameworkCore" version="8.0.11" exclude="Build,Analyzers" />
+        <dependency id="Microsoft.IdentityModel.Tokens" version="8.2.1" exclude="Build,Analyzers" />
+        <dependency id="System.IdentityModel.Tokens.Jwt" version="8.2.1" exclude="Build,Analyzers" />
+        <dependency id="System.Threading.Channels" version="8.0.0" exclude="Build,Analyzers" />
+        <dependency id="protobuf-net" version="3.2.45" exclude="Build,Analyzers" />
+        <dependency id="protobuf-net.Grpc.AspNetCore" version="1.2.2" exclude="Build,Analyzers" />
+      </group>
+    </dependencies>
+  </metadata>
+</package>

@@ -1,0 +1,28 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2013/05/nuspec.xsd">
+  <metadata>
+    <id>ServiceStack.AspNetCore.OpenApi</id>
+    <version>8.5.2</version>
+    <authors>ServiceStack</authors>
+    <requireLicenseAcceptance>true</requireLicenseAcceptance>
+    <licenseUrl>https://servicestack.net/terms</licenseUrl>
+    <projectUrl>https://github.com/ServiceStack/ServiceStack</projectUrl>
+    <iconUrl>https://servicestack.net/img/logo-128.png</iconUrl>
+    <description>Package Description</description>
+    <releaseNotes>https://docs.servicestack.net/release-notes-history</releaseNotes>
+    <copyright>© 2008-2022 ServiceStack, Inc</copyright>
+    <repository type="git" url="https://github.com/ServiceStack/ServiceStack.git" commit="01c2d90ca1e12f291771bf0318c32bdad773cb14" />
+    <dependencies>
+      <group targetFramework="net8.0">
+        <dependency id="ServiceStack.Client" version="8.5.2" exclude="Build,Analyzers" />
+        <dependency id="ServiceStack.Common" version="8.5.2" exclude="Build,Analyzers" />
+        <dependency id="ServiceStack.Extensions" version="8.5.2" exclude="Build,Analyzers" />
+        <dependency id="ServiceStack.Interfaces" version="8.5.2" exclude="Build,Analyzers" />
+        <dependency id="ServiceStack" version="8.5.2" exclude="Build,Analyzers" />
+        <dependency id="Microsoft.AspNetCore.OpenApi" version="8.0.11" exclude="Build,Analyzers" />
+        <dependency id="Microsoft.OpenApi" version="1.6.22" exclude="Build,Analyzers" />
+        <dependency id="Swashbuckle.AspNetCore" version="6.9.0" exclude="Build,Analyzers" />
+      </group>
+    </dependencies>
+  </metadata>
+</package>

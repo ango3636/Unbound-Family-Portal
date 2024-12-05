@@ -1,0 +1,128 @@
+@page "/video-interaction"
+@rendermode @(new InteractiveServerRenderMode(prerender: false))
+
+@inject IJSRuntime JS
+@using FamilyPortal.ServiceInterface
+@inject SponsorService SponsorService
+@inject VideoService VideoService
+@inject LetterService LetterService
+@inject NavigationManager Navigation
+@inject AuthenticationStateProvider AuthenticationStateProvider
+
+@using System.Text.RegularExpressions
+@using Telerik.Blazor
+@using Microsoft.AspNetCore.Mvc.Rendering;
+
+<h3>Upload or Record a Video</h3>
+
+<div class="form-group">
+    <label for="videoFile">Upload a Video</label>
+    @* <input type="file" id="videoFile" @onchange="OnFileSelected" class="form-control" /> *@
+</div>
+
+<div class="form-group">
+    <button class="btn btn-primary" @onclick="StartRecording">Record a Video</button>
+    <video id="recordedVideo" controls autoplay style="display:none;"></video>
+</div>
+
+<div class="form-group mt-3">
+    <button class="btn btn-success" @onclick="SaveAsDraft" disabled="@IsSaving">Save as Draft</button>
+    @if (IsSaving)
+    {
+        <span>Saving...</span>
+    }
+</div>
+
+@if (!string.IsNullOrEmpty(StatusMessage))
+{
+    <p class="text-success">@StatusMessage</p>
+}
+@if (!string.IsNullOrEmpty(ErrorMessage))
+{
+    <p class="text-danger">@ErrorMessage</p>
+}
+
+@code {
+    private DigitalChildLetter videoDraft = new();
+    private bool IsSaving = false;
+    private string StatusMessage;
+    private string ErrorMessage;
+    private string BlobId; // Represents the uploaded video blob ID
+    private Stream RecordedStream;
+
+    /* private async Task OnFileSelected(ChangeEventArgs e)
+    {
+    try
+    {
+    var file = ((Microsoft.AspNetCore.Components.Forms.InputFileChangeEventArgs)e).File;
+    if (file != null)
+    {
+    // Process file as a Blob (or upload it to a storage service, e.g., Azure Blob Storage)
+    BlobId = await UploadVideoToStorage(file);
+    videoDraft.BlobID = BlobId;
+    videoDraft.FileName = file.Name;
+    StatusMessage = "Video uploaded successfully!";
+    }
+    }
+    catch (Exception ex)
+    {
+    ErrorMessage = $"Error uploading video: {ex.Message}";
+    }
+    } */
+
+    private async Task<string> UploadVideoToStorage(Microsoft.AspNetCore.Components.Forms.IBrowserFile file)
+    {
+        // Example: Implement this to upload to Azure Blob Storage or a similar service
+        using var stream = file.OpenReadStream(10 * 1024 * 1024); // Limit file size to 10 MB
+        var blobId = Guid.NewGuid().ToString();
+
+        // Simulating a blob storage service call
+        // Example: await _blobStorageService.UploadAsync(blobId, stream);
+
+        return blobId; // Return the uploaded Blob ID
+    }
+
+    private void StartRecording()
+    {
+        // Implement JS interop to start video recording
+        RecordedStream = null; // Clear previous streams if any
+        StatusMessage = "Recording started...";
+    }
+
+    private async Task SaveAsDraft()
+    {
+        if (string.IsNullOrEmpty(videoDraft.BlobID))
+        {
+            ErrorMessage = "No video uploaded or recorded.";
+            return;
+        }
+
+        try
+        {
+            IsSaving = true;
+            videoDraft.CreatedOn = DateTimeOffset.UtcNow.ToUnixTimeSeconds();
+            videoDraft.IsDraft = 1;
+
+            await VideoService.SaveVideoDraftAsync(videoDraft);
+            StatusMessage = "Draft saved successfully!";
+            ResetForm();
+        }
+        catch (Exception ex)
+        {
+            ErrorMessage = $"Error saving draft: {ex.Message}";
+        }
+        finally
+        {
+            IsSaving = false;
+        }
+    }
+
+    private void ResetForm()
+    {
+        videoDraft = new DigitalChildLetter();
+        BlobId = null;
+        StatusMessage = null;
+        ErrorMessage = null;
+        IsSaving = false;
+    }
+}

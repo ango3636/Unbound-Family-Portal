@@ -1,0 +1,30 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>ServiceStack.Kestrel</name>
+    </assembly>
+    <members>
+        <member name="P:ServiceStack.AppSelfHostBase.IgnoreRequestHandler">
+            <summary>
+            Whether ServiceStack should ignore handling request
+            </summary>
+        </member>
+        <member name="M:ServiceStack.AppSelfHostBase.Configure(Microsoft.Extensions.DependencyInjection.IServiceCollection)">
+            <summary>
+            Override to Configure .NET Core dependencies
+            </summary>
+        </member>
+        <member name="M:ServiceStack.AppSelfHostBase.Configure(Funq.Container)">
+            <summary>
+            Register dependencies in ServiceStack IOC, to register dependencies in ASP .NET Core IOC implement IHostingStartup
+            and register services in ConfigureServices(IServiceCollection)
+            </summary>
+            <param name="container"></param>
+        </member>
+        <member name="M:ServiceStack.AppSelfHostBase.Configure(Microsoft.AspNetCore.Builder.IApplicationBuilder,Microsoft.AspNetCore.Hosting.IHostingEnvironment)">
+            <summary>
+            Override to Configure .NET Core App
+            </summary>
+        </member>
+    </members>
+</doc>

@@ -1,103 +1,134 @@
-@page "/upload_photo"
+@page "/UploadPhoto/{ELetterID:int?}"
+@rendermode @(new InteractiveServerRenderMode(prerender: false))
 
 
-@using System.ComponentModel.DataAnnotations
-@using Microsoft.AspNetCore.Components.Forms
+@using FamilyPortal.ServiceInterface
+@inject SponsorService SponsorService
+@inject NavigationManager Navigation
 
-<PageTitle>Upload Photo</PageTitle>
 
-<div class="mt-8 mx-auto max-w-lg">
-    <div class="max-w-xl">
-        <Heading1>Upload Your Photo</Heading1>
-        <StatusMessage class="mb-3" Message="@errorMessage" />
-        <section class="mt-4 sm:shadow overflow-hidden sm:rounded-md">
-            <EditForm Model="PhotoInput" OnValidSubmit="HandleUpload">
-                <div class="px-4 bg-white dark:bg-black sm:p-6">
-                    <ValidationSummary class="mb-3 text-danger text-center font-semibold" />
-                    <div class="flex flex-col gap-y-4">
-                        <div>
-                            <label class="@TextInput.LabelClasses">Select Photo</label>
-                            <InputFile OnChange="OnPhotoSelected" accept=".jpg,.jpeg" />
-                            @if (errorMessage != null)
-                            {
-                                <p class="text-sm text-red-500 mt-2">@errorMessage</p>
-                            }
-                        </div>
+@using System.Text.RegularExpressions
+@using Telerik.Blazor
+@using Microsoft.AspNetCore.Mvc.Rendering
 
-                        <div>
-                            @if (PhotoPreview != null)
-                            {
-                                <div class="relative">
-                                    <img src="@PhotoPreview" alt="Preview" class="border rounded-lg w-full max-h-96" />
-                                    <p class="mt-2 text-sm">Drag to adjust within 480 x 640 frame.</p>
-                                    <!-- Crop/Rotate UI placeholder -->
-                                </div>
-                            }
-                        </div>
 
-                        <div>
-                            <PrimaryButton id="upload-submit" type="submit">Submit Photo</PrimaryButton>
-                        </div>
+<TelerikContainer>
+    <Heading1>Upload Photo</Heading1>
 
-                        @if (confirmationMessage != null)
-                        {
-                            <div class="mt-4 text-sm text-green-500">
-                                <p>@confirmationMessage</p>
-                            </div>
-                        }
-                    </div>
-                </div>
-            </EditForm>
-        </section>
+
+    <div class="k-form-field" style="padding-bottom: 10px;">
+        <label class="k-form-label">Select A Sponsor:</label>
+        <TelerikDropDownList Data="@SponsorLetters" @bind-Value="@SelectedSponsorLetter" Width="300px" />
     </div>
-</div>
 
-@code {
-    private string? errorMessage;
-    private string? confirmationMessage;
-    private IBrowserFile? SelectedFile;
-    private string? PhotoPreview;
 
-    private UploadInputModel PhotoInput { get; set; } = new();
+    <div class="k-form-field" style="padding: 10px;">
+        <label class="k-form-label">Select Photo:</label>
+        <InputFile OnChange="HandlePhotoUpload" multiple="false" accept="image/jpeg,image/jpg" />
+        <span class="text-danger">@ErrorMessage</span>
+        <br />
+        <div class="flex space-x-2 button-container mt-2">
+            <PrimaryButton @onclick="SendPhoto">Submit Photo</PrimaryButton>
+        </div>
+    </div>
 
-    private async Task OnPhotoSelected(InputFileChangeEventArgs e)
+
+    @if (!string.IsNullOrEmpty(UploadedPhoto))
     {
-        SelectedFile = e.File;
-        if (!SelectedFile.ContentType.Contains("image/jpeg"))
+        <div class="k-form-field">
+            <label class="k-form-label">Uploaded Photo:</label>
+            <div style="border: 1px solid #ccc; width: 480px; height: 640px; overflow: hidden; position: relative;">
+                <img id="preview" src="@UploadedPhoto" style="max-width: 100%; max-height: 100%; position: absolute;" />
+            </div>
+        </div>
+    }
+    </TelerikContainer>
+
+
+    @code {
+    [Parameter] public int? ELetterID { get; set; }
+    List<SelectListItem> SponsorLetters = new();
+    string SelectedSponsorLetter { get; set; }
+    string UploadedPhoto { get; set; }
+    string ErrorMessage { get; set; }
+
+
+    protected override async Task OnInitializedAsync()
+    {
+        // Initialize sponsor letters for dropdown
+        SponsorLetters = await SponsorService.GetAssociatesBySponsorIdAsync(2); // Replace with dynamic associate ID if needed
+        if (SponsorLetters.Any())
         {
-            errorMessage = "Please select a .jpg or .jpeg file.";
-            return;
+            SelectedSponsorLetter = SponsorLetters.First().Value;
         }
-
-        if (SelectedFile.Size > 5 * 1024 * 1024) // 5MB max
-        {
-            errorMessage = "File size is too large. Maximum allowed size is 5MB.";
-            return;
-        }
-
-        using var stream = SelectedFile.OpenReadStream();
-        var buffer = new byte[SelectedFile.Size];
-        await stream.ReadAsync(buffer);
-
-        PhotoPreview = $"data:{SelectedFile.ContentType};base64,{Convert.ToBase64String(buffer)}";
-        errorMessage = null;
     }
 
-    private async Task HandleUpload()
+
+    private async Task HandlePhotoUpload(InputFileChangeEventArgs e)
     {
-        if (SelectedFile == null)
+        var file = e.File;
+        ErrorMessage = string.Empty;
+
+
+        if (file == null)
+            return;
+
+
+        // Debugging message to confirm file is detected
+        Console.WriteLine($"File uploaded: {file.Name}, Size: {file.Size}, Type: {file.ContentType}");
+
+
+        // Check file type (only .jpg, .jpeg)
+        if (file.ContentType != "image/jpeg" && file.ContentType != "image/jpg")
         {
-            errorMessage = "No photo selected.";
+            ErrorMessage = "Please upload a .jpg or .jpeg image.";
             return;
         }
 
-        // Here you can process and save the photo (e.g., send it to an API)
-        confirmationMessage = "Photo uploaded successfully!";
+
+        // Check file size (limit to 5MB)
+        if (file.Size > 5 * 1024 * 1024) // 5MB limit
+        {
+            ErrorMessage = "File size is too large. Maximum size is 5MB.";
+            return;
+        }
+
+
+        // Read the uploaded file and display it
+        var buffer = new byte[file.Size];
+        await file.OpenReadStream().ReadAsync(buffer);
+        UploadedPhoto = $"data:image/jpeg;base64,{Convert.ToBase64String(buffer)}";
+
+
+        // Debugging message to confirm the photo data
+        Console.WriteLine($"Uploaded photo data: {UploadedPhoto.Substring(0, 30)}...");
+
+
+        // Trigger re-render
+        StateHasChanged();
     }
 
-    private sealed class UploadInputModel
+
+    private async Task SendPhoto()
     {
-        public bool IsRetired { get; set; }
-        public DateTime? LastPhotoReceivedDate { get; set; }
+        if (string.IsNullOrEmpty(UploadedPhoto))
+        {
+            ErrorMessage = "Please upload a photo first.";
+            return;
+        }
+
+
+        // Debugging message before submitting
+        Console.WriteLine("Submitting photo...");
+
+
+        // Process the uploaded photo (send to server, etc.)
+        // For now, we'll just redirect to a success page.
+        Navigation.NavigateTo("/photosent");
     }
 }
+<style>
+    .button-container {
+        margin-top: 15px;
+    }
+</style>

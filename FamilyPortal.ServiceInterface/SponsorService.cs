@@ -35,6 +35,24 @@ namespace FamilyPortal.ServiceInterface
             return selectListItems;
         }
 
+        public async Task<List<SelectListItem>> GetAssociatesBySponsorIdAsync(int associateId)
+        {
+            var associates = await _context.Associate
+                .Where(a => a.AssociateID == associateId) // Try fetching directly from Associate table
+                .Select(a => new { a.AssociateID, a.FirstName, a.LastName })
+                .ToListAsync();
+
+
+            var selectListItems = associates.Select(a => new SelectListItem
+            {
+                Value = a.AssociateID.ToString(),
+                Text = $"{a.FirstName} {a.LastName}"
+            }).ToList();
+
+
+            return selectListItems;
+        }
+
     }
 
 

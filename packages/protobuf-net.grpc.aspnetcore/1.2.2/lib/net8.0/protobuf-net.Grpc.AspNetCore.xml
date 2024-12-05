@@ -1,0 +1,38 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>protobuf-net.Grpc.AspNetCore</name>
+    </assembly>
+    <members>
+        <member name="T:Microsoft.AspNetCore.Http.HttpContextAccessorExtensions">
+            <summary>
+            Provides access to http-context specific extension features
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Http.HttpContextAccessorExtensions.GetServerCallContext(Microsoft.AspNetCore.Http.IHttpContextAccessor)">
+            <summary>
+            Gets the server-call-context associated with the current http context, if possible
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Http.HttpContextAccessorExtensions.GetCallContext(Microsoft.AspNetCore.Http.IHttpContextAccessor,System.Object)">
+            <summary>
+            Gets the call-context associated with the current http context, if possible
+            </summary>
+        </member>
+        <member name="T:ProtoBuf.Grpc.Server.ServicesExtensions">
+            <summary>
+            Provides extension methods to the IServiceCollection API
+            </summary>
+        </member>
+        <member name="M:ProtoBuf.Grpc.Server.ServicesExtensions.AddCodeFirstGrpc(Microsoft.Extensions.DependencyInjection.IServiceCollection)">
+            <summary>
+            Registers a provider that can recognize and handle code-first services
+            </summary>
+        </member>
+        <member name="M:ProtoBuf.Grpc.Server.ServicesExtensions.AddCodeFirstGrpc(Microsoft.Extensions.DependencyInjection.IServiceCollection,System.Action{Grpc.AspNetCore.Server.GrpcServiceOptions})">
+            <summary>
+            Registers a provider that can recognize and handle code-first services
+            </summary>
+        </member>
+    </members>
+</doc>

@@ -1,6 +1,7 @@
 @page "/video"
 @rendermode @(new InteractiveServerRenderMode(prerender: false))
 
+@inject IJSRuntime JS
 @using FamilyPortal.ServiceInterface
 @inject SponsorService SponsorService
 @inject VideoService VideoService
@@ -36,7 +37,7 @@
         <div class="k-form-field">
             <label class="k-form-label">Uploaded Video:</label>
             <div class "k-file-item" style="margin: 10px;">
-                <video id="videoPreview" autoplay Width="70%" Height="400px" ; border: 1px solid #ccc;"></video>
+                <video id="videoPreview" autoplay Width="70%" Height="400px" border: 1px solid #ccc;"></video>
             </div>
         </div>
     }
@@ -45,10 +46,13 @@
     {
         <div class="k-form-field">
             <label class="k-form-label">Live Preview:</label>
-            <video src="@VideoValue" id="videoPreview" autoplay Width="70%" Height="400px" ; border: 1px solid
+            <video src="@VideoValue" id="videoPreview" autoplay Width="70%" Height="400px" border: 1px solid
                 #ccc;">@videoFileName</video>
         </div>
     }
+
+    @*WHEN RECORDING VIDEO*@
+
 
     <div class="k-form-field" style="padding: 10px;">
         <label class="k-form-label">Select Video:</label>
@@ -93,6 +97,9 @@
 
 </TelerikContainer>
 
+<script src="~/js/recordVideo.js"></script>
+
+
 @code {
     [Parameter] public int? VideoID { get; set; }
     string VideoValue { get; set; } = string.Empty;
@@ -101,6 +108,8 @@
     private string VideoBlobId { get; set; } = string.Empty;
     string LastSavedDate { get; set; } = DateTime.Now.ToString("MM/dd/yyyy");
     string errorMessage;
+    private IJSObjectReference module;
+
 
 
     List<SelectListItem> SponsorLetters = new();
@@ -165,25 +174,30 @@
 
     private async Task HandleVideoUpload(InputFileChangeEventArgs e)
     {
-
+        Console.WriteLine("START OF HANDLE VIDEO UPLOAD");
         var SelectedFile = e.File;
 
-        if (SelectedFile.Size > 5 * 1024 * 1024) // 5MB max
+
+
+        /* if (SelectedFile.Size > 5 * 1024 * 1024) // 5MB max
         {
-            errorMessage = "File size is too large. Maximum allowed size is 5MB.";
-            return;
-        }
+        Console.WriteLine("INSIDE THE IF STATEMENT");
+        errorMessage = "File size is too large. Maximum allowed size is 5MB.";
+        return;
+        } */
 
         using var stream = SelectedFile.OpenReadStream();
         var buffer = new byte[SelectedFile.Size];
         await stream.ReadAsync(buffer);
 
         VideoValue = $"data:{SelectedFile.ContentType};base64,{Convert.ToBase64String(buffer)}";
+        Console.WriteLine("THIS IS THE VIDEO VALUE: ", VideoValue);
         videoFileName = SelectedFile.Name;
         VideoBlobId = "12345";
         Console.WriteLine(videoFileName);
-        errorMessage = null;
+        errorMessage = " ";
     }
+
 
 
     private async Task SaveDraft()
@@ -261,6 +275,17 @@
         return input;
     }
 
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            await JS.InvokeVoidAsync("startRecording");
+            await JS.InvokeVoidAsync("stopRecording");
+
+        }
+    }
+
+
     private async Task ShowSaveDraftWindow()
     {
         WindowIsVisible = true;
@@ -278,4 +303,64 @@
         SendWindowIsVisible = false;
 
     }
+    private async Task StartRecording()
+    {
+        await JS.InvokeVoidAsync("startRecording");
+    }
+
+    private async Task StopRecording()
+    {
+        await JS.InvokeVoidAsync("stopRecording");
+    }
+
 }
+
+<script>
+    let mediaRecorder;
+    let recordedBlobs;
+
+    function handleDataAvailable(event) {
+        if (event.data && event.data.size > 0) {
+            recordedBlobs.push(event.data);
+        }
+    }
+
+    async function startRecording() {
+        const constraints = {
+            video: true,
+            audio: true
+        };
+
+        const stream = await navigator.mediaDevices.getUserMedia(constraints);
+        const videoElement = document.getElementById('video');
+        videoElement.srcObject = stream;
+
+        recordedBlobs = [];
+        mediaRecorder = new MediaRecorder(stream);
+        mediaRecorder.ondataavailable = handleDataAvailable;
+        mediaRecorder.start();
+        console.log('Recording started');
+    }
+
+    function stopRecording() {
+        mediaRecorder.stop();
+        console.log('Recording stopped');
+        const blob = new Blob(recordedBlobs, { type: 'video/webm' });
+        const url = window.URL.createObjectURL(blob);
+        const videoElement = document.getElementById('video');
+        videoElement.srcObject = null;
+        videoElement.src = url;
+        downloadRecordedVideo(blob);
+    }
+
+    function downloadRecordedVideo(blob) {
+        const url = window.URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.style.display = 'none';
+        a.href = url;
+        a.download = 'recorded-video.webm';
+        document.body.appendChild(a);
+        a.click();
+        window.URL.revokeObjectURL(url);
+    }
+</script>

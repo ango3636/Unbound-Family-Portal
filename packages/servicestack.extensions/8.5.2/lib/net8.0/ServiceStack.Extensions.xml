@@ -1,0 +1,431 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>ServiceStack.Extensions</name>
+    </assembly>
+    <members>
+        <member name="P:ServiceStack.Auth.IdentityAdminUsersFeature`2.QueryIdentityUserProperties">
+            <summary>
+            Return only specified UserAuth Properties in AdminQueryUsers
+            </summary>
+        </member>
+        <member name="P:ServiceStack.Auth.IdentityAdminUsersFeature`2.QueryMediaRules">
+            <summary>
+            Specify different size media rules when a property should be visible, e.g:
+            MediaRules.ExtraSmall.Show&lt;UserAuth&gt;(x => new { x.Id, x.Email, x.DisplayName })
+            </summary>
+        </member>
+        <member name="P:ServiceStack.Auth.IdentityAdminUsersFeature`2.FormLayout">
+            <summary>
+            Which User fields can be updated
+            </summary>
+        </member>
+        <member name="P:ServiceStack.Auth.IdentityAdminUsersFeature`2.HiddenIdentityUserProperties">
+            <summary>
+            Which IdentityUser fields that are not returned 
+            </summary>
+        </member>
+        <member name="P:ServiceStack.Auth.IdentityAdminUsersFeature`2.ReadOnlyIdentityUserProperties">
+            <summary>
+            Which IdentityUser fields that are not modifiable 
+            </summary>
+        </member>
+        <member name="P:ServiceStack.Auth.IdentityAdminUsersFeature`2.CreateUserValidation">
+            <summary>
+            Invoked before user is created
+            A non-null return (e.g. HttpResult/HttpError) invalidates the request and is used as the API Response instead
+            </summary>
+        </member>
+        <member name="P:ServiceStack.Auth.IdentityAdminUsersFeature`2.UpdateUserValidation">
+            <summary>
+            Invoked before user is updated
+            A non-null return (e.g. HttpResult/HttpError) invalidates the request and is used as the API Response instead
+            </summary>
+        </member>
+        <member name="P:ServiceStack.Auth.IdentityAdminUsersFeature`2.ResolveLockoutDate">
+            <summary>
+            What Locking Date to use when Locking a User (default DateTimeOffset.MaxValue)
+            </summary>
+        </member>
+        <member name="P:ServiceStack.Auth.IdentityAdminUsersFeature`2.OnBeforeCreateUser">
+            <summary>
+            Invoked before a User is created
+            </summary>
+        </member>
+        <member name="P:ServiceStack.Auth.IdentityAdminUsersFeature`2.OnAfterCreateUser">
+            <summary>
+            Invoked after a User is created
+            </summary>
+        </member>
+        <member name="P:ServiceStack.Auth.IdentityAdminUsersFeature`2.OnBeforeUpdateUser">
+            <summary>
+            Invoked before a User is updated. (NewUser, ExistingUser, Service)
+            </summary>
+        </member>
+        <member name="P:ServiceStack.Auth.IdentityAdminUsersFeature`2.OnAfterUpdateUser">
+            <summary>
+            Invoked after a User is updated. (NewUser, ExistingUser, Service)
+            </summary>
+        </member>
+        <member name="P:ServiceStack.Auth.IdentityAdminUsersFeature`2.OnBeforeDeleteUser">
+            <summary>
+            Invoked before a User is deleted
+            </summary>
+        </member>
+        <member name="P:ServiceStack.Auth.IdentityAdminUsersFeature`2.OnAfterDeleteUser">
+            <summary>
+            Invoked after a User is deleted
+            </summary>
+        </member>
+        <member name="T:ServiceStack.Auth.AppleAuthProvider">
+            <summary>
+            Required to use Sign In with Apple:
+             - Membership Team ID from https://developer.apple.com/account/#/membership/
+             - Create &amp; configure App ID from https://developer.apple.com/account/resources/identifiers/list
+             - Use App Id to create &amp; configure Service ID from https://developer.apple.com/account/resources/identifiers/list/serviceId
+             - Use App Id to create &amp; configure Private Key from https://developer.apple.com/account/resources/authkeys/list
+             Service ID must be configured with non-localhost trusted domain and HTTPS callback URL, for development can use:
+              - Domain: local.servicestack.com
+              - Callback URL: https://local.servicestack.com:5001/auth/apple
+            </summary>
+        </member>
+        <member name="P:ServiceStack.Auth.AppleAuthProvider.Audience">
+            <summary>
+            The audience used in JWT Client Secret.
+            Default: https://appleid.apple.com
+            </summary>
+        </member>
+        <member name="P:ServiceStack.Auth.AppleAuthProvider.TeamId">
+            <summary>
+            Apple Developer Membership Team ID
+            </summary>
+        </member>
+        <member name="P:ServiceStack.Auth.AppleAuthProvider.ClientId">
+            <summary>
+            Service ID
+            </summary>
+        </member>
+        <member name="P:ServiceStack.Auth.AppleAuthProvider.BundleId">
+            <summary>
+            Bundle ID
+            </summary>
+        </member>
+        <member name="P:ServiceStack.Auth.AppleAuthProvider.KeyId">
+            <summary>
+            The Private Key ID
+            </summary>
+        </member>
+        <member name="P:ServiceStack.Auth.AppleAuthProvider.KeyPath">
+            <summary>
+            Path to .p8 Private Key 
+            </summary>
+        </member>
+        <member name="P:ServiceStack.Auth.AppleAuthProvider.KeyBase64">
+            <summary>
+            Base64 of .p8 Private Key bytes 
+            </summary>
+        </member>
+        <member name="P:ServiceStack.Auth.AppleAuthProvider.KeyBytes">
+            <summary>
+            .p8 Private Key bytes 
+            </summary>
+        </member>
+        <member name="P:ServiceStack.Auth.AppleAuthProvider.ClientSecretFactory">
+            <summary>
+            Customize ClientSecret JWT
+            </summary>
+        </member>
+        <member name="P:ServiceStack.Auth.AppleAuthProvider.ClientSecretExpiry">
+            <summary>
+            When JWT Client Secret expires, defaults to Apple Max 6 Month Expiry 
+            </summary>
+        </member>
+        <member name="P:ServiceStack.Auth.AppleAuthProvider.IssuerSigningKeysJson">
+            <summary>
+            Optional: static list of Apple's public keys, defaults to fetching from https://appleid.apple.com/auth/keys
+            </summary>
+        </member>
+        <member name="P:ServiceStack.Auth.AppleAuthProvider.CacheKey">
+            <summary>
+            Whether to cache private Key if loading from KeyPath, defaults: true
+            </summary>
+        </member>
+        <member name="P:ServiceStack.Auth.AppleAuthProvider.CacheIssuerSigningKeys">
+            <summary>
+            Whether to cache Apple's public keys, defaults: true
+            </summary>
+        </member>
+        <member name="P:ServiceStack.Auth.AppleAuthProvider.ValidateRefreshTokenExpiry">
+            <summary>
+            How long before re-validating Sign in RefreshToken, default: 1 day.
+            Set to null to disable RefreshToken validation.
+            </summary>
+        </member>
+        <member name="F:ServiceStack.Auth.AppleAuthFeature.FlutterSignInWithApple">
+            <summary>
+            Android support for https://pub.dev/packages/sign_in_with_apple
+            </summary>
+        </member>
+        <member name="T:ServiceStack.Auth.IdentityApplicationAuthProvider`2">
+            <summary>
+            Handles converting from Application Cookie ClaimsPrincipal into a ServiceStack Session
+            </summary>
+        </member>
+        <member name="P:ServiceStack.Auth.IdentityApplicationAuthProvider`2.AuthenticationScheme">
+            <summary>
+            Which Authentication Scheme configuration to use (default Identity.Application)
+            </summary>
+        </member>
+        <member name="P:ServiceStack.Auth.IdentityApplicationAuthProvider`2.PermissionClaimType">
+            <summary>
+            Claim Type used for populating permissions (default perms)
+            </summary>
+        </member>
+        <member name="P:ServiceStack.Auth.IdentityApplicationAuthProvider`2.PopulateSessionFilter">
+            <summary>
+            Run custom filter after session is restored from ClaimsPrincipal
+            </summary>
+        </member>
+        <member name="P:ServiceStack.Auth.IdentityApplicationAuthProvider`2.PopulateSessionFilterAsync">
+            <summary>
+            Run Async custom filter after session is restored from ClaimsPrincipal
+            </summary>
+        </member>
+        <member name="T:ServiceStack.Auth.IdentityAuthContext`2">
+            <summary>
+            Configure ServiceStack's Identity Auth Integration
+            </summary>
+        </member>
+        <member name="M:ServiceStack.Auth.IdentityAuthContext`2.#ctor(System.Func{ServiceStack.Auth.IAuthSession},ServiceStack.Auth.IdentityApplicationAuthProvider{`0,`1},ServiceStack.Auth.IdentityCredentialsAuthProvider{`0,`1},ServiceStack.Auth.IdentityJwtAuthProvider{`0,`1},ServiceStack.Auth.IdentityBasicAuthProvider{`0,`1})">
+            <summary>
+            Configure ServiceStack's Identity Auth Integration
+            </summary>
+        </member>
+        <member name="P:ServiceStack.Auth.IdentityAuthContext`2.SessionFactory">
+            <summary>
+            Specify which Custom AuthUserSession to use
+            </summary>
+        </member>
+        <member name="P:ServiceStack.Auth.IdentityAuthContext`2.AuthApplication">
+            <summary>
+            Application Cookie Identity Auth Provider
+            </summary>
+        </member>
+        <member name="P:ServiceStack.Auth.IdentityAuthContext`2.AuthCredentials">
+            <summary>
+            Username/Password SignIn Identity Auth Provider
+            </summary>
+        </member>
+        <member name="P:ServiceStack.Auth.IdentityAuthContext`2.AuthJwt">
+            <summary>
+            JWT Identity Auth Provider
+            </summary>
+        </member>
+        <member name="P:ServiceStack.Auth.IdentityAuthContext`2.AuthBasic">
+            <summary>
+            Basic Auth Provider
+            </summary>
+        </member>
+        <member name="P:ServiceStack.Auth.IdentityAuthContext`2.EnableApplicationAuth">
+            <summary>
+            Enable Identity Cookie Application Auth (default true) 
+            </summary>
+        </member>
+        <member name="P:ServiceStack.Auth.IdentityAuthContext`2.EnableCredentialsAuth">
+            <summary>
+            Enable Username/Password SignIn via ServiceStack's Authenticate API (/auth) 
+            </summary>
+        </member>
+        <member name="P:ServiceStack.Auth.IdentityAuthContext`2.EnableJwtAuth">
+            <summary>
+            Enable Authentication via Identity Auth JWT
+            </summary>
+        </member>
+        <member name="P:ServiceStack.Auth.IdentityAuthContext`2.EnableBasicAuth">
+            <summary>
+            Enable Authentication via Basic Auth
+            </summary>
+        </member>
+        <member name="P:ServiceStack.Auth.IdentityAuthContext`2.LoginPath">
+            <summary>
+            Where users should redirect to Sign In
+            </summary>
+        </member>
+        <member name="P:ServiceStack.Auth.IdentityAuthContext`2.LogoutPath">
+            <summary>
+            Where users should redirect to after logging out
+            </summary>
+        </member>
+        <member name="P:ServiceStack.Auth.IdentityAuthContext`2.AccessDeniedPath">
+            <summary>
+            Which path users should be redirected to if they don't have access to a resource
+            </summary>
+        </member>
+        <member name="P:ServiceStack.Auth.IdentityAuthContext`2.ReturnUrlParameter">
+            <summary>
+            The URL parameter name used to pass the ReturnUrl
+            </summary>
+        </member>
+        <member name="P:ServiceStack.Auth.IdentityAuthContext`2.IncludeRegisterService">
+            <summary>
+            Register ServiceStack's Register API (/register)
+            </summary>
+        </member>
+        <!-- Badly formed XML comment ignored for member "P:ServiceStack.Auth.IdentityAuthContext`2.IncludeAssignRoleServices" -->
+        <member name="P:ServiceStack.Auth.IdentityAuthContext`2.UserToSessionConverter">
+            <summary>
+            Additional custom logic to convert an Identity User to a ServiceStack Session
+            </summary>
+        </member>
+        <member name="P:ServiceStack.Auth.IdentityAuthContext`2.SessionToUserConverter">
+            <summary>
+            Additional custom logic to convert a ServiceStack Session to an Identity User
+            </summary>
+        </member>
+        <member name="P:ServiceStack.Auth.IdentityAuthContext`2.AdminUsers">
+            <summary>
+            Admin Users Feature
+            </summary>
+        </member>
+        <member name="T:ServiceStack.Auth.IdentityCredentialsAuthProvider`2">
+            <summary>
+            Implements /auth/credentials authenticating against ASP.NET Identity IdentityUser
+            </summary>
+        </member>
+        <member name="P:ServiceStack.Auth.IdentityCredentialsAuthProvider`2.LockoutOnFailure">
+            <summary>
+            Should Lock User of failed attempts
+            </summary>
+        </member>
+        <member name="T:ServiceStack.Auth.IdentityJwtAuthProvider`2">
+            <summary>
+            Converts an MVC JwtBearer Cookie into a ServiceStack Session
+            </summary>
+        </member>
+        <member name="P:ServiceStack.Auth.IdentityJwtAuthProvider`2.DefaultIssuer">
+            <summary>
+            Default Issuer to use if unspecified
+            </summary>
+        </member>
+        <member name="P:ServiceStack.Auth.IdentityJwtAuthProvider`2.HashAlgorithm">
+            <summary>
+            Which Hash Algorithm should be used to sign the JWT Token. (default HS256)
+            </summary>
+        </member>
+        <member name="P:ServiceStack.Auth.IdentityJwtAuthProvider`2.AuthenticationScheme">
+            <summary>
+            Which JWT Authentication Scheme configuration to use (default Bearer)
+            </summary>
+        </member>
+        <member name="P:ServiceStack.Auth.IdentityJwtAuthProvider`2.Options">
+            <summary>
+            The JWT Bearer Options to use (default populated from AuthenticationScheme JwtBearerOptions)
+            </summary>
+        </member>
+        <member name="P:ServiceStack.Auth.IdentityJwtAuthProvider`2.TokenValidationParameters">
+            <summary>
+            The JwtBearerOptions TokenValidationParameters short-hand
+            </summary>
+        </member>
+        <member name="P:ServiceStack.Auth.IdentityJwtAuthProvider`2.ExpireTokensIn">
+            <summary>
+            How long should JWT Tokens be valid for. (default 14 days)
+            </summary>
+        </member>
+        <member name="P:ServiceStack.Auth.IdentityJwtAuthProvider`2.ExpireRefreshTokensIn">
+            <summary>
+            How long should JWT Refresh Tokens be valid for. (default 90 days)
+            </summary>
+        </member>
+        <member name="P:ServiceStack.Auth.IdentityJwtAuthProvider`2.ExpireTokensInDays">
+            <summary>
+            Convenient overload to initialize ExpireTokensIn with an Integer
+            </summary>
+        </member>
+        <member name="P:ServiceStack.Auth.IdentityJwtAuthProvider`2.RequireSecureConnection">
+            <summary>
+            Whether to only allow access via Bearer Token from a secure connection (default true)
+            </summary>
+        </member>
+        <member name="P:ServiceStack.Auth.IdentityJwtAuthProvider`2.ResolveJwtId">
+            <summary>
+            Change resolution for resolving unique jti id for Access Tokens
+            </summary>
+        </member>
+        <member name="M:ServiceStack.Auth.IdentityJwtAuthProvider`2.NextJwtId">
+            <summary>
+            Get the next AutoId for usage in jti JWT Access Tokens  
+            </summary>
+        </member>
+        <member name="P:ServiceStack.Auth.IdentityJwtAuthProvider`2.EnableRefreshToken">
+            <summary>
+            Whether to enable JWT Refresh Tokens (default TUser : IRequireRefreshToken) 
+            </summary>
+        </member>
+        <member name="P:ServiceStack.Auth.IdentityJwtAuthProvider`2.DeleteCookiesOnJwtCookies">
+            <summary>
+            Remove Auth Cookies on Authentication
+            </summary>
+        </member>
+        <member name="P:ServiceStack.Auth.IdentityJwtAuthProvider`2.ServiceRoutes">
+            <summary>
+            Register GetAccessToken Service to enable Refresh Tokens
+            </summary>
+        </member>
+        <member name="P:ServiceStack.Auth.IdentityJwtAuthProvider`2.IncludeConvertSessionToTokenService">
+            <summary>
+            Register ConvertSessionToTokenService
+            </summary>
+        </member>
+        <member name="P:ServiceStack.Auth.IdentityJwtAuthProvider`2.Audience">
+            <summary>
+            Return Valid Audiences in comma-delimited string
+            </summary>
+        </member>
+        <member name="P:ServiceStack.Auth.IdentityJwtAuthProvider`2.OnTokenCreated">
+            <summary>
+            Customize which claims are included in the JWT Token
+            </summary>
+        </member>
+        <member name="P:ServiceStack.Auth.IdentityJwtAuthProvider`2.OnRefreshTokenCreated">
+            <summary>
+            Invoked after Refresh Token is created
+            </summary>
+        </member>
+        <member name="P:ServiceStack.Auth.IdentityJwtAuthProvider`2.OnSessionCreated">
+            <summary>
+            Run custom filter after session is restored from a JWT Token
+            </summary>
+        </member>
+        <member name="P:ServiceStack.Auth.IdentityJwtAuthProvider`2.InvalidateRefreshTokenOnLogout">
+            <summary>
+            Whether to invalidate Refresh Tokens on Logout (default true)
+            </summary>
+        </member>
+        <member name="P:ServiceStack.Auth.IdentityJwtAuthProvider`2.ExtendRefreshTokenExpiryAfterUsage">
+            <summary>
+            How long to extend the expiry of Refresh Tokens after usage (default None) 
+            </summary>
+        </member>
+        <member name="M:ServiceStack.Auth.IdentityJwtAuthProvider`2.PreAuthenticateAsync(ServiceStack.Web.IRequest,ServiceStack.Web.IResponse)">
+            <summary>
+            Populate ServiceStack Session from JWT
+            </summary>
+        </member>
+        <member name="T:ServiceStack.Auth.IdentityRegisterServiceBase`2">
+            <summary>
+            Register Base class for IAuthRepository / IUserAuth users
+            </summary>
+        </member>
+        <member name="M:ServiceStack.Auth.IdentityRegisterServiceBase`2.#ctor(Microsoft.AspNetCore.Identity.UserManager{`0})">
+            <summary>
+            Register Base class for IAuthRepository / IUserAuth users
+            </summary>
+        </member>
+        <member name="P:ServiceStack.GrpcFeature.DefaultMethodsForAny">
+            <summary>
+            Only generate specified Verb entries for "ANY" routes
+            </summary>
+        </member>
+    </members>
+</doc>

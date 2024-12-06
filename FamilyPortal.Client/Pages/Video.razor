@@ -21,7 +21,7 @@
     }
     else
     {
-        <Heading1>Record New Video</Heading1>
+        <Heading1>Upload Video</Heading1>
     }
 
     <div class="k-form-field" style="padding-bottom: 10px;">
@@ -35,9 +35,9 @@
     @if (VideoValue.IsNullOrEmpty())
     {
         <div class="k-form-field">
-            <label class="k-form-label">Uploaded Video:</label>
+            <label class="k-form-label">Video:</label>
             <div class "k-file-item" style="margin: 10px;">
-                <video id="videoPreview" autoplay Width="70%" Height="400px" border: 1px solid #ccc;"></video>
+                <video id="videoPreview" autoplay"></video>
             </div>
         </div>
     }
@@ -46,12 +46,10 @@
     {
         <div class="k-form-field">
             <label class="k-form-label">Live Preview:</label>
-            <video src="@VideoValue" id="videoPreview" autoplay Width="70%" Height="400px" border: 1px solid
-                #ccc;">@videoFileName</video>
+            <video src="@VideoValue" id="videoPreview" autoplay Width="70%" Height="400px">@videoFileName</video>
         </div>
     }
 
-    @*WHEN RECORDING VIDEO*@
 
 
     <div class="k-form-field" style="padding: 10px;">
@@ -201,7 +199,7 @@
                 AssociateID = 1,
                 ChildID = 1,
                 CreatedOn = DateTimeOffset.UtcNow.ToUnixTimeSeconds(),
-                BlobID = "VideoBlob",
+                BlobID = VideoBlobId,
                 IsDraft = 1,
                 ChildName = SelectedSponsorLetter
             };
